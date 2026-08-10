@@ -2,7 +2,7 @@
 
 namespace Core
 {
-    public class External
+    public class Extension
     {
         Invoice invoice = new Invoice();
     }

@@ -2,7 +2,7 @@
 
 namespace Perisistence
 {
-    public class External
+    public class Extencion
     {
         Invoice invoice = new Invoice();
     }

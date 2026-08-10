@@ -10,4 +10,9 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.14" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Infrastructura\Infrastructura.csproj" />
+    <ProjectReference Include="..\Perisistence\Perisistence.csproj" />
+  </ItemGroup>
+
 </Project>
