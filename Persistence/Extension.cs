@@ -24,6 +24,8 @@ namespace Persistence
 
             services.AddTransient<IConsultorios, ConsultoriosRepository>();
 
+            services.AddTransient<IHorariosMedicos, HorariosMedicosRepository>();
+
             return services;
         }
     }
