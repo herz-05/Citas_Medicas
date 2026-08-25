@@ -9,6 +9,9 @@ namespace Core.Interface.Repositories
 {
     public interface IPacientes
     {
+        Task AddPaciente(Pacientes pacientes);
         Task<List<Pacientes>> GetPacientesAsync();
+
+        Task<List<Pacientes>> GetPacientesAsync(int totalRegistros = 1000);
     }
 }

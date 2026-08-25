@@ -1,9 +1,17 @@
 ﻿using Domain.Models;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace Core
 {
-    public class Extension
+    public static class Extension
     {
-        Pacientes pacientes = new Pacientes();
+        public static IServiceCollection AddCore(this IServiceCollection services)
+        {
+
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+            return services;
+
+        }
     }
 }
