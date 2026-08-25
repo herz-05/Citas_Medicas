@@ -18,5 +18,18 @@ namespace Persistence.Repositories
         {
             return await _context.Consultorios.ToListAsync();
         }
+
+        public async Task<List<Consultorio>> GetConsultoriosAsync(int totalRegistros)
+        {
+            return await _context.Consultorios
+                .Take(totalRegistros)
+                .ToListAsync();
+        }
+
+        public async Task AddConsultorio(Consultorio consultorio)
+        {
+            await _context.Consultorios.AddAsync(consultorio);
+            await _context.SaveChangesAsync();
+        }
     }
 }
