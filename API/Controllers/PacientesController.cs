@@ -1,6 +1,10 @@
+using Core.feature.Commands;
+using Core.feature.Queries;
 using Core.Interface.Repositories;
 using Domain.Models;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Persistence.Repositories;
 
 namespace API.Controllers
 {
@@ -8,17 +12,23 @@ namespace API.Controllers
     [Route("[controller]")]
     public class PacientesController : ControllerBase
     {
-        private readonly IPacientes _pacientesRepository;
+        private readonly IMediator _mediator;
 
-        public PacientesController(IPacientes pacientesRespository)
+        public PacientesController(IMediator mediator)
         {
-            _pacientesRepository = pacientesRespository;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<List<Pacientes>> Get()
+        public async Task<List<Pacientes>> Get([FromQuery] GetPacienteQuery query)
         {
-            return await _pacientesRepository.GetPacientesAsync();
+            return await _mediator.Send(query);
+        }
+
+        [HttpPost]
+        public async Task<bool> Post([FromBody] AddPacienteCommand query)
+        {
+            return await _mediator.Send(query);
         }
     }
 }
