@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   PacientesService,
@@ -13,19 +13,19 @@ import {
 })
 export class Pacientes implements OnInit {
 
-  pacientes: Paciente[] = [];
+  pacientes = signal<Paciente[]>([]);
 
   constructor(private pacientesService: PacientesService) {}
 
-ngOnInit(): void {
-  this.pacientesService.getPacientes().subscribe({
-    next: (data) => {
-      console.log('PACIENTES RECIBIDOS:', data);
-      this.pacientes = data;
-    },
-    error: (error) => {
-      console.error('Error cargando pacientes:', error);
-    }
-  });
-}
+  ngOnInit(): void {
+    this.pacientesService.getPacientes().subscribe({
+      next: (data) => {
+        console.log('PACIENTES RECIBIDOS:', data);
+        this.pacientes.set(data);
+      },
+      error: (error) => {
+        console.error('Error cargando pacientes:', error);
+      }
+    });
+  }
 }

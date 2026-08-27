@@ -1,0 +1,31 @@
+<h1>Lista de Consultorios</h1>
+
+<p>Total de consultorios: {{ consultorios().length }}</p>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Número</th>
+      <th>Piso</th>
+      <th>Ubicación</th>
+      <th>Descripción</th>
+      <th>Estado</th>
+      <th>Fecha Registro</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let consultorio of consultorios()">
+      <td>{{ consultorio.idConsultorio }}</td>
+      <td>{{ consultorio.nombre }}</td>
+      <td>{{ consultorio.numeroConsultorio }}</td>
+      <td>{{ consultorio.piso }}</td>
+      <td>{{ consultorio.ubicacion }}</td>
+      <td>{{ consultorio.descripcion }}</td>
+      <td>{{ consultorio.estado ? 'Activo' : 'Inactivo' }}</td>
+      <td>{{ consultorio.fechaRegistro }}</td>
+    </tr>
+  </tbody>
+</table>

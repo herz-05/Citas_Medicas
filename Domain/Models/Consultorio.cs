@@ -14,7 +14,9 @@ namespace Domain.Models
         public string? Piso { get; set; }
 
         public string? Ubicacion { get; set; }
+        public string? Descripcion { get; set; }
 
         public bool Estado { get; set; }
+        public DateTime FechaRegistro { get; set; }
     }
 }
