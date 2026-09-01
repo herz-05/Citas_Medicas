@@ -27,4 +27,8 @@ export class PacientesService {
   getPacientes(): Observable<Paciente[]> {
     return this.http.get<Paciente[]>(this.apiUrl);
   }
+  
+  addPaciente(paciente: Paciente): Observable<boolean> {
+  return this.http.post<boolean>(this.apiUrl, paciente);
+}
 }

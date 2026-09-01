@@ -1,0 +1,333 @@
+.btn-nuevo {
+  background: #2196f3;
+  color: white;
+  border: none;
+  padding: 11px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-nuevo:hover {
+  background: #1976d2;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-paciente {
+  width: 580px;
+  max-width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: white;
+  border-radius: 14px;
+  padding: 26px 30px;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mini-logo {
+  background: #2196f3;
+  color: white;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 7px;
+  margin-right: 8px;
+}
+
+.btn-cerrar {
+  border: none;
+  background: transparent;
+  font-size: 25px;
+  cursor: pointer;
+  color: #777;
+}
+
+.modal-paciente h2 {
+  margin-top: 24px;
+  margin-bottom: 5px;
+}
+
+.subtitulo {
+  margin-top: 0;
+  color: #888;
+  font-size: 13px;
+}
+
+.pasos {
+  display: flex;
+  gap: 25px;
+  border-bottom: 1px solid #ddd;
+  margin: 22px 0;
+  font-size: 13px;
+  color: #aaa;
+}
+
+.pasos span {
+  padding-bottom: 10px;
+}
+
+.pasos .activo {
+  color: #2196f3;
+  border-bottom: 2px solid #2196f3;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+}
+
+.campo-completo {
+  grid-column: 1 / -1;
+}
+
+.campo label {
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #555;
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+  padding: 11px 12px;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+}
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+  border-color: #2196f3;
+}
+
+.acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.btn-cancelar {
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-guardar {
+  background: #2196f3;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-guardar:hover {
+  background: #1976d2;
+}
+
+@media (max-width: 650px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .campo-completo {
+    grid-column: auto;
+  }
+}
+
+/* ============================= */
+/* TABLA DE PACIENTES             */
+/* ============================= */
+
+.tabla-contenedor {
+  margin-top: 30px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+
+/* Encabezado de la tarjeta */
+
+.tabla-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tabla-header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #333;
+}
+
+.tabla-header p {
+  margin: 5px 0 0;
+  font-size: 13px;
+  color: #888;
+}
+
+
+/* Para pantallas pequeñas */
+
+.tabla-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+
+/* Tabla */
+
+.tabla-pacientes {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+
+/* Encabezados */
+
+.tabla-pacientes thead {
+  background: #2196f3;
+}
+
+.tabla-pacientes th {
+  padding: 14px 16px;
+  text-align: left;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+}
+
+
+/* Celdas */
+
+.tabla-pacientes td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #eeeeee;
+  color: #555;
+  vertical-align: middle;
+}
+
+
+/* Filas */
+
+.tabla-pacientes tbody tr {
+  transition: background 0.2s ease;
+}
+
+.tabla-pacientes tbody tr:hover {
+  background: #f5faff;
+}
+
+.tabla-pacientes tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+/* ID */
+
+.id-paciente {
+  color: #2196f3;
+  font-weight: 600;
+}
+
+
+/* Nombre + avatar */
+
+.paciente-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.paciente-info strong {
+  color: #333;
+  white-space: nowrap;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #e3f2fd;
+  color: #2196f3;
+
+  font-weight: bold;
+  font-size: 15px;
+
+  border-radius: 50%;
+}
+
+
+/* Sexo */
+
+.sexo {
+  display: inline-block;
+
+  padding: 5px 10px;
+
+  background: #e3f2fd;
+  color: #1976d2;
+
+  border-radius: 20px;
+
+  font-size: 12px;
+  font-weight: 500;
+}
+
+
+/* Cuando no hay registros */
+
+.sin-datos {
+  text-align: center;
+  padding: 35px !important;
+  color: #999 !important;
+}
+
+
+/* Responsive */
+
+@media (max-width: 900px) {
+
+  .tabla-pacientes {
+    min-width: 1000px;
+  }
+
+}

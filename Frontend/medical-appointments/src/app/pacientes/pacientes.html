@@ -2,32 +2,206 @@
 
 <p>Total de pacientes: {{ pacientes().length }}</p>
 
-<table border="1">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Nombres</th>
-      <th>Apellidos</th>
-      <th>Fecha de nacimiento</th>
-      <th>Sexo</th>
-      <th>DUI</th>
-      <th>Teléfono</th>
-      <th>Correo</th>
-      <th>Dirección</th>
-    </tr>
-  </thead>
+<button class="btn-nuevo" (click)="mostrarFormulario = true">
+  Nuevo Paciente
+</button>
 
-  <tbody>
-    <tr *ngFor="let paciente of pacientes()">
-      <td>{{ paciente.idPaciente }}</td>
-      <td>{{ paciente.nombres }}</td>
-      <td>{{ paciente.apellidos }}</td>
-      <td>{{ paciente.fechaNacimiento }}</td>
-      <td>{{ paciente.sexo }}</td>
-      <td>{{ paciente.dui }}</td>
-      <td>{{ paciente.telefono }}</td>
-      <td>{{ paciente.correo }}</td>
-      <td>{{ paciente.direccion }}</td>
-    </tr>
-  </tbody>
-</table>
+<div class="overlay" *ngIf="mostrarFormulario">
+
+  <div class="modal-paciente">
+
+    <div class="modal-header">
+      <div>
+        <span class="mini-logo">+</span>
+        <strong>Pacientes</strong>
+      </div>
+
+      <button
+        class="btn-cerrar"
+        (click)="mostrarFormulario = false">
+        X
+      </button>
+    </div>
+
+    <h2>Registrar nuevo paciente</h2>
+    <p class="subtitulo">
+      Complete la información del paciente
+    </p>
+
+    <div class="pasos">
+      <span class="activo">Datos personales</span>
+      <span>Contacto</span>
+      <span>Dirección</span>
+    </div>
+
+    <div class="form-grid">
+
+      <div class="campo">
+        <label>Nombres</label>
+        <input
+          type="text"
+          placeholder="Ingrese los nombres"
+          [(ngModel)]="nuevoPaciente.nombres">
+      </div>
+
+      <div class="campo">
+        <label>Apellidos</label>
+        <input
+          type="text"
+          placeholder="Ingrese los apellidos"
+          [(ngModel)]="nuevoPaciente.apellidos">
+      </div>
+
+      <div class="campo">
+        <label>Fecha de nacimiento</label>
+        <input
+          type="date"
+          [(ngModel)]="nuevoPaciente.fechaNacimiento">
+      </div>
+
+      <div class="campo">
+        <label>Sexo</label>
+        <select [(ngModel)]="nuevoPaciente.sexo">
+          <option value="">Seleccione</option>
+          <option value="Masculino">Masculino</option>
+          <option value="Femenino">Femenino</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label>DUI</label>
+        <input
+          type="text"
+          placeholder="00000000-0"
+          [(ngModel)]="nuevoPaciente.dui">
+      </div>
+
+      <div class="campo">
+        <label>Teléfono</label>
+        <input
+          type="text"
+          placeholder="7000-0000"
+          [(ngModel)]="nuevoPaciente.telefono">
+      </div>
+
+      <div class="campo campo-completo">
+        <label>Correo</label>
+        <input
+          type="email"
+          placeholder="correo@ejemplo.com"
+          [(ngModel)]="nuevoPaciente.correo">
+      </div>
+
+      <div class="campo campo-completo">
+        <label>Dirección</label>
+        <textarea
+          rows="3"
+          placeholder="Ingrese la dirección"
+          [(ngModel)]="nuevoPaciente.direccion">
+        </textarea>
+      </div>
+
+    </div>
+
+    <div class="acciones">
+
+      <button
+        class="btn-cancelar"
+        (click)="mostrarFormulario = false">
+        Cancelar
+      </button>
+
+      <button
+        class="btn-guardar"
+        (click)="agregarPaciente()">
+        Guardar
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<br><br>
+
+<div class="tabla-contenedor">
+
+  <div class="tabla-header">
+    <div>
+      <h2>Pacientes registrados</h2>
+      <p>{{ pacientes().length }} pacientes encontrados</p>
+    </div>
+  </div>
+
+  <div class="tabla-responsive">
+
+    <table class="tabla-pacientes">
+
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Paciente</th>
+          <th>Fecha nacimiento</th>
+          <th>Sexo</th>
+          <th>DUI</th>
+          <th>Teléfono</th>
+          <th>Correo</th>
+          <th>Dirección</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let paciente of pacientes()">
+
+          <td>
+            <span class="id-paciente">
+              #{{ paciente.idPaciente }}
+            </span>
+          </td>
+
+          <td>
+            <div class="paciente-info">
+              <div class="avatar">
+                {{ paciente.nombres.charAt(0) }}
+              </div>
+
+              <div>
+                <strong>
+                  {{ paciente.nombres }} {{ paciente.apellidos }}
+                </strong>
+              </div>
+            </div>
+          </td>
+
+          <td>{{ paciente.fechaNacimiento }}</td>
+
+          <td>
+            <span class="sexo">
+              {{ paciente.sexo }}
+            </span>
+          </td>
+
+          <td>{{ paciente.dui }}</td>
+
+          <td>{{ paciente.telefono }}</td>
+
+          <td>{{ paciente.correo }}</td>
+
+          <td>{{ paciente.direccion }}</td>
+
+        </tr>
+
+        <tr *ngIf="pacientes().length === 0">
+          <td colspan="8" class="sin-datos">
+            No hay pacientes registrados
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+</div>

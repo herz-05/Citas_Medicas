@@ -20,11 +20,14 @@ namespace Persistence
                 opt => opt.UseSqlServer(configuration["sql:cx"])
             );
 
-            services.AddTransient<IPacientes, PacientesRepository>();
-
             services.AddTransient<IConsultorios, ConsultoriosRepository>();
 
             services.AddTransient<IHorariosMedicos, HorariosMedicosRepository>();
+
+            services.AddScoped(
+                typeof(IGenericRepository<>),
+                typeof(GenericRepository<>)
+            );
 
             return services;
         }

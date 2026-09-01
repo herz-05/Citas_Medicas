@@ -1,10 +1,8 @@
 using Core.feature.Commands;
 using Core.feature.Queries;
-using Core.Interface.Repositories;
 using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Persistence.Repositories;
 
 namespace API.Controllers
 {
@@ -20,15 +18,20 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<List<Pacientes>> Get([FromQuery] GetPacienteQuery query)
+        public async Task<List<Pacientes>> Get(
+            [FromQuery] int totalRegistros = 0)
         {
-            return await _mediator.Send(query);
+            return await _mediator.Send(new GetPacienteQuery
+            {
+                TotalRegistros = totalRegistros
+            });
         }
 
         [HttpPost]
-        public async Task<bool> Post([FromBody] AddPacienteCommand query)
+        public async Task<bool> Post(
+            [FromBody] AddPacienteCommand command)
         {
-            return await _mediator.Send(query);
+            return await _mediator.Send(command);
         }
     }
 }

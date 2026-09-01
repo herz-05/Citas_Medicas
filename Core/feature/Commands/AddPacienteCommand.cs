@@ -1,15 +1,10 @@
 ﻿using Core.Interface.Repositories;
 using Domain.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.feature.Commands
 {
-    public class AddPacienteCommand: IRequest<bool>
+    public class AddPacienteCommand : IRequest<bool>
     {
         public int IdPaciente { get; set; }
         public string? Nombres { get; set; }
@@ -23,32 +18,38 @@ namespace Core.feature.Commands
         public DateTime FechaRegistro { get; set; }
     }
 
-
-    public class AddPacienteCommandHandler : IRequestHandler<AddPacienteCommand, bool>
+    public class AddPacienteCommandHandler
+        : IRequestHandler<AddPacienteCommand, bool>
     {
-        IPacientes _pacientesRepository;
-        public AddPacienteCommandHandler(IPacientes pacientesRepository)
+        private readonly IGenericRepository<Pacientes> _repository;
+
+        public AddPacienteCommandHandler(
+            IGenericRepository<Pacientes> repository)
         {
-            _pacientesRepository = pacientesRepository;
-            
+            _repository = repository;
         }
-        public async Task<bool> Handle(AddPacienteCommand request, CancellationToken cancellationToken)
+
+        public async Task<bool> Handle(
+            AddPacienteCommand request,
+            CancellationToken cancellationToken)
         {
-            Pacientes pacientes = new Pacientes();
-            pacientes.IdPaciente = request.IdPaciente;
-            pacientes.Nombres = request.Nombres;
-            pacientes.Apellidos = request.Apellidos;
-            pacientes.FechaNacimiento = request.FechaNacimiento;
-            pacientes.Sexo = request.Sexo;
-            pacientes.DUI = request.DUI;
-            pacientes.Telefono = request.Telefono;
-            pacientes.Correo = request.Correo;
-            pacientes.Direccion = request.Direccion;
-            pacientes.FechaNacimiento = request.FechaNacimiento;
+            var paciente = new Pacientes
+            {
+                IdPaciente = request.IdPaciente,
+                Nombres = request.Nombres,
+                Apellidos = request.Apellidos,
+                FechaNacimiento = request.FechaNacimiento,
+                Sexo = request.Sexo,
+                DUI = request.DUI,
+                Telefono = request.Telefono,
+                Correo = request.Correo,
+                Direccion = request.Direccion,
+                FechaRegistro = request.FechaRegistro
+            };
 
-            await _pacientesRepository.AddPaciente(pacientes);
+            await _repository.AddAsync(paciente);
+
             return true;
-
         }
     }
 }

@@ -1,11 +1,6 @@
 ﻿using Core.Interface.Repositories;
 using Domain.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.feature.Queries
 {
@@ -14,16 +9,31 @@ namespace Core.feature.Queries
         public int TotalRegistros { get; set; }
     }
 
-    public class GetPacienteQueryHandler : IRequestHandler<GetPacienteQuery, List<Pacientes>>
+    public class GetPacienteQueryHandler
+        : IRequestHandler<GetPacienteQuery, List<Pacientes>>
     {
-        private readonly IPacientes _pacientesRepository;
-        public GetPacienteQueryHandler(IPacientes pacientesRepository)
+        private readonly IGenericRepository<Pacientes> _repository;
+
+        public GetPacienteQueryHandler(
+            IGenericRepository<Pacientes> repository)
         {
-            _pacientesRepository = pacientesRepository;
+            _repository = repository;
         }
-        public async Task<List<Pacientes>> Handle(GetPacienteQuery request, CancellationToken cancellationToken)
+
+        public async Task<List<Pacientes>> Handle(
+            GetPacienteQuery request,
+            CancellationToken cancellationToken)
         {
-            return request.TotalRegistros > 0 ? await _pacientesRepository.GetPacientesAsync(request.TotalRegistros) : await _pacientesRepository.GetPacientesAsync();
+            var pacientes = await _repository.GetAllAsync();
+
+            if (request.TotalRegistros > 0)
+            {
+                return pacientes
+                    .Take(request.TotalRegistros)
+                    .ToList();
+            }
+
+            return pacientes;
         }
     }
 }
