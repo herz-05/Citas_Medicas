@@ -2,7 +2,7 @@
 using Domain.Models;
 using MediatR;
 
-namespace Core.feature.Commands
+namespace Core.feature.Consultorios.Commands
 {
     public class AddConsultorioCommand : IRequest<bool>
     {
@@ -22,28 +22,29 @@ namespace Core.feature.Commands
     public class AddConsultorioCommandHandler
         : IRequestHandler<AddConsultorioCommand, bool>
     {
-        private readonly IConsultorios _consultoriosRepository;
+        private readonly IGenericRepository<Consultorio> _repository;
 
         public AddConsultorioCommandHandler(
-            IConsultorios consultoriosRepository)
+            IGenericRepository<Consultorio> repository)
         {
-            _consultoriosRepository = consultoriosRepository;
+            _repository = repository;
         }
 
         public async Task<bool> Handle(
             AddConsultorioCommand request,
             CancellationToken cancellationToken)
         {
-            Consultorio consultorio = new Consultorio();
+            var consultorio = new Consultorio
+            {
+                IdConsultorio = request.IdConsultorio,
+                Nombre = request.Nombre ?? string.Empty,
+                NumeroConsultorio = request.NumeroConsultorio,
+                Piso = request.Piso,
+                Ubicacion = request.Ubicacion,
+                Estado = request.Estado
+            };
 
-            consultorio.IdConsultorio = request.IdConsultorio;
-            consultorio.Nombre = request.Nombre ?? string.Empty;
-            consultorio.NumeroConsultorio = request.NumeroConsultorio;
-            consultorio.Piso = request.Piso;
-            consultorio.Ubicacion = request.Ubicacion;
-            consultorio.Estado = request.Estado;
-
-            await _consultoriosRepository.AddConsultorio(consultorio);
+            await _repository.AddAsync(consultorio);
 
             return true;
         }

@@ -1,5 +1,5 @@
-﻿using Core.feature.Commands;
-using Core.feature.Queries;
+﻿using Core.feature.Consultorios.Commands;
+using Core.feature.Consultorios.Queries;
 using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

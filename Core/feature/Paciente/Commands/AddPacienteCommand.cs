@@ -2,7 +2,7 @@
 using Domain.Models;
 using MediatR;
 
-namespace Core.feature.Commands
+namespace Core.feature.Paciente.Commands
 {
     public class AddPacienteCommand : IRequest<bool>
     {

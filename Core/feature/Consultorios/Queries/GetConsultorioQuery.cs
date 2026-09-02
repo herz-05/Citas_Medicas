@@ -1,11 +1,8 @@
 ﻿using Core.Interface.Repositories;
 using Domain.Models;
 using MediatR;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Core.feature.Queries
+namespace Core.feature.Consultorios.Queries
 {
     public class GetConsultorioQuery : IRequest<List<Consultorio>>
     {
@@ -15,21 +12,28 @@ namespace Core.feature.Queries
     public class GetConsultorioQueryHandler
         : IRequestHandler<GetConsultorioQuery, List<Consultorio>>
     {
-        private readonly IConsultorios _consultoriosRepository;
+        private readonly IGenericRepository<Consultorio> _repository;
 
         public GetConsultorioQueryHandler(
-            IConsultorios consultoriosRepository)
+            IGenericRepository<Consultorio> repository)
         {
-            _consultoriosRepository = consultoriosRepository;
+            _repository = repository;
         }
 
         public async Task<List<Consultorio>> Handle(
             GetConsultorioQuery request,
             CancellationToken cancellationToken)
         {
-            return request.TotalRegistros > 0
-                ? await _consultoriosRepository.GetConsultoriosAsync(request.TotalRegistros)
-                : await _consultoriosRepository.GetConsultoriosAsync();
+            var consultorios = await _repository.GetAllAsync();
+
+            if (request.TotalRegistros > 0)
+            {
+                return consultorios
+                    .Take(request.TotalRegistros)
+                    .ToList();
+            }
+
+            return consultorios;
         }
     }
 }

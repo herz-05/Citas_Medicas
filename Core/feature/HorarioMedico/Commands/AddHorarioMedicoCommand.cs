@@ -2,7 +2,7 @@
 using Domain.Models;
 using MediatR;
 
-namespace Core.feature.Commands
+namespace Core.feature.HorariosMedicos.Commands
 {
     public class AddHorarioMedicoCommand : IRequest<bool>
     {
@@ -22,10 +22,10 @@ namespace Core.feature.Commands
     public class AddHorarioMedicoCommandHandler
         : IRequestHandler<AddHorarioMedicoCommand, bool>
     {
-        private readonly IHorariosMedicos _repository;
+        private readonly IGenericRepository<HorarioMedico> _repository;
 
         public AddHorarioMedicoCommandHandler(
-            IHorariosMedicos repository)
+            IGenericRepository<HorarioMedico> repository)
         {
             _repository = repository;
         }
@@ -44,7 +44,7 @@ namespace Core.feature.Commands
                 Estado = request.Estado
             };
 
-            await _repository.AddHorarioMedico(horario);
+            await _repository.AddAsync(horario);
 
             return true;
         }

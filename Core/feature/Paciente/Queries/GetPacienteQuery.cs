@@ -2,7 +2,7 @@
 using Domain.Models;
 using MediatR;
 
-namespace Core.feature.Queries
+namespace Core.feature.Paciente.Queries
 {
     public class GetPacienteQuery : IRequest<List<Pacientes>>
     {

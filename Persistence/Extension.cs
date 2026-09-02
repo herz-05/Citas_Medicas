@@ -9,20 +9,21 @@ namespace Persistence
 {
     public static class Extension
     {
-        public static IServiceCollection AddPersistence(this IServiceCollection services)
+        public static IServiceCollection AddPersistence(
+            this IServiceCollection services)
         {
             IConfiguration configuration;
 
             using (ServiceProvider provider = services.BuildServiceProvider())
-                configuration = ServiceProviderServiceExtensions.GetService<IConfiguration>(provider)!;
+            {
+                configuration =
+                    ServiceProviderServiceExtensions
+                    .GetService<IConfiguration>(provider)!;
+            }
 
             services.AddDbContext<ApplicationDbContext>(
                 opt => opt.UseSqlServer(configuration["sql:cx"])
             );
-
-            services.AddTransient<IConsultorios, ConsultoriosRepository>();
-
-            services.AddTransient<IHorariosMedicos, HorariosMedicosRepository>();
 
             services.AddScoped(
                 typeof(IGenericRepository<>),
