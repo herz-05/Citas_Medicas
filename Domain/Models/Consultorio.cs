@@ -2,7 +2,7 @@
 
 namespace Domain.Models
 {
-    public class Consultorio
+    public class HorarioMedico
     {
         [Key]
         public int IdConsultorio { get; set; }

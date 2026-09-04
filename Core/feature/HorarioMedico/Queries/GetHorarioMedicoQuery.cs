@@ -4,8 +4,7 @@ using MediatR;
 
 namespace Core.feature.HorariosMedicos.Queries
 {
-    public class GetHorarioMedicoQuery
-        : IRequest<List<HorarioMedico>>
+    public class GetHorarioMedicoQuery: IRequest<List<HorarioMedico>>
     {
         public int TotalRegistros { get; set; }
     }
