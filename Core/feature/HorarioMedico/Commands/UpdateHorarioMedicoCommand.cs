@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.feature.HorarioMedico.Commands
+namespace Core.feature.HorariosMedicos.Commands
 {
     public class UpdateHorarioMedicoCommand
     {

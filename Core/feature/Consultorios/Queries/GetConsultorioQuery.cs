@@ -4,23 +4,23 @@ using MediatR;
 
 namespace Core.feature.Consultorios.Queries
 {
-    public class GetConsultorioQuery : IRequest<List<HorarioMedico>>
+    public class GetConsultorioQuery : IRequest<List<Consultorio>>
     {
         public int TotalRegistros { get; set; }
     }
 
     public class GetConsultorioQueryHandler
-        : IRequestHandler<GetConsultorioQuery, List<HorarioMedico>>
+        : IRequestHandler<GetConsultorioQuery, List<Consultorio>>
     {
-        private readonly IGenericRepository<HorarioMedico> _repository;
+        private readonly IGenericRepository<Consultorio> _repository;
 
         public GetConsultorioQueryHandler(
-            IGenericRepository<HorarioMedico> repository)
+            IGenericRepository<Consultorio> repository)
         {
             _repository = repository;
         }
 
-        public async Task<List<HorarioMedico>> Handle(
+        public async Task<List<Consultorio>> Handle(
             GetConsultorioQuery request,
             CancellationToken cancellationToken)
         {

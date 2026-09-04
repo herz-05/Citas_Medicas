@@ -1,24 +1,16 @@
 ﻿using Core.Interface.Repositories;
 using Domain.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Core.feature.HorarioMedico.Commands
+namespace Core.feature.HorariosMedicos.Commands
 {
-    public class DeleteHorarioMedicoCommand: IRequest<bool>
+    public class DeleteHorarioMedicoCommand : IRequest<bool>
     {
-       
-         public int IdHorario { get; set; }
-
-       
+        public int IdHorario { get; set; }
     }
 
     public class DeleteHorarioMedicoCommandHandler
-          : IRequestHandler<DeleteHorarioMedicoCommand, bool>
+        : IRequestHandler<DeleteHorarioMedicoCommand, bool>
     {
         private readonly IGenericRepository<HorarioMedico> _repository;
 
@@ -37,11 +29,10 @@ namespace Core.feature.HorarioMedico.Commands
 
             if (horario == null)
             {
-
                 return false;
             }
 
-            await _repository.AddAsync(horario);
+            await _repository.DeleteAsync(horario);
 
             return true;
         }

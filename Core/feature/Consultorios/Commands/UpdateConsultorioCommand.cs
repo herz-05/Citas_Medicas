@@ -1,14 +1,10 @@
 ﻿using Core.Interface.Repositories;
+using Domain.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.feature.Consultorios.Commands
 {
-    public class UpdateConsultorioCommand: IRequest<bool>
+    public class UpdateConsultorioCommand : IRequest<bool>
     {
         public int IdConsultorio { get; set; }
 
@@ -24,7 +20,7 @@ namespace Core.feature.Consultorios.Commands
     }
 
     public class UpdateConsultorioCommandHandler
-       : IRequestHandler<UpdateConsultorioCommand, bool>
+        : IRequestHandler<UpdateConsultorioCommand, bool>
     {
         private readonly IGenericRepository<Consultorio> _repository;
 
@@ -57,3 +53,4 @@ namespace Core.feature.Consultorios.Commands
             return true;
         }
     }
+}

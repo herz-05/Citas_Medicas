@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.feature.HorarioMedico.Queries
+namespace Core.feature.HorariosMedicos.Queries
 {
     public class GetHorarioMedicoByIdQuery
     {

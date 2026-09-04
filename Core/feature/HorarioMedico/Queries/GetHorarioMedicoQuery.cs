@@ -4,15 +4,13 @@ using MediatR;
 
 namespace Core.feature.HorariosMedicos.Queries
 {
-    public class GetHorarioMedicoQuery: IRequest<List<HorarioMedico>>
+    public class GetHorarioMedicoQuery : IRequest<List<HorarioMedico>>
     {
         public int TotalRegistros { get; set; }
     }
 
     public class GetHorarioMedicoQueryHandler
-        : IRequestHandler<
-            GetHorarioMedicoQuery,
-            List<HorarioMedico>>
+        : IRequestHandler<GetHorarioMedicoQuery, List<HorarioMedico>>
     {
         private readonly IGenericRepository<HorarioMedico> _repository;
 
@@ -29,11 +27,7 @@ namespace Core.feature.HorariosMedicos.Queries
             var horarios = await _repository.GetAllAsync();
 
             if (request.TotalRegistros > 0)
-            {
-                return horarios
-                    .Take(request.TotalRegistros)
-                    .ToList();
-            }
+                return horarios.Take(request.TotalRegistros).ToList();
 
             return horarios;
         }
