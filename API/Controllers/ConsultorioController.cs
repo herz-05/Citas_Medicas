@@ -27,6 +27,16 @@ namespace API.Controllers
             });
         }
 
+        [HttpGet("{id}")]
+        public async Task<Consultorio?> GetById(int id)
+        {
+            return await _mediator.Send(
+                new GetConsultorioByIdQuery
+                {
+                    IdConsultorio = id
+                });
+        }
+
         [HttpPost]
         public async Task<bool> Post(
             [FromBody] AddConsultorioCommand command)

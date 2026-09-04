@@ -1,4 +1,5 @@
-﻿using Core.feature.HorariosMedicos.Commands;
+﻿using Core.feature.Consultorios.Queries;
+using Core.feature.HorariosMedicos.Commands;
 using Core.feature.HorariosMedicos.Queries;
 using Domain.Models;
 using MediatR;
@@ -26,6 +27,16 @@ namespace API.Controllers
                 new GetHorarioMedicoQuery
                 {
                     TotalRegistros = totalRegistros
+                });
+        }
+
+        [HttpGet("{id}")]
+        public async Task<HorarioMedico?> GetById(int id)
+        {
+            return await _mediator.Send(
+                new GetHorarioMedicoByIdQuery
+                {
+                    IdHorario = id
                 });
         }
 

@@ -1,3 +1,4 @@
+using Core.feature.Consultorios.Queries;
 using Core.feature.Paciente.Commands;
 using Core.feature.Paciente.Queries;
 using Domain.Models;
@@ -25,6 +26,16 @@ namespace API.Controllers
             {
                 TotalRegistros = totalRegistros
             });
+        }
+
+        [HttpGet("{id}")]
+        public async Task<Pacientes?> GetById(int id)
+        {
+            return await _mediator.Send(
+                new GetPacienteByIdQuery
+                {
+                    IdPaciente = id
+                });
         }
 
         [HttpPost]
