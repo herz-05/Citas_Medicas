@@ -1,8 +1,8 @@
 ﻿namespace Domain.Models
 {
-    public class Rol
+    public class Especialidad
     {
-        public int IdRol { get; set; }
+        public int IdEspecialidad { get; set; }
 
         public string Nombre { get; set; } = string.Empty;
 

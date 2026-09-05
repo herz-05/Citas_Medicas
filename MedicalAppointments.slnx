@@ -20,7 +20,9 @@
     <Project Path="MicroIIdentidadUsuarios/Domain/Domain.csproj" Id="a41d1243-4f5f-4751-b85d-2710e103211b" />
   </Folder>
   <Folder Name="/MicroIdentidadUsuarios/B.Core/" />
-  <Folder Name="/MicroIdentidadUsuarios/C.Persistence/" />
+  <Folder Name="/MicroIdentidadUsuarios/C.Persistence/">
+    <Project Path="MicroIIdentidadUsuarios/Persistence/Persistence.csproj" Id="09f59a06-19cf-437c-af81-40205476b87b" />
+  </Folder>
   <Folder Name="/MicroIdentidadUsuarios/D.Infraestructura/" />
   <Folder Name="/MicroIdentidadUsuarios/E.Api/" />
   <Folder Name="/MicroPacientesAgendas/" />

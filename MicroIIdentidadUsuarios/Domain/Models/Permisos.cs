@@ -1,8 +1,8 @@
 ﻿namespace Domain.Models
 {
-    public class Rol
+    public class Permisos
     {
-        public int IdRol { get; set; }
+        public int IdPermiso { get; set; }
 
         public string Nombre { get; set; } = string.Empty;
 
@@ -10,6 +10,5 @@
 
         public bool Estado { get; set; }
 
-        public DateTime FechaRegistro { get; set; }
     }
 }
