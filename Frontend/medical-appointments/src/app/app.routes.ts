@@ -25,7 +25,7 @@ export const routes: Routes = [
       },
 
       {
-        path: 'horarios',
+        path: 'horarios-medicos',
         component: HorarioMedico
       },
 

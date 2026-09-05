@@ -11,6 +11,7 @@
   width: 230px;
 
   background: #ffffff;
+
   border-right: 1px solid #ececf1;
 
   padding: 14px 12px;
@@ -73,6 +74,7 @@
   justify-content: center;
 
   border: none;
+
   border-radius: 7px;
 
   background: transparent;
@@ -105,7 +107,7 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 7px;
+  border-radius: 50%;
 
   background: #6c5ce7;
 
@@ -129,7 +131,7 @@
   font-size: 14px;
   font-weight: 600;
 
-  color: #222;
+  color: #6c5ce7;
 }
 
 
@@ -149,20 +151,20 @@
 
 
 /* =========================================
-   CONTENEDOR DE CADA OPCIÓN
+   CONTENEDOR
 ========================================= */
 
 .menu-contenedor {
-  width: 100%;
-
   position: relative;
+
+  width: 100%;
 
   overflow: visible;
 }
 
 
 /* =========================================
-   OPCIONES PRINCIPALES
+   OPCIÓN PRINCIPAL
 ========================================= */
 
 .menu-item {
@@ -179,6 +181,7 @@
   margin-bottom: 5px;
 
   border: none;
+
   border-radius: 7px;
 
   background: transparent;
@@ -186,10 +189,12 @@
   color: #555;
 
   font-family: inherit;
+
   font-size: 13px;
   font-weight: 400;
 
   text-align: left;
+
   text-decoration: none;
 
   cursor: pointer;
@@ -201,19 +206,15 @@
     color 0.15s ease;
 }
 
-
-/* =========================================
-   HOVER PRINCIPAL
-========================================= */
-
 .menu-item:hover {
   background: #f1efff;
+
   color: #6c5ce7;
 }
 
 
 /* =========================================
-   ICONO PRINCIPAL
+   ICONOS PRINCIPALES
 ========================================= */
 
 .menu-item > i:first-child {
@@ -229,7 +230,7 @@
 
 
 /* =========================================
-   TEXTO PRINCIPAL
+   TEXTO
 ========================================= */
 
 .menu-item span {
@@ -250,11 +251,13 @@
   margin-left: auto;
 
   font-size: 10px !important;
+
+  transition: transform 0.2s ease;
 }
 
 
 /* =========================================
-   ELEMENTO ACTIVO
+   PRINCIPAL ACTIVO
 ========================================= */
 
 .menu-item.activo {
@@ -273,90 +276,76 @@
 ========================================= */
 
 .submenu {
-  width: 100%;
+  position: relative;
 
-  margin: 3px 0 12px 0;
+  width: calc(100% - 32px);
 
-  padding-left: 34px;
+  margin: 2px 0 12px 32px;
+
+  padding-left: 14px;
 
   box-sizing: border-box;
 }
 
 
 /* =========================================
-   OPCIONES SUBMENÚ
+   LÍNEA DEL SUBMENÚ
+========================================= */
+
+.submenu::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+
+  width: 1px;
+
+  background: #dedce8;
+
+  border-radius: 10px;
+}
+
+
+/* =========================================
+   LINKS DEL SUBMENÚ
 ========================================= */
 
 .submenu a {
+  position: relative;
+
   width: 100%;
-  min-height: 36px;
+
+  min-height: 34px;
 
   display: flex;
   align-items: center;
 
-  gap: 10px;
+  padding: 6px 10px;
 
-  padding: 0 10px;
+  box-sizing: border-box;
 
-  border-radius: 6px;
+  border-radius: 7px;
 
   color: #666;
 
   font-size: 12px;
   font-weight: 400;
 
-  text-decoration: none;
+  line-height: 1.2;
 
-  box-sizing: border-box;
+  text-decoration: none;
 
   transition:
     background 0.15s ease,
     color 0.15s ease;
 }
 
-
-/* =========================================
-   ICONOS DEL SUBMENÚ
-========================================= */
-
-.submenu a i {
-  width: 18px;
-  min-width: 18px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color: #777;
-
-  font-size: 14px;
-}
-
-
-/* =========================================
-   TEXTO SUBMENÚ
-========================================= */
-
-.submenu a span {
-  flex: 1;
-
-  line-height: 1.2;
-
-  white-space: normal;
-}
-
-
-/* =========================================
-   HOVER SUBMENÚ
-========================================= */
-
 .submenu a:hover {
-  background: #f1efff;
+  background: #f4f2ff;
 
-  color: #6c5ce7;
-}
-
-.submenu a:hover i {
   color: #6c5ce7;
 }
 
@@ -373,8 +362,22 @@
   font-weight: 500;
 }
 
-.submenu a.activo-sub i {
-  color: #6c5ce7;
+.submenu a.activo-sub::before {
+  content: "";
+
+  position: absolute;
+
+  left: -15px;
+  top: 50%;
+
+  width: 3px;
+  height: 20px;
+
+  background: #6c5ce7;
+
+  border-radius: 0 4px 4px 0;
+
+  transform: translateY(-50%);
 }
 
 
@@ -387,11 +390,6 @@
 
   padding: 0;
 }
-
-
-/* =========================================
-   BOTONES COLAPSADOS
-========================================= */
 
 .sidebar.colapsado .menu-item {
   width: 44px;
@@ -406,11 +404,6 @@
 
   border-radius: 7px;
 }
-
-
-/* =========================================
-   ICONOS COLAPSADOS
-========================================= */
 
 .sidebar.colapsado .menu-item > i:first-child {
   width: auto;
@@ -441,7 +434,8 @@
 
   border-radius: 8px;
 
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.14);
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.14);
 
   box-sizing: border-box;
 
@@ -450,11 +444,51 @@
   white-space: nowrap;
 
   overflow: visible;
+
+  opacity: 1;
+
+  transform: translateX(0);
+
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
 }
 
 
 /* =========================================
-   PUNTA DEL FLOTANTE
+   DESVANECIMIENTO
+========================================= */
+
+.sidebar.colapsado .menu-flotante.cerrando {
+  opacity: 0;
+
+  transform: translateX(-5px);
+
+  pointer-events: none;
+}
+
+
+/* =========================================
+   PUENTE ENTRE ICONO Y FLOTANTE
+========================================= */
+
+.sidebar.colapsado .menu-flotante::after {
+  content: "";
+
+  position: absolute;
+
+  left: -16px;
+  top: 0;
+
+  width: 16px;
+  height: 48px;
+
+  background: transparent;
+}
+
+
+/* =========================================
+   FLECHA DEL FLOTANTE
 ========================================= */
 
 .sidebar.colapsado .menu-flotante::before {
@@ -478,7 +512,7 @@
 
 
 /* =========================================
-   TÍTULO DEL FLOTANTE
+   TÍTULO FLOTANTE
 ========================================= */
 
 .menu-flotante-titulo {
@@ -486,7 +520,7 @@
 
   z-index: 2;
 
-  padding: 9px 10px 10px 10px;
+  padding: 9px 10px 10px;
 
   margin-bottom: 5px;
 
@@ -502,7 +536,7 @@
 
 
 /* =========================================
-   OPCIONES DEL FLOTANTE
+   LINKS FLOTANTES
 ========================================= */
 
 .menu-flotante a {
@@ -511,6 +545,7 @@
   z-index: 2;
 
   width: 100%;
+
   min-height: 38px;
 
   display: flex;
@@ -531,6 +566,8 @@
   box-sizing: border-box;
 
   white-space: nowrap;
+
+  cursor: pointer;
 
   transition:
     background 0.15s ease,
@@ -561,13 +598,30 @@
 ========================================= */
 
 .menu-flotante a:hover {
-  background: #6c5ce7;
+  background: #f4f2ff;
 
-  color: #ffffff;
+  color: #6c5ce7;
 }
 
 .menu-flotante a:hover i {
-  color: #ffffff;
+  color: #6c5ce7;
+}
+
+
+/* =========================================
+   ACTIVO FLOTANTE
+========================================= */
+
+.menu-flotante a.activo-flotante {
+  background: #eeeaff;
+
+  color: #6c5ce7;
+
+  font-weight: 500;
+}
+
+.menu-flotante a.activo-flotante i {
+  color: #6c5ce7;
 }
 
 
@@ -591,7 +645,7 @@
 
 
 /* =========================================
-   EVITAR QUE SE RECORTE EL FLOTANTE
+   EVITAR RECORTES
 ========================================= */
 
 .sidebar,
