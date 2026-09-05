@@ -1,222 +1,471 @@
-<aside
-  class="sidebar"
-  [class.colapsado]="colapsado">
+<aside class="sidebar" [class.colapsado]="colapsado">
 
-  <!-- CABECERA -->
+  <!-- HEADER -->
+  <div class="sidebar-header">
 
-<div class="sidebar-header">
+    <button
+      type="button"
+      class="btn-menu"
+      (click)="toggleSidebar()">
+      <i class="bi bi-list"></i>
+    </button>
 
-  <!-- Botón de las 3 líneas -->
-  <button
-    class="btn-menu"
-    (click)="toggleSidebar()"
-    type="button">
-    <i class="bi bi-list"></i>
-  </button>
+    <div class="logo" *ngIf="!colapsado">
+      CM
+    </div>
 
-  <!-- Logo: desaparece al colapsar -->
-  <div class="logo">
-    CM
+    <div class="nombre-sistema" *ngIf="!colapsado">
+      <strong>Citas Médicas</strong>
+    </div>
+
   </div>
 
-  <!-- Nombre -->
-  <div class="nombre-sistema">
-    <strong>Citas Médicas</strong>
+
+  <!-- MENÚ -->
+  <nav class="menu">
+
+    <!-- DASHBOARD -->
+    <div class="menu-contenedor">
+
+      <a
+        routerLink="/dashboard"
+        routerLinkActive="activo"
+        class="menu-item"
+        (click)="cerrarFlotante()">
+
+        <i class="bi bi-house"></i>
+
+        <span *ngIf="!colapsado">
+          Dashboard
+        </span>
+
+      </a>
+
+    </div>
+
+<div class="menu-contenedor">
+
+  <button
+    type="button"
+    class="menu-item"
+    (click)="togglePacientes()">
+
+    <i class="bi bi-calendar2-check"></i>
+
+    <span *ngIf="!colapsado">
+      Pacientes y Agendas
+    </span>
+
+    <i
+      *ngIf="!colapsado"
+      class="bi bi-chevron-down flecha">
+    </i>
+
+  </button>
+
+
+  <!-- SUBMENÚ NORMAL -->
+  <div
+    class="submenu"
+    *ngIf="!colapsado && pacientesAbierto">
+
+    <a
+      routerLink="/pacientes"
+      routerLinkActive="activo-sub">
+
+      <i class="bi bi-people"></i>
+
+      <span>
+        Pacientes
+      </span>
+
+    </a>
+
+
+    <a
+      routerLink="/contactos-emergencia"
+      routerLinkActive="activo-sub">
+
+      <i class="bi bi-telephone"></i>
+
+      <span>
+        Contactos de Emergencia
+      </span>
+
+    </a>
+
+
+    <a
+      routerLink="/consultorios"
+      routerLinkActive="activo-sub">
+
+      <i class="bi bi-building"></i>
+
+      <span>
+        Consultorios
+      </span>
+
+    </a>
+
+
+    <a
+      routerLink="/horarios-medicos"
+      routerLinkActive="activo-sub">
+
+      <i class="bi bi-clock"></i>
+
+      <span>
+        Horarios Médicos
+      </span>
+
+    </a>
+
+
+    <a
+      routerLink="/citas"
+      routerLinkActive="activo-sub">
+
+      <i class="bi bi-calendar-check"></i>
+
+      <span>
+        Citas
+      </span>
+
+    </a>
+
+
+    <a
+      routerLink="/turnos"
+      routerLinkActive="activo-sub">
+
+      <i class="bi bi-ticket-perforated"></i>
+
+      <span>
+        Turnos
+      </span>
+
+    </a>
+
+  </div>
+
+
+  <!-- MENÚ FLOTANTE -->
+  <div
+    class="menu-flotante"
+    *ngIf="colapsado && menuFlotante === 'pacientes'">
+
+    <div class="menu-flotante-titulo">
+      Pacientes y Agendas
+    </div>
+
+    <a routerLink="/pacientes" (click)="cerrarFlotante()">
+      <i class="bi bi-people"></i>
+      <span>Pacientes</span>
+    </a>
+
+    <a routerLink="/contactos-emergencia" (click)="cerrarFlotante()">
+      <i class="bi bi-telephone"></i>
+      <span>Contactos de Emergencia</span>
+    </a>
+
+    <a routerLink="/consultorios" (click)="cerrarFlotante()">
+      <i class="bi bi-building"></i>
+      <span>Consultorios</span>
+    </a>
+
+    <a routerLink="/horarios-medicos" (click)="cerrarFlotante()">
+      <i class="bi bi-clock"></i>
+      <span>Horarios Médicos</span>
+    </a>
+
+    <a routerLink="/citas" (click)="cerrarFlotante()">
+      <i class="bi bi-calendar-check"></i>
+      <span>Citas</span>
+    </a>
+
+    <a routerLink="/turnos" (click)="cerrarFlotante()">
+      <i class="bi bi-ticket-perforated"></i>
+      <span>Turnos</span>
+    </a>
+
   </div>
 
 </div>
 
 
-  <!-- BUSCADOR -->
-
-  <div class="buscador">
-
-    <i class="bi bi-search"></i>
-
-    <input
-      *ngIf="!colapsado"
-      type="text"
-      placeholder="Buscar...">
-
-  </div>
-
-
-  <!-- MENU -->
-
-  <nav class="menu">
-
-
-    <!-- DASHBOARD -->
-
-    <a
-      routerLink="/dashboard"
-      routerLinkActive="activo"
-      class="menu-item">
-
-      <i class="bi bi-house-door"></i>
-
-      <span *ngIf="!colapsado">
-        Inicio
-      </span>
-
-    </a>
-
-
-    <!-- PACIENTES -->
-
-    <button
-      class="menu-item"
-      (click)="pacientesAbierto = !pacientesAbierto">
-
-      <i class="bi bi-person-vcard"></i>
-
-      <span *ngIf="!colapsado">
-        Pacientes
-      </span>
-
-    </button>
-
-
-    <div
-      class="submenu"
-      *ngIf="pacientesAbierto && !colapsado">
-
-      <a
-        routerLink="/pacientes"
-        routerLinkActive="activo-sub">
-        Pacientes
-      </a>
-
-      <a
-        routerLink="/consultorios"
-        routerLinkActive="activo-sub">
-        Consultorios
-      </a>
-
-      <a
-        routerLink="/horarios"
-        routerLinkActive="activo-sub">
-        Horarios médicos
-      </a>
-
-      <a
-        routerLink="/citas"
-        routerLinkActive="activo-sub">
-        Citas
-      </a>
-
-    </div>
-
-
     <!-- IDENTIDAD -->
+    <div class="menu-contenedor">
 
-    <button
-      class="menu-item"
-      (click)="identidadAbierto = !identidadAbierto">
+      <button
+        type="button"
+        class="menu-item"
+        [class.activo]="menuFlotante === 'identidad'"
+        (click)="toggleIdentidad()">
 
-      <i class="bi bi-people"></i>
+        <i class="bi bi-person-badge"></i>
 
-      <span *ngIf="!colapsado">
-        Usuarios
-      </span>
+        <span *ngIf="!colapsado">
+          Identidad - Usuarios
+        </span>
 
-    </button>
+        <i
+          *ngIf="!colapsado"
+          class="bi bi-chevron-down flecha">
+        </i>
+
+      </button>
 
 
-    <div
-      class="submenu"
-      *ngIf="identidadAbierto && !colapsado">
+      <div
+        class="submenu"
+        *ngIf="!colapsado && identidadAbierto">
 
-      <a routerLink="/usuarios">
-        Usuarios
-      </a>
+        <a routerLink="/usuarios">
+          Usuarios
+        </a>
 
-      <a routerLink="/roles">
-        Roles
-      </a>
+        <a routerLink="/roles">
+          Roles
+        </a>
 
-      <a routerLink="/medicos">
-        Médicos
-      </a>
+        <a routerLink="/permisos">
+          Permisos
+        </a>
 
-      <a routerLink="/especialidades">
-        Especialidades
-      </a>
+        <a routerLink="/medicos">
+          Médicos
+        </a>
+
+        <a routerLink="/especialidades">
+          Especialidades
+        </a>
+
+      </div>
+
+
+      <div
+        class="menu-flotante"
+        *ngIf="colapsado && menuFlotante === 'identidad'">
+
+        <div class="menu-flotante-titulo">
+          Identidad y Usuarios
+        </div>
+
+        <a routerLink="/usuarios" (click)="cerrarFlotante()">
+          <i class="bi bi-person"></i>
+          Usuarios
+        </a>
+
+        <a routerLink="/roles" (click)="cerrarFlotante()">
+          <i class="bi bi-person-gear"></i>
+          Roles
+        </a>
+
+        <a routerLink="/permisos" (click)="cerrarFlotante()">
+          <i class="bi bi-key"></i>
+          Permisos
+        </a>
+
+        <a routerLink="/medicos" (click)="cerrarFlotante()">
+          <i class="bi bi-person-vcard"></i>
+          Médicos
+        </a>
+
+        <a routerLink="/especialidades" (click)="cerrarFlotante()">
+          <i class="bi bi-clipboard2-pulse"></i>
+          Especialidades
+        </a>
+
+      </div>
 
     </div>
 
 
     <!-- EXPEDIENTES -->
+    <div class="menu-contenedor">
 
-    <a
-      routerLink="/expedientes"
-      routerLinkActive="activo"
-      class="menu-item">
+      <button
+        type="button"
+        class="menu-item"
+        [class.activo]="menuFlotante === 'expedientes'"
+        (click)="abrirFlotante('expedientes')">
 
-      <i class="bi bi-file-medical"></i>
+        <i class="bi bi-folder2-open"></i>
 
-      <span *ngIf="!colapsado">
-        Expedientes
-      </span>
+        <span *ngIf="!colapsado">
+          Expedientes Clínicos
+        </span>
 
-    </a>
+      </button>
+
+
+      <div
+        class="menu-flotante"
+        *ngIf="colapsado && menuFlotante === 'expedientes'">
+
+        <div class="menu-flotante-titulo">
+          Expedientes Clínicos
+        </div>
+
+        <a routerLink="/expedientes" (click)="cerrarFlotante()">
+          Expedientes
+        </a>
+
+        <a routerLink="/atenciones" (click)="cerrarFlotante()">
+          Atenciones
+        </a>
+
+        <a routerLink="/antecedentes" (click)="cerrarFlotante()">
+          Antecedentes
+        </a>
+
+        <a routerLink="/alergias" (click)="cerrarFlotante()">
+          Alergias
+        </a>
+
+        <a routerLink="/signos-vitales" (click)="cerrarFlotante()">
+          Signos Vitales
+        </a>
+
+        <a routerLink="/diagnosticos" (click)="cerrarFlotante()">
+          Diagnósticos
+        </a>
+
+        <a routerLink="/sintomas" (click)="cerrarFlotante()">
+          Síntomas
+        </a>
+
+        <a routerLink="/notas-medicas" (click)="cerrarFlotante()">
+          Notas Médicas
+        </a>
+
+      </div>
+
+    </div>
 
 
     <!-- TRATAMIENTOS -->
+    <div class="menu-contenedor">
 
-    <a
-      routerLink="/tratamientos"
-      routerLinkActive="activo"
-      class="menu-item">
+      <button
+        type="button"
+        class="menu-item"
+        [class.activo]="menuFlotante === 'tratamientos'"
+        (click)="abrirFlotante('tratamientos')">
 
-      <i class="bi bi-capsule"></i>
+        <i class="bi bi-capsule"></i>
 
-      <span *ngIf="!colapsado">
-        Tratamientos
-      </span>
+        <span *ngIf="!colapsado">
+          Tratamientos - Lab
+        </span>
 
-    </a>
-
-
-    <!-- LABORATORIO -->
-
-    <a
-      routerLink="/laboratorio"
-      routerLinkActive="activo"
-      class="menu-item">
-
-      <i class="bi bi-clipboard2-pulse"></i>
-
-      <span *ngIf="!colapsado">
-        Laboratorio
-      </span>
-
-    </a>
+      </button>
 
 
-    <!-- FACTURACION -->
+      <div
+        class="menu-flotante"
+        *ngIf="colapsado && menuFlotante === 'tratamientos'">
 
-    <a
-      routerLink="/facturacion"
-      routerLinkActive="activo"
-      class="menu-item">
+        <div class="menu-flotante-titulo">
+          Tratamientos y Lab
+        </div>
 
-      <i class="bi bi-receipt"></i>
+        <a routerLink="/medicamentos" (click)="cerrarFlotante()">
+          Medicamentos
+        </a>
 
-      <span *ngIf="!colapsado">
-        Facturación
-      </span>
+        <a routerLink="/prescripciones" (click)="cerrarFlotante()">
+          Prescripciones
+        </a>
 
-    </a>
+        <a routerLink="/estudios" (click)="cerrarFlotante()">
+          Estudios
+        </a>
+
+        <a routerLink="/solicitudes-estudio" (click)="cerrarFlotante()">
+          Solicitudes de Estudio
+        </a>
+
+        <a routerLink="/resultados" (click)="cerrarFlotante()">
+          Resultados
+        </a>
+
+        <a routerLink="/archivos-clinicos" (click)="cerrarFlotante()">
+          Archivos Clínicos
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <!-- FACTURACIÓN -->
+    <div class="menu-contenedor">
+
+      <button
+        type="button"
+        class="menu-item"
+        [class.activo]="menuFlotante === 'facturacion'"
+        (click)="abrirFlotante('facturacion')">
+
+        <i class="bi bi-receipt"></i>
+
+        <span *ngIf="!colapsado">
+          Facturación
+        </span>
+
+      </button>
+
+
+      <div
+        class="menu-flotante"
+        *ngIf="colapsado && menuFlotante === 'facturacion'">
+
+        <div class="menu-flotante-titulo">
+          Facturación
+        </div>
+
+        <a routerLink="/servicios" (click)="cerrarFlotante()">
+          Servicios
+        </a>
+
+        <a routerLink="/facturas" (click)="cerrarFlotante()">
+          Facturas
+        </a>
+
+        <a routerLink="/pagos" (click)="cerrarFlotante()">
+          Pagos
+        </a>
+
+        <a routerLink="/formas-pago" (click)="cerrarFlotante()">
+          Formas de Pago
+        </a>
+
+      </div>
+
+    </div>
 
   </nav>
 
 
-  <!-- PARTE INFERIOR -->
-
+  <!-- FOOTER -->
   <div class="sidebar-footer">
 
-    <a class="menu-item logout">
+    <a
+      class="menu-item"
+      routerLink="/configuracion">
+
+      <i class="bi bi-gear"></i>
+
+      <span *ngIf="!colapsado">
+        Configuración
+      </span>
+
+    </a>
+
+    <button
+      type="button"
+      class="menu-item logout">
 
       <i class="bi bi-box-arrow-left"></i>
 
@@ -224,26 +473,7 @@
         Cerrar sesión
       </span>
 
-    </a>
-
-
-    <div class="modo">
-
-      <i class="bi bi-moon"></i>
-
-      <span *ngIf="!colapsado">
-        Modo oscuro
-      </span>
-
-      <div
-        class="switch"
-        *ngIf="!colapsado">
-
-        <div class="switch-circulo"></div>
-
-      </div>
-
-    </div>
+    </button>
 
   </div>
 

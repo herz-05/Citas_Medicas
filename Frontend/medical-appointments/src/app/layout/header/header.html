@@ -1,32 +1,78 @@
-<header class="topbar">
+<header
+  class="header"
+  [class.sidebar-colapsado]="sidebarColapsado">
 
-  <div class="topbar-left">
+  <!-- IZQUIERDA -->
+  <div class="header-left">
 
-    <button
-      class="menu-button"
-      type="button"
-      (click)="cambiarSidebar()">
+    <div class="header-logo">
+      <div class="logo-icon">
+        CM
+      </div>
 
-      <i class="bi bi-list"></i>
-
-    </button>
-
-    <div class="logo">
-      <i class="bi bi-heart-pulse-fill"></i>
-      <span>CITAS MÉDICAS</span>
+      <span class="logo-text">
+        Citas Médicas
+      </span>
     </div>
 
   </div>
 
-  <div class="usuario">
 
-    <div class="avatar">
-      <i class="bi bi-person-fill"></i>
+  <!-- CENTRO -->
+  <div class="header-center">
+
+    <div class="search-box">
+
+      <i class="bi bi-search"></i>
+
+      <input
+        type="text"
+        placeholder="Buscar">
+
     </div>
 
-    <span>Usuario</span>
+  </div>
 
-    <i class="bi bi-chevron-down"></i>
+
+  <!-- DERECHA -->
+  <div class="header-right">
+
+    <button
+      type="button"
+      class="header-icon">
+
+      <i class="bi bi-sun"></i>
+
+    </button>
+
+
+    <button
+      type="button"
+      class="header-icon notification-button">
+
+      <i class="bi bi-bell"></i>
+
+      <span class="notification-dot"></span>
+
+    </button>
+
+
+    <button
+      type="button"
+      class="user-button">
+
+      <div class="avatar">
+        LA
+      </div>
+
+      <div class="user-info">
+        <strong>Usuario</strong>
+        <span>Administrador</span>
+      </div>
+
+      <i class="bi bi-chevron-down user-arrow"></i>
+
+    </button>
 
   </div>
 

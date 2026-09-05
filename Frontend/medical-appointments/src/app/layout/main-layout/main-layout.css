@@ -1,18 +1,18 @@
 .contenido {
-  margin-left: 245px;
+  margin-left: 230px;
+
+  padding: 96px 24px 24px 24px;
 
   min-height: 100vh;
 
-  padding: 20px;
-
-  background: #f5f6fa;
-
-  transition: margin-left 0.25s ease;
+  background: #f7f8fc;
 
   box-sizing: border-box;
+
+  transition: margin-left 0.25s ease;
 }
 
 
 .contenido.sidebar-colapsado {
-  margin-left: 87px;
+  margin-left: 70px;
 }

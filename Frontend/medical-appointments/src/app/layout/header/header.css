@@ -1,88 +1,366 @@
-.topbar {
-  height: 42px;
+/* =========================================
+   HEADER PRINCIPAL
+========================================= */
+
+.header {
+  position: fixed;
+
+  top: 0;
+  right: 0;
+  left: 230px;
+
+  height: 72px;
+
   background: #ffffff;
 
+  border-bottom: 1px solid #ececf1;
+
+  display: grid;
+
+  grid-template-columns: 1fr minmax(300px, 500px) 1fr;
+
+  align-items: center;
+
+  padding: 0 24px;
+
+  box-sizing: border-box;
+
+  z-index: 900;
+
+  transition: left 0.25s ease;
+}
+
+
+/* SIDEBAR COLAPSADO */
+
+.header.sidebar-colapsado {
+  left: 70px;
+}
+
+
+/* =========================================
+   IZQUIERDA
+========================================= */
+
+.header-left {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-
-  border-bottom: 1px solid #e5e7eb;
-
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-
-  z-index: 1000;
 }
 
-.topbar-left {
+
+.header-logo {
   display: flex;
   align-items: center;
-  height: 100%;
+
+  gap: 10px;
 }
 
-.menu-button {
-  width: 55px;
-  height: 42px;
 
-  border: none;
-  background: #4f6ee8;
-  color: white;
-
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.menu-button:hover {
-  background: #405fd3;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  padding-left: 20px;
-
-  font-size: 17px;
-  font-weight: 700;
-  color: #3268a8;
-}
-
-.logo i {
-  font-size: 22px;
-}
-
-.usuario {
-  height: 100%;
+.logo-icon {
+  width: 34px;
+  height: 34px;
 
   display: flex;
   align-items: center;
-  gap: 7px;
-
-  padding: 0 18px;
-
-  color: #777;
-  font-size: 13px;
-
-  cursor: pointer;
-}
-
-.avatar {
-  width: 28px;
-  height: 28px;
+  justify-content: center;
 
   border-radius: 50%;
 
-  background: #4f6ee8;
-  color: white;
+  background: #6c5ce7;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 700;
 }
 
-.usuario .bi-chevron-down {
+
+.logo-text {
+  color: #6c5ce7;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================
+   CENTRO
+========================================= */
+
+.header-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.search-box {
+  width: 100%;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 0 16px;
+
+  border: 1px solid #cfcfd5;
+
+  border-radius: 22px;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  transition: 0.15s ease;
+}
+
+
+.search-box:focus-within {
+  border-color: #6c5ce7;
+
+  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.08);
+}
+
+
+.search-box i {
+  color: #888;
+
+  font-size: 15px;
+}
+
+
+.search-box input {
+  width: 100%;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  color: #333;
+}
+
+
+.search-box input::placeholder {
+  color: #999;
+}
+
+
+/* =========================================
+   DERECHA
+========================================= */
+
+.header-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 8px;
+}
+
+
+/* ICONOS */
+
+.header-icon {
+  position: relative;
+
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  color: #666;
+
+  font-size: 17px;
+
+  cursor: pointer;
+
+  transition: 0.15s ease;
+}
+
+
+.header-icon:hover {
+  background: #f1efff;
+
+  color: #6c5ce7;
+}
+
+
+/* =========================================
+   NOTIFICACIÓN
+========================================= */
+
+.notification-button {
+  position: relative;
+}
+
+
+.notification-dot {
+  position: absolute;
+
+  top: 7px;
+  right: 7px;
+
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: #6c5ce7;
+
+  border: 1px solid #ffffff;
+}
+
+
+/* =========================================
+   USUARIO
+========================================= */
+
+.user-button {
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 4px 8px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition: 0.15s ease;
+}
+
+
+.user-button:hover {
+  background: #f6f5fb;
+}
+
+
+/* AVATAR */
+
+.avatar {
+  width: 34px;
+  height: 34px;
+
+  min-width: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #eeeaff;
+
+  color: #6c5ce7;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* INFORMACIÓN */
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  line-height: 1.2;
+}
+
+
+.user-info strong {
+  color: #333;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+.user-info span {
+  margin-top: 2px;
+
+  color: #999;
+
   font-size: 10px;
+}
+
+
+.user-arrow {
+  margin-left: 2px;
+
+  color: #888;
+
+  font-size: 10px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 950px) {
+
+  .header {
+    grid-template-columns: auto 1fr auto;
+
+    padding: 0 14px;
+  }
+
+  .logo-text {
+    display: none;
+  }
+
+  .user-info,
+  .user-arrow {
+    display: none;
+  }
+
+}
+
+
+@media (max-width: 650px) {
+
+  .header-center {
+    justify-content: flex-end;
+  }
+
+  .search-box {
+    width: 42px;
+
+    padding: 0;
+
+    justify-content: center;
+
+    border: none;
+  }
+
+  .search-box input {
+    display: none;
+  }
+
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -9,9 +9,6 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class Header {
 
-  @Output() toggleSidebar = new EventEmitter<void>();
+  @Input() sidebarColapsado = false;
 
-  cambiarSidebar() {
-    this.toggleSidebar.emit();
-  }
 }
