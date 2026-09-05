@@ -1,5 +1,9 @@
+/* ==========================================
+   BOTONES PRINCIPALES
+   ========================================== */
+
 .btn-nuevo {
-  background: #2196f3;
+  background: #6c5ce7;
   color: white;
   border: none;
   padding: 11px 20px;
@@ -9,9 +13,14 @@
 }
 
 .btn-nuevo:hover {
-  background: #1976d2;
+  background: #5b4cc4; /* Tono morado más oscuro para el hover */
 }
 
+/* ==========================================
+   MODAL: CONTENEDOR Y ESTRUCTURA
+   ========================================== */
+
+/* Fondo oscuro translúcido detrás del modal */
 .overlay {
   position: fixed;
   inset: 0;
@@ -22,6 +31,7 @@
   z-index: 1000;
 }
 
+/* Ventana principal del modal */
 .modal-paciente {
   width: 580px;
   max-width: 90%;
@@ -33,6 +43,7 @@
   box-shadow: 0 15px 45px rgba(0, 0, 0, 0.3);
 }
 
+/* Cabecera del modal */
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -40,7 +51,7 @@
 }
 
 .mini-logo {
-  background: #2196f3;
+  background: #6c5ce7;
   color: white;
   width: 28px;
   height: 28px;
@@ -70,6 +81,7 @@
   font-size: 13px;
 }
 
+/* Indicador de pasos o pestañas */
 .pasos {
   display: flex;
   gap: 25px;
@@ -84,9 +96,13 @@
 }
 
 .pasos .activo {
-  color: #2196f3;
-  border-bottom: 2px solid #2196f3;
+  color: #6c5ce7;
+  border-bottom: 2px solid #6c5ce7;
 }
+
+/* ==========================================
+   FORMULARIO DENTRO DEL MODAL
+   ========================================== */
 
 .form-grid {
   display: grid;
@@ -119,12 +135,14 @@
   outline: none;
 }
 
+/* Borde morado en foco */
 .campo input:focus,
 .campo select:focus,
 .campo textarea:focus {
-  border-color: #2196f3;
+  border-color: #6c5ce7;
 }
 
+/* Botones de acción del formulario */
 .acciones {
   display: flex;
   justify-content: flex-end;
@@ -141,7 +159,7 @@
 }
 
 .btn-guardar {
-  background: #2196f3;
+  background: #6c5ce7;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -150,9 +168,10 @@
 }
 
 .btn-guardar:hover {
-  background: #1976d2;
+  background: #5b4cc4;
 }
 
+/* Ajuste responsive para formularios */
 @media (max-width: 650px) {
   .form-grid {
     grid-template-columns: 1fr;
@@ -163,10 +182,11 @@
   }
 }
 
-/* ============================= */
-/* TABLA DE PACIENTES             */
-/* ============================= */
+/* ==========================================
+   TABLA DE PACIENTES
+   ========================================== */
 
+/* Contenedor tipo tarjeta */
 .tabla-contenedor {
   margin-top: 30px;
   background: white;
@@ -176,9 +196,7 @@
   overflow: hidden;
 }
 
-
 /* Encabezado de la tarjeta */
-
 .tabla-header {
   padding: 20px 24px;
   border-bottom: 1px solid #e5e7eb;
@@ -196,28 +214,22 @@
   color: #888;
 }
 
-
-/* Para pantallas pequeñas */
-
+/* Contenedor con scroll horizontal para pantallas pequeñas */
 .tabla-responsive {
   width: 100%;
   overflow-x: auto;
 }
 
-
-/* Tabla */
-
+/* Elemento tabla */
 .tabla-pacientes {
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
 }
 
-
-/* Encabezados */
-
+/* Fila de cabecera de la tabla */
 .tabla-pacientes thead {
-  background: #2196f3;
+  background: #6c5ce7;
 }
 
 .tabla-pacientes th {
@@ -231,9 +243,7 @@
   white-space: nowrap;
 }
 
-
-/* Celdas */
-
+/* Celdas de datos */
 .tabla-pacientes td {
   padding: 14px 16px;
   border-bottom: 1px solid #eeeeee;
@@ -241,32 +251,26 @@
   vertical-align: middle;
 }
 
-
-/* Filas */
-
+/* Filas y efecto hover con tinte morado muy suave */
 .tabla-pacientes tbody tr {
   transition: background 0.2s ease;
 }
 
 .tabla-pacientes tbody tr:hover {
-  background: #f5faff;
+  background: #f8f7fd;
 }
 
 .tabla-pacientes tbody tr:last-child td {
   border-bottom: none;
 }
 
-
-/* ID */
-
+/* Columna de ID */
 .id-paciente {
-  color: #2196f3;
+  color: #6c5ce7;
   font-weight: 600;
 }
 
-
-/* Nombre + avatar */
-
+/* Celda con nombre y avatar */
 .paciente-info {
   display: flex;
   align-items: center;
@@ -281,53 +285,37 @@
 .avatar {
   width: 36px;
   height: 36px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
-  background: #e3f2fd;
-  color: #2196f3;
-
+  background: #ede9fe; /* Tinte lila claro */
+  color: #6c5ce7;
   font-weight: bold;
   font-size: 15px;
-
   border-radius: 50%;
 }
 
-
-/* Sexo */
-
+/* Etiqueta / badge de sexo */
 .sexo {
   display: inline-block;
-
   padding: 5px 10px;
-
-  background: #e3f2fd;
-  color: #1976d2;
-
+  background: #ede9fe; /* Tinte lila claro */
+  color: #5b4cc4;
   border-radius: 20px;
-
   font-size: 12px;
   font-weight: 500;
 }
 
-
-/* Cuando no hay registros */
-
+/* Estado sin registros */
 .sin-datos {
   text-align: center;
   padding: 35px !important;
   color: #999 !important;
 }
 
-
-/* Responsive */
-
+/* Ajuste responsive de la tabla */
 @media (max-width: 900px) {
-
   .tabla-pacientes {
     min-width: 1000px;
   }
-
 }

@@ -1,0 +1,88 @@
+.topbar {
+  height: 42px;
+  background: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  z-index: 1000;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.menu-button {
+  width: 55px;
+  height: 42px;
+
+  border: none;
+  background: #4f6ee8;
+  color: white;
+
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.menu-button:hover {
+  background: #405fd3;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding-left: 20px;
+
+  font-size: 17px;
+  font-weight: 700;
+  color: #3268a8;
+}
+
+.logo i {
+  font-size: 22px;
+}
+
+.usuario {
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 0 18px;
+
+  color: #777;
+  font-size: 13px;
+
+  cursor: pointer;
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+
+  border-radius: 50%;
+
+  background: #4f6ee8;
+  color: white;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.usuario .bi-chevron-down {
+  font-size: 10px;
+}

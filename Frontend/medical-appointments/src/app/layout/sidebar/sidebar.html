@@ -1,0 +1,250 @@
+<aside
+  class="sidebar"
+  [class.colapsado]="colapsado">
+
+  <!-- CABECERA -->
+
+<div class="sidebar-header">
+
+  <!-- Botón de las 3 líneas -->
+  <button
+    class="btn-menu"
+    (click)="toggleSidebar()"
+    type="button">
+    <i class="bi bi-list"></i>
+  </button>
+
+  <!-- Logo: desaparece al colapsar -->
+  <div class="logo">
+    CM
+  </div>
+
+  <!-- Nombre -->
+  <div class="nombre-sistema">
+    <strong>Citas Médicas</strong>
+  </div>
+
+</div>
+
+
+  <!-- BUSCADOR -->
+
+  <div class="buscador">
+
+    <i class="bi bi-search"></i>
+
+    <input
+      *ngIf="!colapsado"
+      type="text"
+      placeholder="Buscar...">
+
+  </div>
+
+
+  <!-- MENU -->
+
+  <nav class="menu">
+
+
+    <!-- DASHBOARD -->
+
+    <a
+      routerLink="/dashboard"
+      routerLinkActive="activo"
+      class="menu-item">
+
+      <i class="bi bi-house-door"></i>
+
+      <span *ngIf="!colapsado">
+        Inicio
+      </span>
+
+    </a>
+
+
+    <!-- PACIENTES -->
+
+    <button
+      class="menu-item"
+      (click)="pacientesAbierto = !pacientesAbierto">
+
+      <i class="bi bi-person-vcard"></i>
+
+      <span *ngIf="!colapsado">
+        Pacientes
+      </span>
+
+    </button>
+
+
+    <div
+      class="submenu"
+      *ngIf="pacientesAbierto && !colapsado">
+
+      <a
+        routerLink="/pacientes"
+        routerLinkActive="activo-sub">
+        Pacientes
+      </a>
+
+      <a
+        routerLink="/consultorios"
+        routerLinkActive="activo-sub">
+        Consultorios
+      </a>
+
+      <a
+        routerLink="/horarios"
+        routerLinkActive="activo-sub">
+        Horarios médicos
+      </a>
+
+      <a
+        routerLink="/citas"
+        routerLinkActive="activo-sub">
+        Citas
+      </a>
+
+    </div>
+
+
+    <!-- IDENTIDAD -->
+
+    <button
+      class="menu-item"
+      (click)="identidadAbierto = !identidadAbierto">
+
+      <i class="bi bi-people"></i>
+
+      <span *ngIf="!colapsado">
+        Usuarios
+      </span>
+
+    </button>
+
+
+    <div
+      class="submenu"
+      *ngIf="identidadAbierto && !colapsado">
+
+      <a routerLink="/usuarios">
+        Usuarios
+      </a>
+
+      <a routerLink="/roles">
+        Roles
+      </a>
+
+      <a routerLink="/medicos">
+        Médicos
+      </a>
+
+      <a routerLink="/especialidades">
+        Especialidades
+      </a>
+
+    </div>
+
+
+    <!-- EXPEDIENTES -->
+
+    <a
+      routerLink="/expedientes"
+      routerLinkActive="activo"
+      class="menu-item">
+
+      <i class="bi bi-file-medical"></i>
+
+      <span *ngIf="!colapsado">
+        Expedientes
+      </span>
+
+    </a>
+
+
+    <!-- TRATAMIENTOS -->
+
+    <a
+      routerLink="/tratamientos"
+      routerLinkActive="activo"
+      class="menu-item">
+
+      <i class="bi bi-capsule"></i>
+
+      <span *ngIf="!colapsado">
+        Tratamientos
+      </span>
+
+    </a>
+
+
+    <!-- LABORATORIO -->
+
+    <a
+      routerLink="/laboratorio"
+      routerLinkActive="activo"
+      class="menu-item">
+
+      <i class="bi bi-clipboard2-pulse"></i>
+
+      <span *ngIf="!colapsado">
+        Laboratorio
+      </span>
+
+    </a>
+
+
+    <!-- FACTURACION -->
+
+    <a
+      routerLink="/facturacion"
+      routerLinkActive="activo"
+      class="menu-item">
+
+      <i class="bi bi-receipt"></i>
+
+      <span *ngIf="!colapsado">
+        Facturación
+      </span>
+
+    </a>
+
+  </nav>
+
+
+  <!-- PARTE INFERIOR -->
+
+  <div class="sidebar-footer">
+
+    <a class="menu-item logout">
+
+      <i class="bi bi-box-arrow-left"></i>
+
+      <span *ngIf="!colapsado">
+        Cerrar sesión
+      </span>
+
+    </a>
+
+
+    <div class="modo">
+
+      <i class="bi bi-moon"></i>
+
+      <span *ngIf="!colapsado">
+        Modo oscuro
+      </span>
+
+      <div
+        class="switch"
+        *ngIf="!colapsado">
+
+        <div class="switch-circulo"></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</aside>

@@ -1,0 +1,13 @@
+<app-sidebar
+  [colapsado]="sidebarColapsado"
+  (cambiarEstado)="cambiarSidebar()">
+</app-sidebar>
+
+
+<main
+  class="contenido"
+  [class.sidebar-colapsado]="sidebarColapsado">
+
+  <router-outlet></router-outlet>
+
+</main>
