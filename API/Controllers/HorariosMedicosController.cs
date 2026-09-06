@@ -20,7 +20,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<List<HorarioMedico>> Get(
+        public async Task<List<HorariosMedico>> Get(
             [FromQuery] int totalRegistros = 0)
         {
             return await _mediator.Send(
@@ -31,7 +31,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<HorarioMedico?> GetById(int id)
+        public async Task<HorariosMedico?> GetById(int id)
         {
             return await _mediator.Send(
                 new GetHorarioMedicoByIdQuery

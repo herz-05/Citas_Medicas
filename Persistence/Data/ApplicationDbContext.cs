@@ -13,7 +13,11 @@ namespace Persistence.Data
     {
         public DbSet<Pacientes> Pacientes { get; set; }
         public DbSet<Consultorio> Consultorios { get; set; }
-        public DbSet<HorarioMedico> HorariosMedicos { get; set; }
+        public DbSet<HorariosMedico> HorariosMedicos { get; set; }
+        public DbSet<Cita> Citas { get; set; }
+        public DbSet<ContactoEmergencia> ContactosEmergencias { get; set; }
+        public DbSet<EstadoCitas> EstadosCitas { get; set; }
+        public DbSet<Turno> Turnos { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

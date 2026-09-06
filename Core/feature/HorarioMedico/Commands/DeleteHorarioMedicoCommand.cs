@@ -12,10 +12,10 @@ namespace Core.feature.HorariosMedicos.Commands
     public class DeleteHorarioMedicoCommandHandler
         : IRequestHandler<DeleteHorarioMedicoCommand, bool>
     {
-        private readonly IGenericRepository<HorarioMedico> _repository;
+        private readonly IGenericRepository<HorariosMedico> _repository;
 
         public DeleteHorarioMedicoCommandHandler(
-            IGenericRepository<HorarioMedico> repository)
+            IGenericRepository<HorariosMedico> repository)
         {
             _repository = repository;
         }

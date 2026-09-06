@@ -22,10 +22,10 @@ namespace Core.feature.HorariosMedicos.Commands
     public class AddHorarioMedicoCommandHandler
         : IRequestHandler<AddHorarioMedicoCommand, bool>
     {
-        private readonly IGenericRepository<HorarioMedico> _repository;
+        private readonly IGenericRepository<HorariosMedico> _repository;
 
         public AddHorarioMedicoCommandHandler(
-            IGenericRepository<HorarioMedico> repository)
+            IGenericRepository<HorariosMedico> repository)
         {
             _repository = repository;
         }
@@ -34,7 +34,7 @@ namespace Core.feature.HorariosMedicos.Commands
             AddHorarioMedicoCommand request,
             CancellationToken cancellationToken)
         {
-            var horario = new HorarioMedico
+            var horario = new HorariosMedico
             {
                 IdMedico = request.IdMedico,
                 IdConsultorio = request.IdConsultorio,

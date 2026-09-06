@@ -29,10 +29,10 @@ namespace Core.feature.HorariosMedicos.Commands
         public class UpdateHorarioMedicoCommandHandler
           : IRequestHandler<UpdateHorarioMedicoCommand, bool>
         {
-            private readonly IGenericRepository<HorarioMedico> _repository;
+            private readonly IGenericRepository<HorariosMedico> _repository;
 
             public UpdateHorarioMedicoCommandHandler(
-                IGenericRepository<HorarioMedico> repository)
+                IGenericRepository<HorariosMedico> repository)
             {
                 _repository = repository;
             }

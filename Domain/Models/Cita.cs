@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Models
 {
-    public class Citas
+    public class Cita
     {
         public int IdCita { get; set; }
         public int IdPaciente { get; set; }

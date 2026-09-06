@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Models
 {
-    public class EstadosCitas
+    public class EstadoCitas
     {
         public int IdEstadoCita { get; set; }
         public string NombreEstado { get; set; } = string.Empty;

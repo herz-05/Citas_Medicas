@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Models
 {
-    public class Turnos
+    public class Turno
     {
         public int IdTurno { get; set; }
         public int IdHorario { get; set; }

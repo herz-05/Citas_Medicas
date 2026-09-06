@@ -9,23 +9,23 @@ using System.Threading.Tasks;
 
 namespace Core.feature.HorariosMedicos.Queries
 {
-    public class GetHorarioMedicoByIdQuery: IRequest<HorarioMedico>
+    public class GetHorarioMedicoByIdQuery: IRequest<HorariosMedico>
     {
         public int IdHorario {  get; set; }
     }
 
     public class GetHorarioMedicoByIdQueryHandler
-       : IRequestHandler<GetHorarioMedicoByIdQuery, HorarioMedico>
+       : IRequestHandler<GetHorarioMedicoByIdQuery, HorariosMedico>
     {
-        private readonly IGenericRepository<HorarioMedico> _repository;
+        private readonly IGenericRepository<HorariosMedico> _repository;
 
         public GetHorarioMedicoByIdQueryHandler(
-            IGenericRepository<HorarioMedico> repository)
+            IGenericRepository<HorariosMedico> repository)
         {
             _repository = repository;
         }
 
-        public async Task<HorarioMedico> Handle(
+        public async Task<HorariosMedico> Handle(
             GetHorarioMedicoByIdQuery request,
             CancellationToken cancellationToken)
         {

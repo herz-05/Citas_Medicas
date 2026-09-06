@@ -1,30 +1,36 @@
 <Solution>
   <Folder Name="/MicroBase/" />
   <Folder Name="/MicroBase/A.Domain/">
-    <Project Path="../../../../../source/repos/Citas_Medicas/src/Domain/Domain.csproj" Id="51d09182-7c9b-43eb-ad82-411a03f2c9ba" />
+    <Project Path="../../../source/repos/Citas_Medicas/src/Domain/Domain.csproj" Id="51d09182-7c9b-43eb-ad82-411a03f2c9ba" />
   </Folder>
   <Folder Name="/MicroBase/B.Core/">
-    <Project Path="../../../../../source/repos/Citas_Medicas/src/Core/Core.csproj" Id="cfe2a39f-6796-42a2-8efa-4d0b93930939" />
+    <Project Path="../../../source/repos/Citas_Medicas/src/Core/Core.csproj" Id="cfe2a39f-6796-42a2-8efa-4d0b93930939" />
   </Folder>
   <Folder Name="/MicroBase/C.Persistence/">
-    <Project Path="../../../../../source/repos/Citas_Medicas/src/Perisistence/Perisistence.csproj" Id="7ec008b2-2c3b-46d4-85f5-b7d82c12ad42" />
+    <Project Path="../../../source/repos/Citas_Medicas/src/Perisistence/Perisistence.csproj" Id="7ec008b2-2c3b-46d4-85f5-b7d82c12ad42" />
   </Folder>
   <Folder Name="/MicroBase/D.Infrastructura/">
-    <Project Path="../../../../../source/repos/Citas_Medicas/src/Infrastructura/Infrastructura.csproj" Id="3a31db5d-5f58-479a-abe8-34b754c3c7ce" />
+    <Project Path="../../../source/repos/Citas_Medicas/src/Infrastructura/Infrastructura.csproj" Id="3a31db5d-5f58-479a-abe8-34b754c3c7ce" />
   </Folder>
   <Folder Name="/MicroBase/E.API/">
-    <Project Path="../../../../../source/repos/Citas_Medicas/src/API/API.csproj" Id="b8884d26-c06e-4000-9e01-f9e1c1880f57" />
+    <Project Path="../../../source/repos/Citas_Medicas/src/API/API.csproj" Id="b8884d26-c06e-4000-9e01-f9e1c1880f57" />
   </Folder>
   <Folder Name="/MicroIdentidadUsuarios/" />
   <Folder Name="/MicroIdentidadUsuarios/A.Domain/">
     <Project Path="MicroIIdentidadUsuarios/Domain/Domain.csproj" Id="a41d1243-4f5f-4751-b85d-2710e103211b" />
   </Folder>
-  <Folder Name="/MicroIdentidadUsuarios/B.Core/" />
+  <Folder Name="/MicroIdentidadUsuarios/B.Core/">
+    <Project Path="MicroIIdentidadUsuarios/Core/Core.csproj" Id="cf6bda11-fde2-425a-8f72-de6d1f6201a1" />
+  </Folder>
   <Folder Name="/MicroIdentidadUsuarios/C.Persistence/">
     <Project Path="MicroIIdentidadUsuarios/Persistence/Persistence.csproj" Id="09f59a06-19cf-437c-af81-40205476b87b" />
   </Folder>
-  <Folder Name="/MicroIdentidadUsuarios/D.Infraestructura/" />
-  <Folder Name="/MicroIdentidadUsuarios/E.Api/" />
+  <Folder Name="/MicroIdentidadUsuarios/D.Infraestructura/">
+    <Project Path="MicroIIdentidadUsuarios/Infraestructura/Infraestructura.csproj" Id="8269d60a-4021-4a17-8c5e-215d1b69fb7d" />
+  </Folder>
+  <Folder Name="/MicroIdentidadUsuarios/E.Api/">
+    <Project Path="MicroIIdentidadUsuarios/API/API.csproj" Id="76010aea-a606-4f3c-ba06-c008fedebec1" />
+  </Folder>
   <Folder Name="/MicroPacientesAgendas/" />
   <Folder Name="/MicroPacientesAgendas/A.Domian/">
     <Project Path="Domain/Domain.csproj" />
