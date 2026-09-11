@@ -1,12 +1,10 @@
-﻿
-using Core.Interface.Repositories;
+﻿using Core.Interface.Repositories;
 using Domain.Models;
 using MediatR;
 
-
 namespace Core.feature.Citas.Commands
 {
-    public class AddCitasCommand: IRequest<bool>
+    public class AddCitasCommand : IRequest<bool>
     {
         public int IdCita { get; set; }
         public int IdPaciente { get; set; }
@@ -21,9 +19,8 @@ namespace Core.feature.Citas.Commands
         public DateTime FechaRegistro { get; set; }
     }
 
-
     public class AddCitasCommandHandler
-       : IRequestHandler<AddCitasCommand, bool>
+        : IRequestHandler<AddCitasCommand, bool>
     {
         private readonly IGenericRepository<Cita> _repository;
 
@@ -37,7 +34,7 @@ namespace Core.feature.Citas.Commands
             AddCitasCommand request,
             CancellationToken cancellationToken)
         {
-            var citas = new Cita
+            var cita = new Cita
             {
                 IdPaciente = request.IdPaciente,
                 IdMedico = request.IdMedico,
@@ -48,10 +45,10 @@ namespace Core.feature.Citas.Commands
                 HoraFin = request.HoraFin,
                 MotivoConsulta = request.MotivoConsulta,
                 Observaciones = request.Observaciones,
-                FechaRegistro = request.FechaRegistro,
+                FechaRegistro = request.FechaRegistro
             };
 
-            await _repository.AddAsync(citas);
+            await _repository.AddAsync(cita);
 
             return true;
         }

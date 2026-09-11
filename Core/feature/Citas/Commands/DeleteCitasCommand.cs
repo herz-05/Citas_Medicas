@@ -1,21 +1,16 @@
 ﻿using Core.Interface.Repositories;
 using Domain.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.feature.Citas.Commands
 {
-    public class DeleteCitasCommand: IRequest<bool>
+    public class DeleteCitasCommand : IRequest<bool>
     {
         public int IdCita { get; set; }
     }
 
     public class DeleteCitasCommandHandler
-       : IRequestHandler<DeleteCitasCommand, bool>
+        : IRequestHandler<DeleteCitasCommand, bool>
     {
         private readonly IGenericRepository<Cita> _repository;
 
@@ -29,16 +24,14 @@ namespace Core.feature.Citas.Commands
             DeleteCitasCommand request,
             CancellationToken cancellationToken)
         {
-            var citas = await _repository.GetByIdAsync(
-                request.IdCita);
+            var cita = await _repository.GetByIdAsync(request.IdCita);
 
-            if (citas == null)
+            if (cita == null)
             {
-
                 return false;
             }
 
-            await _repository.AddAsync(citas);
+            await _repository.DeleteAsync(cita);
 
             return true;
         }

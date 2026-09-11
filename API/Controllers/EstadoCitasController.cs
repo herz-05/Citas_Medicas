@@ -1,5 +1,5 @@
-
 using Core.feature.EstadosCitas.Commands;
+using Core.feature.EstadosCitas.Queires;
 using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +8,7 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class EstadoCitasontroller : ControllerBase
+    public class EstadoCitasController : ControllerBase
     {
         private readonly IMediator _mediator;
 
@@ -33,7 +33,7 @@ namespace API.Controllers
             return await _mediator.Send(
                 new GetEstadosCitasByIdQuery
                 {
-                    IdPaciente = id
+                    IdEstadoCitas = id
                 });
         }
 
