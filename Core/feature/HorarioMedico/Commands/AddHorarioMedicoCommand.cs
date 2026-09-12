@@ -1,21 +1,17 @@
-﻿using Core.Interface.Repositories;
+﻿using Generics.Interfaces;
 using Domain.Models;
 using MediatR;
 
-namespace Core.feature.HorariosMedicos.Commands
+namespace Core.feature.HorarioMedico.Commands
 {
     public class AddHorarioMedicoCommand : IRequest<bool>
     {
+        public int IdHorario { get; set; }
         public int IdMedico { get; set; }
-
         public int IdConsultorio { get; set; }
-
         public string DiaSemana { get; set; } = string.Empty;
-
         public TimeSpan HoraInicio { get; set; }
-
         public TimeSpan HoraFin { get; set; }
-
         public bool Estado { get; set; }
     }
 

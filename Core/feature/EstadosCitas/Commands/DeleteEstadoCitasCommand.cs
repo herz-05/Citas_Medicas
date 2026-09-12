@@ -1,21 +1,16 @@
-﻿using Core.Interface.Repositories;
+﻿using Generics.Interfaces;
 using Domain.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.feature.EstadosCitas.Commands
 {
-    public class DeleteEstadoCitasCommand: IRequest<bool>
+    public class DeleteEstadoCitasCommand : IRequest<bool>
     {
-        public int IdEstadoCita {  get; set; }
+        public int IdEstadoCita { get; set; }
     }
 
     public class DeleteEstadoCitasCommandHandler
-       : IRequestHandler<DeleteEstadoCitasCommand, bool>
+        : IRequestHandler<DeleteEstadoCitasCommand, bool>
     {
         private readonly IGenericRepository<EstadoCitas> _repository;
 
@@ -34,11 +29,10 @@ namespace Core.feature.EstadosCitas.Commands
 
             if (estado == null)
             {
-
                 return false;
             }
 
-            await _repository.AddAsync(estado);
+            await _repository.DeleteAsync(estado);
 
             return true;
         }

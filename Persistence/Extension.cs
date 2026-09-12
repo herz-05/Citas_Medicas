@@ -1,9 +1,9 @@
-﻿using Core.Interface.Repositories;
+﻿using Generics.Interfaces;
+using Generics.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence.Data;
-using Persistence.Repositories;
 
 namespace Persistence
 {
@@ -24,6 +24,10 @@ namespace Persistence
             services.AddDbContext<ApplicationDbContext>(
                 opt => opt.UseSqlServer(configuration["sql:cx"])
             );
+
+
+            services.AddScoped<DbContext>(provider =>
+                provider.GetRequiredService<ApplicationDbContext>());
 
             services.AddScoped(
                 typeof(IGenericRepository<>),

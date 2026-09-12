@@ -1,15 +1,10 @@
-﻿using Core.Interface.Repositories;
+﻿using Generics.Interfaces;
 using Domain.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.feature.EstadosCitas.Commands
 {
-    public class AddEstadosCitasCommand: IRequest<bool>
+    public class AddEstadosCitasCommand : IRequest<bool>
     {
         public int IdEstadoCita { get; set; }
         public string NombreEstado { get; set; } = string.Empty;
@@ -17,7 +12,7 @@ namespace Core.feature.EstadosCitas.Commands
     }
 
     public class AddEstadosCitasCommandHandler
-     : IRequestHandler<AddEstadosCitasCommand, bool>
+        : IRequestHandler<AddEstadosCitasCommand, bool>
     {
         private readonly IGenericRepository<EstadoCitas> _repository;
 
@@ -31,13 +26,13 @@ namespace Core.feature.EstadosCitas.Commands
             AddEstadosCitasCommand request,
             CancellationToken cancellationToken)
         {
-            var estadosCitas = new EstadoCitas
+            var estado = new EstadoCitas
             {
                 NombreEstado = request.NombreEstado,
-                Descripcion = request.Descripcion,
+                Descripcion = request.Descripcion
             };
 
-            await _repository.AddAsync(estadosCitas);
+            await _repository.AddAsync(estado);
 
             return true;
         }

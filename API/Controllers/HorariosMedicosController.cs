@@ -1,6 +1,6 @@
 ﻿using Core.feature.Consultorios.Queries;
-using Core.feature.HorariosMedicos.Commands;
-using Core.feature.HorariosMedicos.Queries;
+using Core.feature.HorarioMedico.Commands;
+using Core.feature.HorarioMedico.Queries;
 using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

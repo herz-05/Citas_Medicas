@@ -1,8 +1,8 @@
-﻿using Core.Interface.Repositories;
+﻿using Generics.Interfaces;
 using Domain.Models;
 using MediatR;
 
-namespace Core.feature.HorariosMedicos.Commands
+namespace Core.feature.HorarioMedico.Commands
 {
     public class DeleteHorarioMedicoCommand : IRequest<bool>
     {

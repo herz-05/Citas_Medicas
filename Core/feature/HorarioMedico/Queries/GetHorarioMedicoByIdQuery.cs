@@ -1,21 +1,17 @@
-﻿using Core.Interface.Repositories;
+﻿using Generics.Interfaces;
 using Domain.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Core.feature.HorariosMedicos.Queries
+namespace Core.feature.HorarioMedico.Queries
 {
-    public class GetHorarioMedicoByIdQuery: IRequest<HorariosMedico>
+    public class GetHorarioMedicoByIdQuery
+        : IRequest<HorariosMedico?>
     {
-        public int IdHorario {  get; set; }
+        public int IdHorario { get; set; }
     }
 
     public class GetHorarioMedicoByIdQueryHandler
-       : IRequestHandler<GetHorarioMedicoByIdQuery, HorariosMedico>
+        : IRequestHandler<GetHorarioMedicoByIdQuery, HorariosMedico?>
     {
         private readonly IGenericRepository<HorariosMedico> _repository;
 
@@ -25,13 +21,12 @@ namespace Core.feature.HorariosMedicos.Queries
             _repository = repository;
         }
 
-        public async Task<HorariosMedico> Handle(
+        public async Task<HorariosMedico?> Handle(
             GetHorarioMedicoByIdQuery request,
             CancellationToken cancellationToken)
         {
-
             return await _repository.GetByIdAsync(
-               request.IdHorario);
+                request.IdHorario);
         }
     }
 }
