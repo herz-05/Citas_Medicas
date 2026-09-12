@@ -1,21 +1,16 @@
 ﻿using Core.Interface.Repositories;
 using Domain.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.feature.ContactosEmergencia.Commands
 {
-    public class DeleteContactosCommands: IRequest<bool>
+    public class DeleteContactosCommand : IRequest<bool>
     {
         public int IdContacto { get; set; }
     }
 
     public class DeleteContactosCommandHandler
-       : IRequestHandler<DeleteContactosCommands, bool>
+        : IRequestHandler<DeleteContactosCommand, bool>
     {
         private readonly IGenericRepository<ContactoEmergencia> _repository;
 
@@ -26,7 +21,7 @@ namespace Core.feature.ContactosEmergencia.Commands
         }
 
         public async Task<bool> Handle(
-            DeleteContactosCommands request,
+            DeleteContactosCommand request,
             CancellationToken cancellationToken)
         {
             var contacto = await _repository.GetByIdAsync(
@@ -34,11 +29,10 @@ namespace Core.feature.ContactosEmergencia.Commands
 
             if (contacto == null)
             {
-
                 return false;
             }
 
-            await _repository.AddAsync(contacto);
+            await _repository.DeleteAsync(contacto);
 
             return true;
         }

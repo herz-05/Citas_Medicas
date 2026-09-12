@@ -1,4 +1,4 @@
-﻿using Core.Interface.Repositories;
+﻿using Generics.Interfaces;
 using Domain.Models;
 using MediatR;
 

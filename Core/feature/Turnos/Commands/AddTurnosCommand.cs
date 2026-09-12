@@ -1,15 +1,10 @@
 ﻿using Core.Interface.Repositories;
 using Domain.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.feature.Turnos.Commands
 {
-    public class AddTurnosCommand: IRequest<bool>
+    public class AddTurnosCommand : IRequest<bool>
     {
         public int IdTurno { get; set; }
         public int IdHorario { get; set; }
@@ -35,18 +30,17 @@ namespace Core.feature.Turnos.Commands
             AddTurnosCommand request,
             CancellationToken cancellationToken)
         {
-            var turnos = new Turno
+            var turno = new Turno
             {
                 IdHorario = request.IdHorario,
                 IdPaciente = request.IdPaciente,
                 NumeroTurno = request.NumeroTurno,
                 FechaTurno = request.FechaTurno,
                 Estado = request.Estado,
-                FechaRegistro = request.FechaRegistro,
-
+                FechaRegistro = request.FechaRegistro
             };
 
-            await _repository.AddAsync(turnos);
+            await _repository.AddAsync(turno);
 
             return true;
         }

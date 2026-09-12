@@ -1,5 +1,5 @@
-
 using Core.feature.Turnos.Commands;
+using Core.feature.Turnos.Queries;
 using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +33,7 @@ namespace API.Controllers
             return await _mediator.Send(
                 new GetTurnosByIdQuery
                 {
-                    IdPaciente = id
+                    IdTurno = id
                 });
         }
 

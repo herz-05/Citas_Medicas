@@ -1,16 +1,10 @@
-﻿using Core.feature.Citas.Commands;
-using Core.Interface.Repositories;
+﻿using Core.Interface.Repositories;
 using Domain.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.feature.ContactosEmergencia.Commands
 {
-    public class AddContactosCommands: IRequest<bool>
+    public class AddContactosCommand : IRequest<bool>
     {
         public int IdContacto { get; set; }
         public int IdPaciente { get; set; }
@@ -22,7 +16,7 @@ namespace Core.feature.ContactosEmergencia.Commands
     }
 
     public class AddContactosCommandHandler
-      : IRequestHandler<AddContactosCommands, bool>
+        : IRequestHandler<AddContactosCommand, bool>
     {
         private readonly IGenericRepository<ContactoEmergencia> _repository;
 
@@ -33,10 +27,10 @@ namespace Core.feature.ContactosEmergencia.Commands
         }
 
         public async Task<bool> Handle(
-            AddContactosCommands request,
+            AddContactosCommand request,
             CancellationToken cancellationToken)
         {
-            var contactos = new ContactoEmergencia
+            var contacto = new ContactoEmergencia
             {
                 IdPaciente = request.IdPaciente,
                 NombreCompleto = request.NombreCompleto,
@@ -46,7 +40,7 @@ namespace Core.feature.ContactosEmergencia.Commands
                 Direccion = request.Direccion
             };
 
-            await _repository.AddAsync(contactos);
+            await _repository.AddAsync(contacto);
 
             return true;
         }

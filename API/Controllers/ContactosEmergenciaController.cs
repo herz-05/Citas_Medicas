@@ -1,5 +1,5 @@
-
 using Core.feature.ContactosEmergencia.Commands;
+using Core.feature.ContactosEmergencia.Queries;
 using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -21,10 +21,11 @@ namespace API.Controllers
         public async Task<List<ContactoEmergencia>> Get(
             [FromQuery] int totalRegistros = 0)
         {
-            return await _mediator.Send(new GetContactosQuery
-            {
-                TotalRegistros = totalRegistros
-            });
+            return await _mediator.Send(
+                new GetContactosQuery
+                {
+                    TotalRegistros = totalRegistros
+                });
         }
 
         [HttpGet("{id}")]
@@ -33,13 +34,13 @@ namespace API.Controllers
             return await _mediator.Send(
                 new GetContactosByIdQuery
                 {
-                    IdPaciente = id
+                    IdContacto = id
                 });
         }
 
         [HttpPost]
         public async Task<bool> Post(
-            [FromBody] AddContactosCommands command)
+            [FromBody] AddContactosCommand command)
         {
             return await _mediator.Send(command);
         }

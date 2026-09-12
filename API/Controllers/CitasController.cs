@@ -1,5 +1,5 @@
-
 using Core.feature.Citas.Commands;
+using Core.feature.Citas.Queries;
 using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +33,7 @@ namespace API.Controllers
             return await _mediator.Send(
                 new GetCitasByIdQuery
                 {
-                    IdCitas= id
+                    IdCitas = id
                 });
         }
 

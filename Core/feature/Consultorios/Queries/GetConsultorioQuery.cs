@@ -1,4 +1,4 @@
-﻿using Core.Interface.Repositories;
+﻿using Generics.Interfaces;
 using Domain.Models;
 using MediatR;
 
@@ -33,7 +33,7 @@ namespace Core.feature.Consultorios.Queries
                     .ToList();
             }
 
-            return consultorios;
+            return consultorios.ToList();
         }
     }
 }
