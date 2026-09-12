@@ -1,19 +1,16 @@
 ﻿using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Persistence.Confing
+namespace Persistence.Config
 {
-    public class ContactoEmergenciaConfigType : IEntityTypeConfiguration<ContactoEmergencia>
+    public class ContactoEmergenciaConfigType
+        : IEntityTypeConfiguration<ContactoEmergencia>
     {
-        public void Configure(EntityTypeBuilder<ContactoEmergencia> builder)
+        public void Configure(
+            EntityTypeBuilder<ContactoEmergencia> builder)
         {
-            throw new NotImplementedException();
+            builder.HasKey(x => x.IdContacto);
         }
     }
 }
