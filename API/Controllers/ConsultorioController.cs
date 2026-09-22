@@ -56,6 +56,19 @@ namespace API.Controllers
             return Ok(consultorio);
         }
 
+        [HttpGet("one")]
+        public async Task<ActionResult<Consultorio>> GetOne(
+            [FromQuery] GetConsultorioByOneQuery query)
+        {
+            var consultorio = await _mediator.Send(query);
+
+            if (consultorio == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(consultorio);
+        }
 
         // =========================================
         // POST - CREAR CONSULTORIO
