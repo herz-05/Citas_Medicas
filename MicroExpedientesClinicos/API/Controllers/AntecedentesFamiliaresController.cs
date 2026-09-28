@@ -1,3 +1,4 @@
+using Core.feature.AntecedenteFamiliares.Queries;
 using Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

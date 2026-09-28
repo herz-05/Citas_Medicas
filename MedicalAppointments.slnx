@@ -98,4 +98,7 @@
   <Folder Name="/MicroTratamientos-Lab/E. API/">
     <Project Path="MicroTratamientos-Lab/API/API.csproj" Id="1bcdd6b6-1553-4966-9d7f-90b793b0e4a3" />
   </Folder>
+  <Folder Name="/NugetPackage_Rest/">
+    <Project Path="nugets/NugetPackage_Rest/NugetPackage_Rest.csproj" Id="cd61c411-f1a6-4bce-8870-c1a863e4092d" />
+  </Folder>
 </Solution>
