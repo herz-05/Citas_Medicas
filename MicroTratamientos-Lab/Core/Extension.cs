@@ -1,4 +1,7 @@
-﻿namespace Core
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+
+namespace Core
 {
     public static class Extension
     {

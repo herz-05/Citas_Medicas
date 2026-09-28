@@ -17,6 +17,6 @@ namespace Domain.Models
         public bool Activo { get; set; }
 
         // Propiedades de navegación
-        public List<PrescripcionDetalle> PrescripcionDetalles { get; set; } = new()
+        public List<PrescripcionDetalle> PrescripcionDetalles { get; set; } = new();
     }
 }
