@@ -1,9 +1,5 @@
 <div class="acciones-tabla">
-
-  <!-- =========================================
-       VER
-  ========================================= -->
-
+  <!-- VER -->
   <button
     *ngIf="mostrarVer"
     type="button"
@@ -11,16 +7,10 @@
     title="Ver"
     aria-label="Ver"
     (click)="onVer()">
-
     <i class="bi bi-eye"></i>
-
   </button>
 
-
-  <!-- =========================================
-       EDITAR
-  ========================================= -->
-
+  <!-- EDITAR -->
   <button
     *ngIf="mostrarEditar"
     type="button"
@@ -28,16 +18,10 @@
     title="Editar"
     aria-label="Editar"
     (click)="onEditar()">
-
     <i class="bi bi-pencil"></i>
-
   </button>
 
-
-  <!-- =========================================
-       ELIMINAR
-  ========================================= -->
-
+  <!-- ELIMINAR -->
   <button
     *ngIf="mostrarEliminar"
     type="button"
@@ -45,9 +29,6 @@
     title="Eliminar"
     aria-label="Eliminar"
     (click)="onEliminar()">
-
     <i class="bi bi-trash"></i>
-
   </button>
-
 </div>

@@ -1,13 +1,5 @@
-import {
-  Component,
-  Input
-} from '@angular/core';
-
-import {
-  BusquedaService,
-  SugerenciaBusqueda
-} from '../../core/services/busqueda';
-
+import { Component, Input } from '@angular/core';
+import { BusquedaService, SugerenciaBusqueda } from '../../core/services/busqueda';
 
 @Component({
   selector: 'app-header',
@@ -17,111 +9,43 @@ import {
   styleUrl: './header.css'
 })
 export class Header {
-
-
-  // =========================================
   // SIDEBAR
-  // =========================================
-
-  @Input()
-  sidebarColapsado = false;
-
-
-  // =========================================
-  // CONSTRUCTOR
-  // =========================================
+  @Input() sidebarColapsado = false;
 
   constructor(
     public busquedaService: BusquedaService
   ) {}
 
-
-  // =========================================
-  // ESCRIBIR
-  // =========================================
-
-  onEscribir(
-    event: Event
-  ): void {
-
-    const input =
-      event.target as HTMLInputElement;
-
-
-    this.busquedaService.escribir(
-      input.value
-    );
-
+  // ESCRIBIR EN EL BUSCADOR
+  onEscribir(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.busquedaService.escribir(input.value);
   }
 
-
-  // =========================================
-  // ENTER
-  // =========================================
-
+  // CONFIRMAR CON ENTER
   onEnter(): void {
-
     this.realizarBusqueda();
-
   }
 
-
-  // =========================================
-  // CLIC EN LUPA
-  // =========================================
-
+  // CLIC EN EL BOTÓN DE LUPA
   onClickBuscar(): void {
-
     this.realizarBusqueda();
-
   }
 
-
-  // =========================================
-  // REALIZAR BÚSQUEDA
-  // =========================================
-
+  // REALIZAR BÚSQUEDA GLOBAL
   private realizarBusqueda(): void {
-
     this.busquedaService.buscar();
-
   }
 
-
-  // =========================================
-  // SELECCIONAR SUGERENCIA
-  // =========================================
-
-  seleccionarSugerencia(
-    sugerencia: SugerenciaBusqueda
-  ): void {
-
-    this.busquedaService
-      .seleccionarSugerencia(
-        sugerencia
-      );
-
+  // SELECCIONAR UNA SUGERENCIA DE LA PREDICCIÓN
+  seleccionarSugerencia(sugerencia: SugerenciaBusqueda): void {
+    this.busquedaService.seleccionarSugerencia(sugerencia);
   }
 
-
-  // =========================================
-  // FOCUS
-  // =========================================
-
+  // FOCO EN EL INPUT
   onFocus(): void {
-
-    if (
-      this.busquedaService
-        .sugerencias()
-        .length > 0
-    ) {
-
-      this.busquedaService
-        .mostrarSugerencias
-        .set(true);
-
+    if (this.busquedaService.sugerencias().length > 0) {
+      this.busquedaService.mostrarSugerencias.set(true);
     }
-
   }
-
 }

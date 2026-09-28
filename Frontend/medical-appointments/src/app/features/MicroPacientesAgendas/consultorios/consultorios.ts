@@ -1,531 +1,164 @@
-import {
-  Component,
-  OnInit,
-  signal
-} from '@angular/core';
-
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-import {
-  ConsultoriosService,
-  Consultorio
-} from '../../../core/services/consultorios';
-
-import {
-  BusquedaService
-} from '../../../core/services/busqueda';
-
-import {
-  BotonesAcciones
-} from '../../../shared/components/botones-acciones/botones-acciones';
-
-import {
-  Paginacion
-} from '../../../shared/components/paginacion/paginacion';
-
+import { ConsultoriosService, Consultorio } from '../../../core/services/consultorios';
+import { BusquedaService } from '../../../core/services/busqueda';
+import { BotonesAcciones } from '../../../shared/components/botones-acciones/botones-acciones';
+import { Paginacion } from '../../../shared/components/paginacion/paginacion';
 
 @Component({
   selector: 'app-consultorios',
   standalone: true,
-
-  imports: [
-    CommonModule,
-    FormsModule,
-    BotonesAcciones,
-    Paginacion
-  ],
-
+  imports: [CommonModule, FormsModule, BotonesAcciones, Paginacion],
   templateUrl: './consultorios.html',
   styleUrl: './consultorios.css'
 })
 export class Consultorios implements OnInit {
-
-
-  // =========================================
-  // LISTA DE CONSULTORIOS
-  // =========================================
-
+  // LISTA Y PAGINACIÓN
   consultorios = signal<Consultorio[]>([]);
-
-
-  // =========================================
-  // PAGINACIÓN
-  // =========================================
-
   paginaActual = 1;
-
   tamanoPagina = 10;
-
   totalRegistros = 0;
-
   totalPaginas = 0;
 
-
-  // =========================================
-  // FORMULARIO
-  // =========================================
-
+  // FORMULARIO Y ESTADOS
   mostrarFormulario = false;
-
-  modoFormulario:
-    'nuevo' |
-    'ver' |
-    'editar' = 'nuevo';
-
-  consultorioSeleccionado:
-    Consultorio | null = null;
-
-  nuevoConsultorio:
-    Consultorio = this.crearConsultorioVacio();
-
-
-  // =========================================
-  // CONSTRUCTOR
-  // =========================================
+  modoFormulario: 'nuevo' | 'ver' | 'editar' = 'nuevo';
+  consultorioSeleccionado: Consultorio | null = null;
+  nuevoConsultorio: Consultorio = this.crearConsultorioVacio();
 
   constructor(
     private consultoriosService: ConsultoriosService,
     private busquedaService: BusquedaService
   ) {}
 
-
-  // =========================================
-  // INIT
-  // =========================================
-
   ngOnInit(): void {
-
-    // Configurar buscador global
-    // para Consultorios
-
-    this.busquedaService.configurar(
-      'Buscar consultorios...'
-    );
-
-
-    // Cargar consultorios
-
+    this.busquedaService.configurar('Buscar consultorios...');
     this.cargarConsultorios();
-
   }
 
-
-  // =========================================
-  // CARGAR CONSULTORIOS PAGINADOS
-  // =========================================
-
+  // CARGAR Y PAGINAR
   cargarConsultorios(): void {
-
-    this.consultoriosService
-      .getConsultorios(
-        this.paginaActual,
-        this.tamanoPagina
-      )
-      .subscribe({
-
-        next: (resultado) => {
-
-          console.log(
-            'CONSULTORIOS RECIBIDOS:',
-            resultado
-          );
-
-          this.consultorios.set(
-            resultado.data
-          );
-
-          this.totalRegistros =
-            resultado.totalRecords;
-
-          this.totalPaginas =
-            resultado.totalPages;
-
-          this.paginaActual =
-            resultado.currentPage;
-
-          this.tamanoPagina =
-            resultado.pageSize;
-
-        },
-
-        error: (error) => {
-
-          console.error(
-            'Error cargando consultorios:',
-            error
-          );
-
-        }
-
-      });
-
+    this.consultoriosService.getConsultorios(this.paginaActual, this.tamanoPagina).subscribe({
+      next: (resultado) => {
+        this.consultorios.set(resultado.data);
+        this.totalRegistros = resultado.totalRecords;
+        this.totalPaginas = resultado.totalPages;
+        this.paginaActual = resultado.currentPage;
+        this.tamanoPagina = resultado.pageSize;
+      },
+      error: (error) => console.error('Error cargando consultorios:', error)
+    });
   }
 
-
-  // =========================================
-  // CAMBIAR PÁGINA
-  // =========================================
-
-  cambiarPagina(
-    pagina: number
-  ): void {
-
-    if (
-      pagina < 1 ||
-      pagina > this.totalPaginas ||
-      pagina === this.paginaActual
-    ) {
-      return;
-    }
-
+  cambiarPagina(pagina: number): void {
+    if (pagina < 1 || pagina > this.totalPaginas || pagina === this.paginaActual) return;
     this.paginaActual = pagina;
-
     this.cargarConsultorios();
-
   }
 
-
-  // =========================================
-  // CAMBIAR TAMAÑO DE PÁGINA
-  // =========================================
-
-  cambiarTamanoPagina(
-    tamano: number
-  ): void {
-
+  cambiarTamanoPagina(tamano: number): void {
     this.tamanoPagina = tamano;
-
     this.paginaActual = 1;
-
     this.cargarConsultorios();
-
   }
 
-
-  // =========================================
-  // NUEVO CONSULTORIO
-  // =========================================
-
+  // ACCIONES DEL MODAL
   abrirNuevoConsultorio(): void {
-
     this.modoFormulario = 'nuevo';
-
     this.consultorioSeleccionado = null;
-
-    this.nuevoConsultorio =
-      this.crearConsultorioVacio();
-
+    this.nuevoConsultorio = this.crearConsultorioVacio();
     this.mostrarFormulario = true;
-
   }
 
+  verConsultorio(consultorio: Consultorio): void {
+    this.consultoriosService.getConsultorioById(consultorio.idConsultorio).subscribe({
+      next: (data) => {
+        this.modoFormulario = 'ver';
+        this.consultorioSeleccionado = data;
+        this.nuevoConsultorio = { ...data };
+        this.mostrarFormulario = true;
+      },
+      error: (error) => console.error('Error obteniendo consultorio:', error)
+    });
+  }
 
-  // =========================================
-  // VER CONSULTORIO
-  // =========================================
+  editarConsultorio(consultorio: Consultorio): void {
+    this.consultoriosService.getConsultorioById(consultorio.idConsultorio).subscribe({
+      next: (data) => {
+        this.modoFormulario = 'editar';
+        this.consultorioSeleccionado = data;
+        this.nuevoConsultorio = { ...data };
+        this.mostrarFormulario = true;
+      },
+      error: (error) => console.error('Error obteniendo consultorio:', error)
+    });
+  }
 
-  verConsultorio(
-    consultorio: Consultorio
-  ): void {
+  eliminarConsultorio(consultorio: Consultorio): void {
+    if (!confirm(`¿Desea eliminar el consultorio ${consultorio.nombre}?`)) return;
 
-    this.consultoriosService
-      .getConsultorioById(
-        consultorio.idConsultorio
-      )
-      .subscribe({
-
-        next: (data) => {
-
-          this.modoFormulario = 'ver';
-
-          this.consultorioSeleccionado =
-            data;
-
-          this.nuevoConsultorio = {
-            ...data
-          };
-
-          this.mostrarFormulario = true;
-
-        },
-
-        error: (error) => {
-
-          console.error(
-            'Error obteniendo consultorio:',
-            error
-          );
-
+    this.consultoriosService.deleteConsultorio(consultorio.idConsultorio).subscribe({
+      next: () => {
+        if (this.consultorios().length === 1 && this.paginaActual > 1) {
+          this.paginaActual--;
         }
-
-      });
-
+        this.cargarConsultorios();
+      },
+      error: (error) => console.error('Error eliminando consultorio:', error)
+    });
   }
-
-
-  // =========================================
-  // EDITAR CONSULTORIO
-  // =========================================
-
-  editarConsultorio(
-    consultorio: Consultorio
-  ): void {
-
-    this.consultoriosService
-      .getConsultorioById(
-        consultorio.idConsultorio
-      )
-      .subscribe({
-
-        next: (data) => {
-
-          this.modoFormulario = 'editar';
-
-          this.consultorioSeleccionado =
-            data;
-
-          this.nuevoConsultorio = {
-            ...data
-          };
-
-          this.mostrarFormulario = true;
-
-        },
-
-        error: (error) => {
-
-          console.error(
-            'Error obteniendo consultorio:',
-            error
-          );
-
-        }
-
-      });
-
-  }
-
-
-  // =========================================
-  // ELIMINAR CONSULTORIO
-  // =========================================
-
-  eliminarConsultorio(
-    consultorio: Consultorio
-  ): void {
-
-    const confirmar = confirm(
-      `¿Desea eliminar el consultorio ${consultorio.nombre}?`
-    );
-
-    if (!confirmar) {
-      return;
-    }
-
-
-    this.consultoriosService
-      .deleteConsultorio(
-        consultorio.idConsultorio
-      )
-      .subscribe({
-
-        next: () => {
-
-          console.log(
-            'Consultorio eliminado correctamente'
-          );
-
-          if (
-            this.consultorios().length === 1 &&
-            this.paginaActual > 1
-          ) {
-
-            this.paginaActual--;
-
-          }
-
-          this.cargarConsultorios();
-
-        },
-
-        error: (error) => {
-
-          console.error(
-            'Error eliminando consultorio:',
-            error
-          );
-
-        }
-
-      });
-
-  }
-
-
-  // =========================================
-  // GUARDAR CONSULTORIO
-  // =========================================
 
   guardarConsultorio(): void {
-
-    if (
-      this.modoFormulario === 'nuevo'
-    ) {
-
+    if (this.modoFormulario === 'nuevo') {
       this.agregarConsultorio();
-
-      return;
-
-    }
-
-
-    if (
-      this.modoFormulario === 'editar'
-    ) {
-
+    } else if (this.modoFormulario === 'editar') {
       this.actualizarConsultorio();
-
     }
-
   }
-
-
-  // =========================================
-  // AGREGAR CONSULTORIO
-  // =========================================
 
   agregarConsultorio(): void {
-
-    this.consultoriosService
-      .addConsultorio(
-        this.nuevoConsultorio
-      )
-      .subscribe({
-
-        next: () => {
-
-          console.log(
-            'Consultorio agregado correctamente'
-          );
-
-          this.cerrarFormulario();
-
-          this.paginaActual = 1;
-
-          this.cargarConsultorios();
-
-        },
-
-        error: (error) => {
-
-          console.error(
-            'Error agregando consultorio:',
-            error
-          );
-
-        }
-
-      });
-
+    this.consultoriosService.addConsultorio(this.nuevoConsultorio).subscribe({
+      next: () => {
+        this.cerrarFormulario();
+        this.paginaActual = 1;
+        this.cargarConsultorios();
+      },
+      error: (error) => console.error('Error agregando consultorio:', error)
+    });
   }
-
-
-  // =========================================
-  // ACTUALIZAR CONSULTORIO
-  // =========================================
 
   actualizarConsultorio(): void {
-
-    this.consultoriosService
-      .updateConsultorio(
-        this.nuevoConsultorio
-      )
-      .subscribe({
-
-        next: () => {
-
-          console.log(
-            'Consultorio actualizado correctamente'
-          );
-
-          this.cerrarFormulario();
-
-          this.cargarConsultorios();
-
-        },
-
-        error: (error) => {
-
-          console.error(
-            'Error actualizando consultorio:',
-            error
-          );
-
-        }
-
-      });
-
+    this.consultoriosService.updateConsultorio(this.nuevoConsultorio).subscribe({
+      next: () => {
+        this.cerrarFormulario();
+        this.cargarConsultorios();
+      },
+      error: (error) => console.error('Error actualizando consultorio:', error)
+    });
   }
-
-
-  // =========================================
-  // CERRAR FORMULARIO
-  // =========================================
 
   cerrarFormulario(): void {
-
     this.mostrarFormulario = false;
-
     this.modoFormulario = 'nuevo';
-
     this.consultorioSeleccionado = null;
-
     this.limpiarFormulario();
-
   }
-
-
-  // =========================================
-  // LIMPIAR FORMULARIO
-  // =========================================
 
   limpiarFormulario(): void {
-
-    this.nuevoConsultorio =
-      this.crearConsultorioVacio();
-
+    this.nuevoConsultorio = this.crearConsultorioVacio();
   }
 
-
-  // =========================================
-  // CONSULTORIO VACÍO
-  // =========================================
-
-  private crearConsultorioVacio():
-    Consultorio {
-
+  private crearConsultorioVacio(): Consultorio {
     return {
-
       idConsultorio: 0,
-
       nombre: '',
-
       numeroConsultorio: '',
-
       piso: '',
-
       ubicacion: '',
-
       descripcion: '',
-
       estado: true,
-
-      fechaRegistro:
-        new Date().toISOString()
-
+      fechaRegistro: new Date().toISOString()
     };
-
   }
-
 }

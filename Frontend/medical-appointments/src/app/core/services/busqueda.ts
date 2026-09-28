@@ -1,278 +1,70 @@
-import {
-  Injectable,
-  signal
-} from '@angular/core';
-
-
-/* =========================================
-   SUGERENCIA DE BÚSQUEDA
-========================================= */
+import { Injectable, signal } from '@angular/core';
 
 export interface SugerenciaBusqueda {
-
-  // Texto principal que verá el usuario
   texto: string;
-
-  // Información secundaria
   descripcion?: string;
-
-  // Filtro exacto para la búsqueda
   filtro?: string;
-
 }
-
 
 @Injectable({
   providedIn: 'root'
 })
 export class BusquedaService {
+  entrada = signal<string>('');
+  texto = signal<string>('');
+  filtroSeleccionado = signal<string>('');
+  placeholder = signal<string>('Buscar');
+  sugerencias = signal<SugerenciaBusqueda[]>([]);
+  mostrarSugerencias = signal<boolean>(false);
 
+  // Actualiza lo que el usuario escribe sin disparar la búsqueda en la tabla
+  escribir(texto: string): void {
+    this.entrada.set(texto);
 
-  // =========================================
-  // TEXTO QUE SE ESTÁ ESCRIBIENDO
-  // =========================================
-
-  entrada =
-    signal<string>('');
-
-
-  // =========================================
-  // TEXTO CONFIRMADO
-  // =========================================
-
-  texto =
-    signal<string>('');
-
-
-  // =========================================
-  // FILTRO EXACTO SELECCIONADO
-  // =========================================
-
-  filtroSeleccionado =
-    signal<string>('');
-
-
-  // =========================================
-  // PLACEHOLDER
-  // =========================================
-
-  placeholder =
-    signal<string>('Buscar');
-
-
-  // =========================================
-  // SUGERENCIAS
-  // =========================================
-
-  sugerencias =
-    signal<SugerenciaBusqueda[]>([]);
-
-
-  // =========================================
-  // MOSTRAR SUGERENCIAS
-  // =========================================
-
-  mostrarSugerencias =
-    signal<boolean>(false);
-
-
-  // =========================================
-  // ESCRIBIR
-  // =========================================
-
-  escribir(
-    texto: string
-  ): void {
-
-    /*
-     * IMPORTANTE:
-     *
-     * Aquí solamente modificamos entrada().
-     *
-     * NO modificamos texto().
-     * NO modificamos filtroSeleccionado().
-     *
-     * Por lo tanto escribir NO debe
-     * modificar la tabla.
-     */
-
-    this.entrada.set(
-      texto
-    );
-
-
-    if (
-      texto.trim() === ''
-    ) {
-
+    if (texto.trim() === '') {
       this.sugerencias.set([]);
-
       this.mostrarSugerencias.set(false);
-
     }
-
   }
 
-
-  // =========================================
-  // ESTABLECER SUGERENCIAS
-  // =========================================
-
-  establecerSugerencias(
-    sugerencias: SugerenciaBusqueda[]
-  ): void {
-
-    this.sugerencias.set(
-      sugerencias
-    );
-
-
-    this.mostrarSugerencias.set(
-      sugerencias.length > 0
-    );
-
+  establecerSugerencias(sugerencias: SugerenciaBusqueda[]): void {
+    this.sugerencias.set(sugerencias);
+    this.mostrarSugerencias.set(sugerencias.length > 0);
   }
 
+  // Ejecuta la búsqueda general (Enter o lupa)
+  buscar(texto?: string): void {
+    const valor = texto !== undefined ? texto : this.entrada();
+    const valorLimpio = valor.trim();
 
-  // =========================================
-  // BÚSQUEDA MANUAL
-  // ENTER O LUPA
-  // =========================================
-
-  buscar(
-    texto?: string
-  ): void {
-
-    const valor =
-      texto !== undefined
-        ? texto
-        : this.entrada();
-
-
-    const valorLimpio =
-      valor.trim();
-
-
-    this.entrada.set(
-      valorLimpio
-    );
-
-
-    /*
-     * Al usar Enter o la lupa
-     * hacemos búsqueda general.
-     */
-
-    this.filtroSeleccionado.set('');
-
-
-    this.texto.set(
-      valorLimpio
-    );
-
-
+    this.entrada.set(valorLimpio);
+    this.filtroSeleccionado.set(''); // Limpia el filtro específico al hacer búsqueda general
+    this.texto.set(valorLimpio);
     this.cerrarSugerencias();
-
   }
 
-
-  // =========================================
-  // SELECCIONAR SUGERENCIA
-  // =========================================
-
-  seleccionarSugerencia(
-    sugerencia: SugerenciaBusqueda
-  ): void {
-
-    /*
-     * El input mostrará el nombre.
-     */
-
-    this.entrada.set(
-      sugerencia.texto
-    );
-
-
-    /*
-     * Guardamos el filtro exacto.
-     *
-     * Ejemplo:
-     *
-     * IdPaciente == 5
-     */
-
-    this.filtroSeleccionado.set(
-      sugerencia.filtro ?? ''
-    );
-
-
-    /*
-     * texto() funciona como señal
-     * de búsqueda confirmada.
-     */
-
-    this.texto.set(
-      sugerencia.texto
-    );
-
-
+  // Aplica el filtro exacto al seleccionar una sugerencia
+  seleccionarSugerencia(sugerencia: SugerenciaBusqueda): void {
+    this.entrada.set(sugerencia.texto);
+    this.filtroSeleccionado.set(sugerencia.filtro ?? '');
+    this.texto.set(sugerencia.texto);
     this.cerrarSugerencias();
-
   }
-
-
-  // =========================================
-  // CERRAR SUGERENCIAS
-  // =========================================
 
   cerrarSugerencias(): void {
-
     this.mostrarSugerencias.set(false);
-
   }
 
-
-  // =========================================
-  // CONFIGURAR
-  // =========================================
-
-  configurar(
-    placeholder: string
-  ): void {
-
-    this.placeholder.set(
-      placeholder
-    );
-
-    this.entrada.set('');
-
-    this.texto.set('');
-
-    this.filtroSeleccionado.set('');
-
-    this.sugerencias.set([]);
-
-    this.mostrarSugerencias.set(false);
-
+  configurar(placeholder: string): void {
+    this.placeholder.set(placeholder);
+    this.limpiar();
   }
-
-
-  // =========================================
-  // LIMPIAR
-  // =========================================
 
   limpiar(): void {
-
     this.entrada.set('');
-
     this.texto.set('');
-
     this.filtroSeleccionado.set('');
-
     this.sugerencias.set([]);
-
     this.mostrarSugerencias.set(false);
-
   }
-
 }

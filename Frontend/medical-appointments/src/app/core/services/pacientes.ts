@@ -1,146 +1,52 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { GenericCrudService, PagedResult } from '../generics/generic-crud.service';
 
-import {
-  GenericCrudService,
-  PagedResult
-} from '../generics/generic-crud.service';
-
-
-/* =========================================
-   INTERFAZ PACIENTE
-========================================= */
-
+// Modelo de datos para la entidad Paciente
 export interface Paciente {
-
   idPaciente: number;
-
   nombres: string;
-
   apellidos: string;
-
   fechaNacimiento: string;
-
   sexo: string;
-
   dui: string;
-
   telefono: string;
-
   correo: string;
-
   direccion: string;
-
   fechaRegistro: string;
-
 }
-
-
-/* =========================================
-   SERVICIO PACIENTES
-========================================= */
 
 @Injectable({
   providedIn: 'root'
 })
-export class PacientesService
-  extends GenericCrudService<Paciente> {
-
-
-  // =========================================
-  // CONSTRUCTOR
-  // =========================================
-
-  constructor(
-    http: HttpClient
-  ) {
-
-    super(
-      http,
-      'https://localhost:7250/Pacientes'
-    );
-
+export class PacientesService extends GenericCrudService<Paciente> {
+  constructor(http: HttpClient) {
+    super(http, 'https://localhost:7250/Pacientes');
   }
 
-
-  // =========================================
-  // GET - LISTAR PACIENTES PAGINADOS
-  // =========================================
-
-  getPacientes(
-    pageNumber: number = 1,
-    pageSize: number = 10,
-    filter: string = ''
-  ): Observable<PagedResult<Paciente>> {
-
-    return this.getPaged(
-      pageNumber,
-      pageSize,
-      filter
-    );
-
+  // Obtiene el listado paginado de pacientes con opción de filtro
+  getPacientes(pageNumber: number = 1, pageSize: number = 10, filter: string = ''): Observable<PagedResult<Paciente>> {
+    return this.getPaged(pageNumber, pageSize, filter);
   }
 
-
-  // =========================================
-  // GET - PACIENTE POR ID
-  // =========================================
-
-  getPacienteById(
-    idPaciente: number
-  ): Observable<Paciente> {
-
-    return this.getById(
-      idPaciente
-    );
-
+  // Obtiene un paciente específico por su ID
+  getPacienteById(idPaciente: number): Observable<Paciente> {
+    return this.getById(idPaciente);
   }
 
-
-  // =========================================
-  // POST - AGREGAR PACIENTE
-  // =========================================
-
-  addPaciente(
-    paciente: Paciente
-  ): Observable<boolean> {
-
-    return this.add(
-      paciente
-    );
-
+  // Registra un nuevo paciente
+  addPaciente(paciente: Paciente): Observable<boolean> {
+    return this.add(paciente);
   }
 
-
-  // =========================================
-  // PUT - ACTUALIZAR PACIENTE
-  // =========================================
-
-  updatePaciente(
-    paciente: Paciente
-  ): Observable<boolean> {
-
-    return this.update(
-      paciente.idPaciente,
-      paciente
-    );
-
+  // Actualiza un paciente existente
+  updatePaciente(paciente: Paciente): Observable<boolean> {
+    return this.update(paciente.idPaciente, paciente);
   }
 
-
-  // =========================================
-  // DELETE - ELIMINAR PACIENTE
-  // =========================================
-
-  deletePaciente(
-    idPaciente: number
-  ): Observable<boolean> {
-
-    return this.delete(
-      idPaciente
-    );
-
+  // Elimina un paciente por su ID
+  deletePaciente(idPaciente: number): Observable<boolean> {
+    return this.delete(idPaciente);
   }
-
 }

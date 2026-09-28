@@ -1,53 +1,20 @@
-<header
-  class="header"
-  [class.sidebar-colapsado]="sidebarColapsado">
-
-  <!-- =========================================
-       IZQUIERDA
-  ========================================== -->
-
+<header class="header" [class.sidebar-colapsado]="sidebarColapsado">
+  <!-- IZQUIERDA -->
   <div class="header-left">
-
     <div class="header-logo">
-
-      <div class="logo-icon">
-        CM
-      </div>
-
-      <span class="logo-text">
-        Citas Médicas
-      </span>
-
+      <div class="logo-icon">CM</div>
+      <span class="logo-text">Citas Médicas</span>
     </div>
-
   </div>
 
-
-  <!-- =========================================
-       CENTRO
-  ========================================== -->
-
+  <!-- CENTRO -->
   <div class="header-center">
-
     <div class="search-container">
-
-
-      <!-- =====================================
-           BUSCADOR
-      ====================================== -->
-
+      <!-- BUSCADOR -->
       <div class="search-box">
-
-        <button
-          type="button"
-          class="search-button"
-          aria-label="Buscar"
-          (click)="onClickBuscar()">
-
+        <button type="button" class="search-button" aria-label="Buscar" (click)="onClickBuscar()">
           <i class="bi bi-search"></i>
-
         </button>
-
 
         <input
           type="text"
@@ -57,118 +24,44 @@
           (input)="onEscribir($event)"
           (keydown.enter)="onEnter()"
           (focus)="onFocus()">
-
       </div>
 
-
-      <!-- =====================================
-           PREDICCIONES
-      ====================================== -->
-
-      @if (
-        busquedaService.mostrarSugerencias() &&
-        busquedaService.sugerencias().length > 0
-      ) {
-
+      <!-- PREDICCIONES -->
+      @if (busquedaService.mostrarSugerencias() && busquedaService.sugerencias().length > 0) {
         <div class="search-suggestions">
-
-          @for (
-            sugerencia of busquedaService.sugerencias();
-            track $index
-          ) {
-
-            <button
-              type="button"
-              class="suggestion-item"
-              (click)="seleccionarSugerencia(sugerencia)">
-
-              <span class="suggestion-text">
-
-                {{ sugerencia.texto }}
-
-              </span>
-
-
-              @if (
-                sugerencia.descripcion
-              ) {
-
-                <span
-                  class="suggestion-description">
-
-                  {{ sugerencia.descripcion }}
-
-                </span>
-
+          @for (sugerencia of busquedaService.sugerencias(); track $index) {
+            <button type="button" class="suggestion-item" (click)="seleccionarSugerencia(sugerencia)">
+              <span class="suggestion-text">{{ sugerencia.texto }}</span>
+              @if (sugerencia.descripcion) {
+                <span class="suggestion-description">{{ sugerencia.descripcion }}</span>
               }
-
             </button>
-
           }
-
         </div>
-
       }
-
     </div>
-
   </div>
 
-
-  <!-- =========================================
-       DERECHA
-  ========================================== -->
-
+  <!-- DERECHA -->
   <div class="header-right">
-
-    <button
-      type="button"
-      class="header-icon">
-
+    <button type="button" class="header-icon">
       <i class="bi bi-sun"></i>
-
     </button>
 
-
-    <button
-      type="button"
-      class="header-icon notification-button">
-
+    <button type="button" class="header-icon notification-button">
       <i class="bi bi-bell"></i>
-
       <span class="notification-dot"></span>
-
     </button>
 
-
-    <button
-      type="button"
-      class="user-button">
-
-      <div class="avatar">
-        LA
-      </div>
-
+    <button type="button" class="user-button">
+      <div class="avatar">LA</div>
 
       <div class="user-info">
-
-        <strong>
-          Usuario
-        </strong>
-
-        <span>
-          Administrador
-        </span>
-
+        <strong>Usuario</strong>
+        <span>Administrador</span>
       </div>
 
-
-      <i
-        class="bi bi-chevron-down user-arrow">
-      </i>
-
+      <i class="bi bi-chevron-down user-arrow"></i>
     </button>
-
   </div>
-
 </header>

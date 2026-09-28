@@ -1,174 +1,63 @@
-import {
-  HttpClient,
-  HttpParams
-} from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import {
-  Observable
-} from 'rxjs';
-
-
-/* =========================================
-   RESULTADO PAGINADO
-========================================= */
-
+// Resultado paginado para las consultas con paginación
 export interface PagedResult<T> {
-
   data: T[];
-
   totalRecords: number;
-
   pageSize: number;
-
   currentPage: number;
-
   totalPages: number;
-
 }
 
-
-/* =========================================
-   SERVICIO CRUD GENÉRICO
-========================================= */
-
+// Servicio base abstracto para operaciones CRUD genéricas
 export abstract class GenericCrudService<T> {
 
-
-  // =========================================
-  // CONSTRUCTOR
-  // =========================================
-
   protected constructor(
-
     protected http: HttpClient,
-
     protected apiUrl: string
-
   ) {}
 
-
-  // =========================================
-  // OBTENER TODOS
-  // =========================================
-
-  getAll():
-    Observable<T[]> {
-
-    return this.http.get<T[]>(
-      this.apiUrl
-    );
-
+  // Obtener todos los registros
+  getAll(): Observable<T[]> {
+    return this.http.get<T[]>(this.apiUrl);
   }
 
-
-  // =========================================
-  // OBTENER PAGINADO
-  // =========================================
-
+  // Obtener registros paginados con opción de filtro
   getPaged(
     pageNumber: number = 1,
     pageSize: number = 10,
     filter: string = ''
   ): Observable<PagedResult<T>> {
+    let params = new HttpParams()
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
 
-    let params =
-      new HttpParams()
-        .set(
-          'pageNumber',
-          pageNumber.toString()
-        )
-        .set(
-          'pageSize',
-          pageSize.toString()
-        );
-
-
-    // =========================================
-    // FILTRO
-    // =========================================
-
-    if (
-      filter.trim() !== ''
-    ) {
-
-      params = params.set(
-        'filter',
-        filter
-      );
-
+    // Aplicar filtro si no está vacío
+    if (filter.trim() !== '') {
+      params = params.set('filter', filter);
     }
 
-
-    return this.http.get<PagedResult<T>>(
-      this.apiUrl,
-      {
-        params
-      }
-    );
-
+    return this.http.get<PagedResult<T>>(this.apiUrl, { params });
   }
 
-
-  // =========================================
-  // OBTENER POR ID
-  // =========================================
-
-  getById(
-    id: number
-  ): Observable<T> {
-
-    return this.http.get<T>(
-      `${this.apiUrl}/${id}`
-    );
-
+  // Obtener un registro por su ID
+  getById(id: number): Observable<T> {
+    return this.http.get<T>(`${this.apiUrl}/${id}`);
   }
 
-
-  // =========================================
-  // AGREGAR
-  // =========================================
-
-  add(
-    entity: T
-  ): Observable<boolean> {
-
-    return this.http.post<boolean>(
-      this.apiUrl,
-      entity
-    );
-
+  // Agregar un nuevo registro
+  add(entity: T): Observable<boolean> {
+    return this.http.post<boolean>(this.apiUrl, entity);
   }
 
-
-  // =========================================
-  // ACTUALIZAR
-  // =========================================
-
-  update(
-    id: number,
-    entity: T
-  ): Observable<boolean> {
-
-    return this.http.put<boolean>(
-      `${this.apiUrl}/${id}`,
-      entity
-    );
-
+  // Actualizar un registro existente
+  update(id: number, entity: T): Observable<boolean> {
+    return this.http.put<boolean>(`${this.apiUrl}/${id}`, entity);
   }
 
-
-  // =========================================
-  // ELIMINAR
-  // =========================================
-
-  delete(
-    id: number
-  ): Observable<boolean> {
-
-    return this.http.delete<boolean>(
-      `${this.apiUrl}/${id}`
-    );
-
+  // Eliminar un registro por su ID
+  delete(id: number): Observable<boolean> {
+    return this.http.delete<boolean>(`${this.apiUrl}/${id}`);
   }
-
 }

@@ -1,75 +1,36 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output
-} from '@angular/core';
-
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-botones-acciones',
   standalone: true,
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   templateUrl: './botones-acciones.html',
   styleUrl: './botones-acciones.css'
 })
 export class BotonesAcciones {
-
-  /* =========================================
-     CONFIGURACIÓN
-  ========================================= */
-
+  // CONFIGURACIÓN DE VISIBILIDAD DE BOTONES
   @Input() mostrarVer = true;
-
   @Input() mostrarEditar = true;
-
   @Input() mostrarEliminar = true;
 
-
-  /* =========================================
-     EVENTOS
-  ========================================= */
-
+  // EVENTOS DE ACCIÓN
   @Output() ver = new EventEmitter<void>();
-
   @Output() editar = new EventEmitter<void>();
-
   @Output() eliminar = new EventEmitter<void>();
 
-
-  /* =========================================
-     VER
-  ========================================= */
-
+  // EMITIR EVENTO VER
   onVer(): void {
-
     this.ver.emit();
-
   }
 
-
-  /* =========================================
-     EDITAR
-  ========================================= */
-
+  // EMITIR EVENTO EDITAR
   onEditar(): void {
-
     this.editar.emit();
-
   }
 
-
-  /* =========================================
-     ELIMINAR
-  ========================================= */
-
+  // EMITIR EVENTO ELIMINAR
   onEliminar(): void {
-
     this.eliminar.emit();
-
   }
-
 }
