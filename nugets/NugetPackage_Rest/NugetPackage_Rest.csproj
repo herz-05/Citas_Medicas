@@ -23,8 +23,6 @@
 		</AssemblyAttribute>
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="Builders\" />
-	  <Folder Include="Extensions\" />
 	  <Folder Include="Interfaces\IRequests\" />
 	  <Folder Include="Interfaces\IServices\" />
 	</ItemGroup>
