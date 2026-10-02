@@ -101,4 +101,5 @@
   <Folder Name="/NugetPackage_Rest/">
     <Project Path="nugets/NugetPackage_Rest/NugetPackage_Rest.csproj" Id="cd61c411-f1a6-4bce-8870-c1a863e4092d" />
   </Folder>
+  <Project Path="NugetPackage_Rest.Tests/NugetPackage_Rest.Tests.csproj" />
 </Solution>

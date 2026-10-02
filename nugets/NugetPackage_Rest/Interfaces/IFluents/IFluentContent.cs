@@ -12,7 +12,7 @@ namespace NugetPackage_Rest.Interfaces.IFluents
     {
         Task<string> GetContentAsStringAsync();
        
-    Task<byte[]> GetContentAsByteArrayAsync();
+        Task<byte[]> GetContentAsByteArrayAsync();
         Task<T> DeserializeWithAsync<T>();
         TaskAwaiter<HttpResponseMessage> GetAwaiter();
     }
