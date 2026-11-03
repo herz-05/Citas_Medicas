@@ -104,4 +104,15 @@ export class FacturasService
       `${this.apiUrl}/${idFactura}`
     );
   }
+
+
+  anularFactura(
+    idFactura: number
+  ): Observable<void> {
+
+    return this.http.put<void>(
+      `${this.apiUrl}/${idFactura}/anular`,
+      null
+    );
+  }
 }

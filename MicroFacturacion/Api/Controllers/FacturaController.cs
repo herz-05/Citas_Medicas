@@ -101,5 +101,16 @@ namespace API.Controllers
 
             return NoContent();
         }
+        [HttpPut("{id}/anular")]
+        public async Task<IActionResult> Anular(int id)
+        {
+            await _mediator.Send(
+                new AnularFacturaCommand
+                {
+                    IdFactura = id
+                });
+
+            return NoContent();
+        }
     }
 }

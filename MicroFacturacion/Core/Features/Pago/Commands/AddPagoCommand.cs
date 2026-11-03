@@ -31,59 +31,111 @@ namespace Core.Facturacion.Features.Pagos.Commands
             _formaPagoRepository = formaPagoRepository;
         }
 
-        public async Task<Pago> Handle(AddPagoCommand request, CancellationToken cancellationToken)
+        public async Task<Pago> Handle(
+            AddPagoCommand request,
+            CancellationToken cancellationToken)
         {
             if (request.Monto <= 0)
-                throw new ArgumentException("El monto del pago debe ser mayor que cero.");
+                throw new ArgumentException(
+                    "El monto del pago debe ser mayor que cero.");
 
-            // 1. Validar existencia y estado de la forma de pago
-            var formaPago = await _formaPagoRepository.GetOneByAsync(x => x.IdFormaPago == request.IdFormaPago, true, cancellationToken);
+            var formaPago = await _formaPagoRepository.GetOneByAsync(
+                x => x.IdFormaPago == request.IdFormaPago,
+                true,
+                cancellationToken);
+
             if (formaPago == null)
-                throw new ArgumentException("La forma de pago seleccionada no existe.");
+                throw new ArgumentException(
+                    "La forma de pago seleccionada no existe.");
+
             if (!formaPago.Estado)
-                throw new ArgumentException("La forma de pago seleccionada se encuentra inactiva.");
+                throw new ArgumentException(
+                    "La forma de pago seleccionada se encuentra inactiva.");
 
-            // 2. Buscar factura
-            var factura = await _facturaRepository.GetOneByAsync(x => x.IdFactura == request.IdFactura, false, cancellationToken);
+            var factura = await _facturaRepository.GetOneByAsync(
+                x => x.IdFactura == request.IdFactura,
+                false,
+                cancellationToken);
+
             if (factura == null)
-                throw new ArgumentException("La factura seleccionada no existe.");
+                throw new ArgumentException(
+                    "La factura seleccionada no existe.");
 
-            // 3. Obtener detalles y calcular total
-            var detalles = await _detalleRepository.GetPagedAsync(1, 1000, x => x.IdFactura == request.IdFactura, cancellationToken: cancellationToken);
+            if (factura.Estado.Equals(
+                "CANCELADA",
+                StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    "No se pueden registrar pagos en una factura cancelada.");
+            }
+
+            if (factura.Estado.Equals(
+                "PAGADA",
+                StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    "La factura ya se encuentra pagada.");
+            }
+
+            var detalles = await _detalleRepository.GetPagedAsync(
+                1,
+                1000,
+                x => x.IdFactura == request.IdFactura,
+                cancellationToken: cancellationToken);
+
             if (!detalles.Data.Any())
-                throw new InvalidOperationException("La factura no tiene detalles registrados.");
+                throw new InvalidOperationException(
+                    "La factura no tiene detalles registrados.");
 
-            var totalFactura = detalles.Data.Sum(x => x.Cantidad * x.PrecioUnitario);
+            var totalFactura = detalles.Data.Sum(
+                x => x.Cantidad * x.PrecioUnitario);
+
             if (totalFactura <= 0)
-                throw new InvalidOperationException("El total de la factura debe ser mayor que cero.");
+                throw new InvalidOperationException(
+                    "El total de la factura debe ser mayor que cero.");
 
-            // 4. Obtener pagos anteriores y calcular saldo pendiente
-            var pagosAnteriores = await _pagoRepository.GetPagedAsync(1, 1000, x => x.IdFactura == request.IdFactura, cancellationToken: cancellationToken);
+            var pagosAnteriores = await _pagoRepository.GetPagedAsync(
+                1,
+                1000,
+                x => x.IdFactura == request.IdFactura,
+                cancellationToken: cancellationToken);
+
             var totalPagado = pagosAnteriores.Data.Sum(x => x.Monto);
             var saldoPendiente = totalFactura - totalPagado;
 
             if (saldoPendiente <= 0)
-                throw new InvalidOperationException("La factura ya se encuentra pagada.");
+                throw new InvalidOperationException(
+                    "La factura ya se encuentra pagada.");
 
             if (request.Monto > saldoPendiente)
-                throw new ArgumentException($"El monto ingresado supera el saldo pendiente de ${saldoPendiente:N2}.");
+            {
+                throw new ArgumentException(
+                    $"El monto ingresado supera el saldo pendiente de ${saldoPendiente:N2}.");
+            }
 
-            // 5. Crear y guardar el nuevo pago
             var pago = new Pago
             {
                 IdFactura = request.IdFactura,
                 IdFormaPago = request.IdFormaPago,
                 Monto = request.Monto,
-                FechaPago = request.FechaPago == default ? DateTime.Now : request.FechaPago
+                FechaPago = request.FechaPago == default
+                    ? DateTime.Now
+                    : request.FechaPago
             };
 
-            var pagoCreado = await _pagoRepository.AddAsync(pago, cancellationToken);
+            var pagoCreado = await _pagoRepository.AddAsync(
+                pago,
+                cancellationToken);
 
-            // 6. Actualizar estado de la factura
             var nuevoTotalPagado = totalPagado + request.Monto;
-            factura.Estado = nuevoTotalPagado >= totalFactura ? "PAGADA" : "PARCIAL";
 
-            await _facturaRepository.UpdateAsync(factura, cancellationToken);
+            factura.Estado = nuevoTotalPagado >= totalFactura
+                ? "PAGADA"
+                : "PARCIAL";
+
+            await _facturaRepository.UpdateAsync(
+                factura,
+                cancellationToken);
 
             return pagoCreado;
         }

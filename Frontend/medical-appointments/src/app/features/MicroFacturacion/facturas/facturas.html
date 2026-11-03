@@ -1,14 +1,19 @@
 <!-- Contenedor principal de facturas -->
 <div class="facturas-container">
   <div class="tabla-contenedor">
-    
+
     <!-- Encabezado de la sección -->
     <div class="tabla-header">
       <div>
         <h2>Facturas</h2>
         <p>Administra las facturas de los pacientes.</p>
       </div>
-      <button type="button" class="btn-nuevo" (click)="abrirNuevaFactura()">
+
+      <button
+        type="button"
+        class="btn-nuevo"
+        [disabled]="guardando"
+        (click)="abrirNuevaFactura()">
         <i class="bi bi-plus-lg"></i>
         Nueva factura
       </button>
@@ -46,11 +51,13 @@
             <td class="columna-acciones">
               <app-botones-acciones
                 [mostrarVer]="true"
-                [mostrarEditar]="true"
-                [mostrarEliminar]="true"
+                [mostrarEditar]="puedeEditarFactura(factura)"
+                [mostrarEliminar]="false"
+                [mostrarAnular]="puedeAnularFactura(factura)"
+                [deshabilitado]="guardando"
                 (ver)="verFactura(factura)"
                 (editar)="editarFactura(factura)"
-                (eliminar)="eliminarFactura(factura)">
+                (anular)="anularFactura(factura)">
               </app-botones-acciones>
             </td>
           </tr>
@@ -83,12 +90,18 @@
 <!-- Modal para Crear, Editar o Ver Factura -->
 <div class="modal-overlay" *ngIf="mostrarFormulario">
   <div class="modal-factura">
-    
+
     <!-- Encabezado del modal -->
     <div class="modal-header">
       <div>
         <h2>
-          {{ modoFormulario === 'nuevo' ? 'Nueva factura' : modoFormulario === 'editar' ? 'Editar factura' : 'Detalle de factura' }}
+          {{
+            modoFormulario === 'nuevo'
+              ? 'Nueva factura'
+              : modoFormulario === 'editar'
+                ? 'Editar factura'
+                : 'Detalle de factura'
+          }}
         </h2>
         <p *ngIf="modoFormulario !== 'nuevo'">
           Factura #{{ nuevaFactura.idFactura }}
@@ -96,22 +109,38 @@
       </div>
 
       <div class="modal-header-acciones">
-        <button type="button" class="btn-imprimir" *ngIf="nuevaFactura.idFactura > 0" (click)="imprimirFactura()">
+        <button
+          type="button"
+          class="btn-imprimir"
+          *ngIf="nuevaFactura.idFactura > 0"
+          [disabled]="guardando || cargandoDetalles"
+          (click)="imprimirFactura()">
           <i class="bi bi-printer"></i>
           <span>Imprimir</span>
         </button>
-        <button type="button" class="btn-cerrar" [disabled]="guardando" (click)="cerrarFormulario()">
+
+        <button
+          type="button"
+          class="btn-cerrar"
+          [disabled]="guardando"
+          (click)="cerrarFormulario()">
           <i class="bi bi-x-lg"></i>
         </button>
       </div>
     </div>
 
-    <!-- Formulario principal de la factura -->
+    <!-- Formulario principal -->
     <div class="form-grid">
-      <!-- Selector de paciente -->
+      <!-- Paciente -->
       <div class="campo">
         <label>Paciente</label>
-        <select [(ngModel)]="nuevaFactura.idPaciente" [disabled]="modoFormulario === 'ver' || guardando">
+        <select
+          [(ngModel)]="nuevaFactura.idPaciente"
+          [disabled]="
+            modoFormulario === 'ver' ||
+            guardando ||
+            (modoFormulario === 'editar' && !puedeEditarFactura(nuevaFactura))
+          ">
           <option [ngValue]="0">Seleccione un paciente</option>
           <option *ngFor="let paciente of pacientes()" [ngValue]="paciente.idPaciente">
             {{ paciente.nombres }} {{ paciente.apellidos }}
@@ -119,13 +148,20 @@
         </select>
       </div>
 
-      <!-- Selector de fecha -->
+      <!-- Fecha -->
       <div class="campo">
         <label>Fecha</label>
-        <input type="datetime-local" [(ngModel)]="nuevaFactura.fechaFactura" [disabled]="modoFormulario === 'ver' || guardando">
+        <input
+          type="datetime-local"
+          [(ngModel)]="nuevaFactura.fechaFactura"
+          [disabled]="
+            modoFormulario === 'ver' ||
+            guardando ||
+            (modoFormulario === 'editar' && !puedeEditarFactura(nuevaFactura))
+          ">
       </div>
 
-      <!-- Estado de la factura (solo visible al editar o ver) -->
+      <!-- Estado -->
       <div class="campo campo-completo" *ngIf="modoFormulario !== 'nuevo'">
         <label>Estado</label>
         <div class="estado-contenedor">
@@ -136,7 +172,7 @@
       </div>
     </div>
 
-    <!-- Sección de detalles de la factura (servicios, medicamentos, etc.) -->
+    <!-- Detalles -->
     <div class="detalle-factura">
       <div class="detalle-titulo">
         <div>
@@ -144,13 +180,18 @@
           <p>Servicios, medicamentos y estudios incluidos en la factura.</p>
         </div>
         <span class="cantidad-items">
-          {{ detallesFactura().length }} {{ detallesFactura().length === 1 ? 'ítem' : 'ítems' }}
+          {{ detallesFactura().length }}
+          {{ detallesFactura().length === 1 ? 'ítem' : 'ítems' }}
         </span>
       </div>
 
       <app-factura-detalle
         [idFactura]="nuevaFactura.idFactura"
-        [editable]="modoFormulario !== 'ver' && !guardando"
+        [editable]="
+          modoFormulario !== 'ver' &&
+          !guardando &&
+          (modoFormulario === 'nuevo' || puedeEditarFactura(nuevaFactura))
+        "
         [cargando]="cargandoDetalles"
         [servicios]="servicios()"
         [medicamentos]="medicamentos()"
@@ -160,27 +201,64 @@
       </app-factura-detalle>
     </div>
 
-    <!-- Botones de acción del modal -->
+    <!-- Acciones -->
     <div class="acciones">
-      <button type="button" class="btn-cancelar" [disabled]="guardando" (click)="cerrarFormulario()">
+      <!-- Cerrar / Cancelar -->
+      <button
+        type="button"
+        class="btn-cancelar"
+        [disabled]="guardando"
+        (click)="cerrarFormulario()">
         {{ modoFormulario === 'ver' ? 'Cerrar' : 'Cancelar' }}
       </button>
 
-      <button type="button" class="btn-pagar-formulario" *ngIf="nuevaFactura.estado.toLowerCase() !== 'pagada' && nuevaFactura.estado.toLowerCase() !== 'cancelada'" [disabled]="guardando || cargandoDetalles || detallesFactura().length === 0" (click)="pagarFactura()">
+      <!-- Anular factura -->
+      <button
+        type="button"
+        class="btn-anular-factura"
+        *ngIf="nuevaFactura.idFactura > 0 && puedeAnularFactura(nuevaFactura)"
+        [disabled]="guardando || cargandoDetalles"
+        (click)="anularFactura(nuevaFactura)">
+        <i class="bi bi-x-circle"></i>
+        Anular factura
+      </button>
+
+      <!-- Pagar -->
+      <button
+        type="button"
+        class="btn-pagar-formulario"
+        *ngIf="modoFormulario === 'nuevo' || puedePagarFactura(nuevaFactura)"
+        [disabled]="guardando || cargandoDetalles || detallesFactura().length === 0"
+        (click)="pagarFactura()">
         <i class="bi bi-cash-coin"></i>
         {{ modoFormulario === 'nuevo' ? 'Crear y pagar' : 'Pagar factura' }}
       </button>
 
-      <button type="button" class="btn-guardar" *ngIf="modoFormulario === 'nuevo' || modoFormulario === 'editar'" [disabled]="guardando" (click)="guardarFactura()">
+      <!-- Guardar -->
+      <button
+        type="button"
+        class="btn-guardar"
+        *ngIf="
+          modoFormulario === 'nuevo' ||
+          (modoFormulario === 'editar' && puedeEditarFactura(nuevaFactura))
+        "
+        [disabled]="guardando || cargandoDetalles || detallesFactura().length === 0"
+        (click)="guardarFactura()">
         <i class="bi bi-check-lg"></i>
-        {{ guardando ? 'Guardando...' : modoFormulario === 'nuevo' ? 'Crear factura' : 'Guardar factura' }}
+        {{
+          guardando
+            ? 'Guardando...'
+            : modoFormulario === 'nuevo'
+              ? 'Crear factura'
+              : 'Guardar factura'
+        }}
       </button>
     </div>
 
   </div>
 </div>
 
-<!-- Modal secundario para el proceso de pago -->
+<!-- Modal de pago -->
 <app-factura-pago
   [visible]="mostrarModalPago"
   [factura]="facturaPago"

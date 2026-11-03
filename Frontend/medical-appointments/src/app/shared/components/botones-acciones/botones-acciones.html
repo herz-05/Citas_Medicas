@@ -1,34 +1,43 @@
-<div class="acciones-tabla">
-  <!-- VER -->
+<div class="botones-acciones">
+
   <button
     *ngIf="mostrarVer"
     type="button"
     class="btn-accion btn-ver"
     title="Ver"
-    aria-label="Ver"
-    (click)="onVer()">
+    [disabled]="deshabilitado"
+    (click)="emitirVer()">
     <i class="bi bi-eye"></i>
   </button>
 
-  <!-- EDITAR -->
   <button
     *ngIf="mostrarEditar"
     type="button"
     class="btn-accion btn-editar"
     title="Editar"
-    aria-label="Editar"
-    (click)="onEditar()">
+    [disabled]="deshabilitado"
+    (click)="emitirEditar()">
     <i class="bi bi-pencil"></i>
   </button>
 
-  <!-- ELIMINAR -->
+  <button
+    *ngIf="mostrarAnular"
+    type="button"
+    class="btn-accion btn-anular"
+    title="Anular"
+    [disabled]="deshabilitado"
+    (click)="emitirAnular()">
+    <i class="bi bi-x-circle"></i>
+  </button>
+
   <button
     *ngIf="mostrarEliminar"
     type="button"
     class="btn-accion btn-eliminar"
     title="Eliminar"
-    aria-label="Eliminar"
-    (click)="onEliminar()">
+    [disabled]="deshabilitado"
+    (click)="emitirEliminar()">
     <i class="bi bi-trash"></i>
   </button>
+
 </div>

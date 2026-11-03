@@ -65,6 +65,11 @@
   color: #333;
 }
 
+.btn-cerrar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .resumen-pago {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -130,6 +135,7 @@
   font-size: 12px;
   outline: none;
   box-sizing: border-box;
+  transition: 0.2s ease;
 }
 
 .campo input:focus,
@@ -138,9 +144,20 @@
   box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.08);
 }
 
+.campo input:disabled,
+.campo select:disabled {
+  background: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
 .btn-pagar {
   min-height: 40px;
   padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
   border: none;
   border-radius: 6px;
   background: #059669;
@@ -149,6 +166,7 @@
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
+  transition: 0.2s ease;
 }
 
 .btn-pagar:hover:not(:disabled) {
@@ -177,6 +195,21 @@
 
 .factura-pagada i {
   font-size: 20px;
+}
+
+.estado {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  margin-bottom: 18px;
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  color: #777;
+  font-size: 12px;
+  text-align: center;
 }
 
 .historial {
@@ -213,4 +246,82 @@
   padding: 12px;
   border-bottom: 1px solid #eee;
   color: #555;
+}
+
+.historial tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.sin-datos {
+  padding: 24px !important;
+  color: #999 !important;
+  text-align: center;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid #eee;
+}
+
+.btn-cerrar-footer {
+  min-height: 38px;
+  padding: 0 18px;
+  border: 1px solid #d6d6d6;
+  border-radius: 6px;
+  background: #fff;
+  color: #555;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn-cerrar-footer:hover:not(:disabled) {
+  background: #f5f5f5;
+  border-color: #c5c5c5;
+}
+
+.btn-cerrar-footer:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 850px) {
+  .form-pago {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .btn-pagar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .modal-overlay {
+    padding: 10px;
+  }
+
+  .modal-pago {
+    max-height: calc(100vh - 20px);
+    padding: 20px;
+  }
+
+  .resumen-pago {
+    grid-template-columns: 1fr;
+  }
+
+  .form-pago {
+    grid-template-columns: 1fr;
+  }
+
+  .historial {
+    overflow-x: auto;
+  }
+
+  .historial table {
+    min-width: 500px;
+  }
 }

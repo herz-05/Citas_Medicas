@@ -1,64 +1,94 @@
-/* CONTENEDOR DE ACCIONES */
-.acciones-tabla {
+.botones-acciones {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  white-space: nowrap;
+  gap: 12px;
 }
 
-/* BOTÓN GENÉRICO */
 .btn-accion {
-  width: 32px;
-  height: 32px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
-  border: 1px solid transparent;
-  border-radius: 6px;
+
+  padding: 4px;
+
+  border: none;
+  outline: none;
+
   background: transparent;
+
   cursor: pointer;
-  font-size: 14px;
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease;
 }
 
-.btn-accion:active {
-  transform: scale(0.92);
+.btn-accion i {
+  font-size: 18px;
+  line-height: 1;
 }
 
-/* VER */
+.btn-accion:hover:not(:disabled) {
+  transform: scale(1.15);
+}
+
+.btn-accion:active:not(:disabled) {
+  transform: scale(1);
+}
+
+.btn-accion:focus,
+.btn-accion:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.btn-accion:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+
+/* Ver */
+
 .btn-ver {
-  color: #6c5ce7;
+  color: #2563eb;
 }
 
-.btn-ver:hover {
-  background: #eeeaff;
-  border-color: #ddd6fe;
+.btn-ver:hover:not(:disabled) {
+  color: #1d4ed8;
 }
 
-/* EDITAR */
+
+/* Editar */
+
 .btn-editar {
   color: #d97706;
 }
 
-.btn-editar:hover {
-  background: #fff7ed;
-  border-color: #fed7aa;
+.btn-editar:hover:not(:disabled) {
+  color: #b45309;
 }
 
-/* ELIMINAR */
+
+/* Anular */
+
+.btn-anular {
+  color: #dc2626;
+}
+
+.btn-anular:hover:not(:disabled) {
+  color: #b91c1c;
+}
+
+
+/* Eliminar */
+
 .btn-eliminar {
   color: #dc2626;
 }
 
-.btn-eliminar:hover {
-  background: #fef2f2;
-  border-color: #fecaca;
-}
-
-/* ICONOS */
-.btn-accion i {
-  font-size: 14px;
-  pointer-events: none;
+.btn-eliminar:hover:not(:disabled) {
+  color: #b91c1c;
 }
