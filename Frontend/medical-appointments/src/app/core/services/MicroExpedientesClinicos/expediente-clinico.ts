@@ -5,11 +5,13 @@ import { GenericCrudService, PagedResult } from '../../generics/generic-crud.ser
 
 // Modelo de datos para la entidad ExpedienteClinico
 export interface ExpedienteClinico {
-  idExpedienteClinico: number;
-  idPaciente: number;
+  expedienteId: number;
+  pacienteId: number;
+  numeroExpediente: string;
   fechaApertura: string;
   estado: string;
-  observaciones: string;
+  creadoEn: string;
+  actualizadoEn: string;
 }
 
 @Injectable({
@@ -18,7 +20,7 @@ export interface ExpedienteClinico {
 export class ExpedientesClinicosService extends GenericCrudService<ExpedienteClinico> {
   constructor(http: HttpClient) {
     // Cambia el puerto por el de tu microservicio de expedientes
-    super(http, 'http://localhost:5087/ExpedientesClinicos');
+    super(http, 'http://localhost:5087/ExpedienteClinico');
   }
 
   // Obtiene el listado paginado de expedientes con opción de filtro
@@ -38,7 +40,7 @@ export class ExpedientesClinicosService extends GenericCrudService<ExpedienteCli
 
   // Actualiza un expediente existente
   updateExpediente(expediente: ExpedienteClinico): Observable<boolean> {
-    return this.update(expediente.idExpedienteClinico, expediente);
+    return this.update(expediente.expedienteId, expediente);
   }
 
   // Elimina un expediente por su ID

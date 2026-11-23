@@ -108,9 +108,9 @@ export class ExpedientesClinicos implements OnInit, OnDestroy {
         }
 
         const sugerencias: SugerenciaBusqueda[] = resultado.data.map((expediente) => ({
-          texto: `Expediente #${expediente.idExpedienteClinico}`,
-          descripcion: `Paciente #${expediente.idPaciente}`,
-          filtro: `IdExpedienteClinico == ${expediente.idExpedienteClinico}`
+          texto: `Expediente #${expediente.expedienteId}`,
+          descripcion: `Paciente #${expediente.pacienteId}`,
+          filtro: `IdExpedienteClinico == ${expediente.expedienteId}`
         }));
 
         this.busquedaService.establecerSugerencias(sugerencias);
@@ -160,9 +160,9 @@ export class ExpedientesClinicos implements OnInit, OnDestroy {
   }
 
   eliminarExpediente(expediente: ExpedienteClinico): void {
-    if (!confirm(`¿Desea eliminar el expediente #${expediente.idExpedienteClinico}?`)) return;
+    if (!confirm(`¿Desea eliminar el expediente #${expediente.expedienteId}?`)) return;
 
-    this.expedientesService.deleteExpediente(expediente.idExpedienteClinico).subscribe({
+    this.expedientesService.deleteExpediente(expediente.expedienteId).subscribe({
       next: () => {
         if (this.expedientes().length === 1 && this.paginaActual > 1) {
           this.paginaActual--;
@@ -239,11 +239,14 @@ export class ExpedientesClinicos implements OnInit, OnDestroy {
   // MODELO VACÍO
   private crearExpedienteVacio(): ExpedienteClinico {
     return {
-      idExpedienteClinico: 0,
-      idPaciente: 0,
-      fechaApertura: new Date().toISOString().substring(0, 10),
-      estado: 'Activo',
-      observaciones: ''
+      expedienteId: 0,
+    pacienteId: 0,
+    numeroExpediente: '',
+    fechaApertura: new Date().toISOString().substring(0, 10),
+    estado: 'Activo',
+    creadoEn: '',
+    actualizadoEn: ''
+      
     };
   }
 }

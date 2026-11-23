@@ -1,4 +1,5 @@
 
+using Core.feature.ExpedienteClinico.Queries;
 using Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +11,10 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddPersistence();
 
-
+// Registrar MediatR
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(typeof(GetExpClinicoQuery).Assembly)
+);
 
 builder.Services.AddCors(options =>
 {
@@ -32,6 +36,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// IMPORTANTE: aplicar la política CORS
+app.UseCors("AngularPolicy");
 
 app.UseAuthorization();
 

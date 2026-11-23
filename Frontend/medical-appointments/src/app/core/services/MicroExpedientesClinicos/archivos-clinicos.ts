@@ -26,7 +26,7 @@ export class ArchivosClinicosService
   extends GenericCrudService<ArchivoClinico> {
 
   constructor(http: HttpClient) {
-    super(http, 'http://localhost:5085/ArchClinico');
+    super(http, 'http://localhost:5087/ArchClinico');
   }
 
   getArchivosClinicos(

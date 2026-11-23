@@ -16,7 +16,7 @@ export interface Diagnostico {
 })
 export class DiagnosticosService extends GenericCrudService<Diagnostico> {
   constructor(http: HttpClient) {
-    super(http, 'http://localhost:5085/Diagnosticos');
+    super(http, 'http://localhost:5087/Diagnosticos');
   }
 
   // Obtiene el listado paginado de diagnósticos con opción de filtro

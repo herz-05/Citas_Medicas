@@ -1,117 +1,309 @@
+
 <!-- MODAL EXPEDIENTE CLÍNICO -->
 <div class="overlay" *ngIf="mostrarFormulario">
+
   <div class="modal-registro">
 
     <!-- HEADER MODAL -->
     <div class="modal-header">
+
       <div class="modal-marca">
-        <span class="mini-logo"><i class="bi bi-folder2-open"></i></span>
+        <span class="mini-logo">
+          <i class="bi bi-folder2-open"></i>
+        </span>
+
         <strong>Expediente clínico</strong>
       </div>
-      <button type="button" class="btn-cerrar" (click)="cerrarFormulario()">
+
+      <button
+        type="button"
+        class="btn-cerrar"
+        (click)="cerrarFormulario()">
+
         <i class="bi bi-x-lg"></i>
+
       </button>
+
     </div>
 
-    <!-- TÍTULOS Y SUBTÍTULOS -->
-    <h2 *ngIf="modoFormulario === 'nuevo'">Registrar nuevo expediente</h2>
-    <h2 *ngIf="modoFormulario === 'ver'">Información del expediente</h2>
-    <h2 *ngIf="modoFormulario === 'editar'">Editar expediente</h2>
+    <!-- TÍTULOS -->
+    <h2 *ngIf="modoFormulario === 'nuevo'">
+      Registrar nuevo expediente
+    </h2>
 
-    <p class="subtitulo" *ngIf="modoFormulario === 'nuevo'">Complete la información del expediente</p>
-    <p class="subtitulo" *ngIf="modoFormulario === 'ver'">Consulte la información registrada</p>
-    <p class="subtitulo" *ngIf="modoFormulario === 'editar'">Modifique la información necesaria</p>
+    <h2 *ngIf="modoFormulario === 'ver'">
+      Información del expediente
+    </h2>
+
+    <h2 *ngIf="modoFormulario === 'editar'">
+      Editar expediente
+    </h2>
+
+    <!-- SUBTÍTULOS -->
+    <p class="subtitulo" *ngIf="modoFormulario === 'nuevo'">
+      Complete la información del expediente
+    </p>
+
+    <p class="subtitulo" *ngIf="modoFormulario === 'ver'">
+      Consulte la información registrada
+    </p>
+
+    <p class="subtitulo" *ngIf="modoFormulario === 'editar'">
+      Modifique la información necesaria
+    </p>
 
     <!-- FORMULARIO -->
     <div class="form-grid">
+
+      <!-- ID EXPEDIENTE -->
+      <div class="campo" *ngIf="modoFormulario !== 'nuevo'">
+
+        <label>ID del expediente</label>
+
+        <input
+          type="number"
+          [(ngModel)]="nuevoExpediente.expedienteId"
+          disabled>
+
+      </div>
+
+      <!-- ID PACIENTE -->
       <div class="campo">
+
         <label>ID del paciente</label>
-        <input type="number" placeholder="Ingrese el ID del paciente" [(ngModel)]="nuevoExpediente.idPaciente" [disabled]="modoFormulario === 'ver'">
+
+        <input
+          type="number"
+          placeholder="Ingrese el ID del paciente"
+          [(ngModel)]="nuevoExpediente.pacienteId"
+          [disabled]="modoFormulario === 'ver'">
+
       </div>
 
+      <!-- NÚMERO EXPEDIENTE -->
       <div class="campo">
-        <label>Fecha de apertura</label>
-        <input type="date" [(ngModel)]="nuevoExpediente.fechaApertura" [disabled]="modoFormulario === 'ver'">
+
+        <label>Número de expediente</label>
+
+        <input
+          type="text"
+          placeholder="Ingrese el número de expediente"
+          [(ngModel)]="nuevoExpediente.numeroExpediente"
+          [disabled]="modoFormulario === 'ver'">
+
       </div>
 
-      <div class="campo campo-completo">
+      <!-- FECHA APERTURA -->
+      <div class="campo">
+
+        <label>Fecha de apertura</label>
+
+        <input
+          type="date"
+          [(ngModel)]="nuevoExpediente.fechaApertura"
+          [disabled]="modoFormulario === 'ver'">
+
+      </div>
+
+      <!-- ESTADO -->
+      <div class="campo">
+
         <label>Estado</label>
-        <select [(ngModel)]="nuevoExpediente.estado" [disabled]="modoFormulario === 'ver'">
+
+        <select
+          [(ngModel)]="nuevoExpediente.estado"
+          [disabled]="modoFormulario === 'ver'">
+
           <option value="">Seleccione</option>
           <option value="Activo">Activo</option>
           <option value="Inactivo">Inactivo</option>
+
         </select>
+
       </div>
 
-      <div class="campo campo-completo">
-        <label>Observaciones</label>
-        <textarea rows="3" placeholder="Ingrese las observaciones" [(ngModel)]="nuevoExpediente.observaciones" [disabled]="modoFormulario === 'ver'"></textarea>
+      <!-- FECHA DE CREACIÓN -->
+      <div class="campo campo-completo" *ngIf="modoFormulario === 'ver'">
+
+        <label>Fecha de creación</label>
+
+        <input
+          type="text"
+          [ngModel]="nuevoExpediente.creadoEn | date:'dd/MM/yyyy HH:mm'"
+          disabled>
+
       </div>
+
+      <!-- FECHA DE ACTUALIZACIÓN -->
+      <div class="campo campo-completo" *ngIf="modoFormulario === 'ver'">
+
+        <label>Última actualización</label>
+
+        <input
+          type="text"
+          [ngModel]="nuevoExpediente.actualizadoEn | date:'dd/MM/yyyy HH:mm'"
+          disabled>
+
+      </div>
+
     </div>
 
     <!-- ACCIONES MODAL -->
     <div class="acciones">
-      <button *ngIf="modoFormulario === 'ver'" type="button" class="btn-cancelar" (click)="cerrarFormulario()">Cerrar</button>
 
+      <!-- MODO VER -->
+      <button
+        *ngIf="modoFormulario === 'ver'"
+        type="button"
+        class="btn-cancelar"
+        (click)="cerrarFormulario()">
+
+        Cerrar
+
+      </button>
+
+      <!-- MODO NUEVO Y EDITAR -->
       <ng-container *ngIf="modoFormulario !== 'ver'">
-        <button type="button" class="btn-cancelar" (click)="cerrarFormulario()">Cancelar</button>
-        <button type="button" class="btn-guardar" (click)="guardarExpediente()">
-          <i class="bi bi-check-lg"></i>
-          {{ modoFormulario === 'nuevo' ? 'Guardar' : 'Guardar cambios' }}
+
+        <button
+          type="button"
+          class="btn-cancelar"
+          (click)="cerrarFormulario()">
+
+          Cancelar
+
         </button>
+
+        <button
+          type="button"
+          class="btn-guardar"
+          (click)="guardarExpediente()">
+
+          <i class="bi bi-check-lg"></i>
+
+          {{ modoFormulario === 'nuevo' ? 'Guardar' : 'Guardar cambios' }}
+
+        </button>
+
       </ng-container>
+
     </div>
 
   </div>
+
 </div>
 
-<!-- TABLA EXPEDIENTES -->
+
+<!-- TABLA EXPEDIENTES CLÍNICOS -->
 <div class="tabla-contenedor">
+
+  <!-- ENCABEZADO TABLA -->
   <div class="tabla-header">
+
     <div>
+
       <h2>Expedientes clínicos</h2>
-      <p>{{ totalRegistros }} {{ totalRegistros === 1 ? 'expediente registrado' : 'expedientes registrados' }}</p>
+
+      <p>
+        {{ totalRegistros }}
+        {{ totalRegistros === 1
+          ? 'expediente registrado'
+          : 'expedientes registrados' }}
+      </p>
+
     </div>
-    <button type="button" class="btn-nuevo" (click)="abrirNuevoExpediente()">
-      <i class="bi bi-plus-lg"></i> Nuevo expediente
+
+    <button
+      type="button"
+      class="btn-nuevo"
+      (click)="abrirNuevoExpediente()">
+
+      <i class="bi bi-plus-lg"></i>
+      Nuevo expediente
+
     </button>
+
   </div>
 
+
+  <!-- TABLA RESPONSIVE -->
   <div class="tabla-responsive">
+
     <table class="tabla-datos">
+
       <thead>
+
         <tr>
+
           <th>ID</th>
-          <th>Paciente</th>
+          <th>ID Paciente</th>
+          <th>Número expediente</th>
           <th>Fecha apertura</th>
           <th>Estado</th>
-          <th>Observaciones</th>
           <th class="columna-acciones">Acciones</th>
+
         </tr>
+
       </thead>
+
       <tbody>
+
+        <!-- LISTADO DE EXPEDIENTES -->
         <tr *ngFor="let expediente of expedientes()">
-          <td><span class="id-registro">{{ expediente.idExpedienteClinico }}</span></td>
-          <td><span class="nombre-registro">Paciente #{{ expediente.idPaciente }}</span></td>
-          <td>{{ expediente.fechaApertura | date:'dd/MM/yyyy' }}</td>
-          <td><span class="etiqueta">{{ expediente.estado }}</span></td>
-          <td>{{ expediente.observaciones }}</td>
+
+          <td>
+            {{ expediente.expedienteId }}
+          </td>
+
+          <td>
+            Paciente #{{ expediente.pacienteId }}
+          </td>
+
+          <td>
+            {{ expediente.numeroExpediente }}
+          </td>
+
+          <td>
+            {{ expediente.fechaApertura | date:'dd/MM/yyyy' }}
+          </td>
+
+          <td>
+
+            <span>
+              {{ expediente.estado }}
+            </span>
+
+          </td>
+
           <td class="columna-acciones">
+
             <app-botones-acciones
               (ver)="verExpediente(expediente)"
               (editar)="editarExpediente(expediente)"
               (eliminar)="eliminarExpediente(expediente)">
             </app-botones-acciones>
+
           </td>
+
         </tr>
 
+        <!-- SIN REGISTROS -->
         <tr *ngIf="expedientes().length === 0">
-          <td colspan="6" class="sin-datos">No hay expedientes registrados</td>
+
+          <td colspan="6" class="sin-datos">
+            No hay expedientes registrados
+          </td>
+
         </tr>
+
       </tbody>
+
     </table>
+
   </div>
 
+
+  <!-- PAGINACIÓN -->
   <app-paginacion
     [paginaActual]="paginaActual"
     [tamanoPagina]="tamanoPagina"
@@ -121,4 +313,5 @@
     (paginaCambiada)="cambiarPagina($event)"
     (tamanoPaginaCambiado)="cambiarTamanoPagina($event)">
   </app-paginacion>
+
 </div>
