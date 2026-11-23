@@ -1,1 +1,113 @@
-<p>diagnosticos works!</p>
+<!-- MODAL DIAGNOSTICO -->
+<div class="overlay" *ngIf="mostrarFormulario">
+  <div class="modal-registro">
+
+    <!-- HEADER MODAL -->
+    <div class="modal-header">
+      <div class="modal-marca">
+        <span class="mini-logo"><i class="bi bi-clipboard2-pulse"></i></span>
+        <strong>Diagnóstico</strong>
+      </div>
+      <button type="button" class="btn-cerrar" (click)="cerrarFormulario()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <!-- TÍTULOS Y SUBTÍTULOS -->
+    <h2 *ngIf="modoFormulario === 'nuevo'">Registrar nuevo diagnóstico</h2>
+    <h2 *ngIf="modoFormulario === 'ver'">Información del diagnóstico</h2>
+    <h2 *ngIf="modoFormulario === 'editar'">Editar diagnóstico</h2>
+
+    <p class="subtitulo" *ngIf="modoFormulario === 'nuevo'">Complete la información del diagnóstico</p>
+    <p class="subtitulo" *ngIf="modoFormulario === 'ver'">Consulte la información registrada</p>
+    <p class="subtitulo" *ngIf="modoFormulario === 'editar'">Modifique la información necesaria</p>
+
+    <!-- FORMULARIO -->
+    <div class="form-grid">
+      <div class="campo">
+        <label>Código CIE-10</label>
+        <input type="text" placeholder="Ej. J00" [(ngModel)]="nuevoDiagnostico.codigoCie10" [disabled]="modoFormulario === 'ver'">
+      </div>
+
+      <div class="campo">
+        <label>Nombre</label>
+        <input type="text" placeholder="Ingrese el nombre" [(ngModel)]="nuevoDiagnostico.nombre" [disabled]="modoFormulario === 'ver'">
+      </div>
+
+      <div class="campo campo-completo">
+        <label>Descripción</label>
+        <textarea rows="3" placeholder="Ingrese la descripción" [(ngModel)]="nuevoDiagnostico.descripcion" [disabled]="modoFormulario === 'ver'"></textarea>
+      </div>
+    </div>
+
+    <!-- ACCIONES MODAL -->
+    <div class="acciones">
+      <button *ngIf="modoFormulario === 'ver'" type="button" class="btn-cancelar" (click)="cerrarFormulario()">Cerrar</button>
+
+      <ng-container *ngIf="modoFormulario !== 'ver'">
+        <button type="button" class="btn-cancelar" (click)="cerrarFormulario()">Cancelar</button>
+        <button type="button" class="btn-guardar" (click)="guardarDiagnostico()">
+          <i class="bi bi-check-lg"></i>
+          {{ modoFormulario === 'nuevo' ? 'Guardar' : 'Guardar cambios' }}
+        </button>
+      </ng-container>
+    </div>
+
+  </div>
+</div>
+
+<!-- TABLA DIAGNOSTICOS -->
+<div class="tabla-contenedor">
+  <div class="tabla-header">
+    <div>
+      <h2>Diagnósticos</h2>
+      <p>{{ totalRegistros }} {{ totalRegistros === 1 ? 'diagnóstico registrado' : 'diagnósticos registrados' }}</p>
+    </div>
+    <button type="button" class="btn-nuevo" (click)="abrirNuevoDiagnostico()">
+      <i class="bi bi-plus-lg"></i> Nuevo diagnóstico
+    </button>
+  </div>
+
+  <div class="tabla-responsive">
+    <table class="tabla-datos">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Código CIE-10</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th class="columna-acciones">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let diagnostico of diagnosticos()">
+          <td><span class="id-registro">{{ diagnostico.idDiagnostico }}</span></td>
+          <td><span class="etiqueta">{{ diagnostico.codigoCie10 }}</span></td>
+          <td><span class="nombre-registro">{{ diagnostico.nombre }}</span></td>
+          <td>{{ diagnostico.descripcion }}</td>
+          <td class="columna-acciones">
+            <app-botones-acciones
+              (ver)="verDiagnostico(diagnostico)"
+              (editar)="editarDiagnostico(diagnostico)"
+              (eliminar)="eliminarDiagnostico(diagnostico)">
+            </app-botones-acciones>
+          </td>
+        </tr>
+
+        <tr *ngIf="diagnosticos().length === 0">
+          <td colspan="5" class="sin-datos">No hay diagnósticos registrados</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <app-paginacion
+    [paginaActual]="paginaActual"
+    [tamanoPagina]="tamanoPagina"
+    [totalRegistros]="totalRegistros"
+    [totalPaginas]="totalPaginas"
+    nombreRegistros="diagnósticos"
+    (paginaCambiada)="cambiarPagina($event)"
+    (tamanoPaginaCambiado)="cambiarTamanoPagina($event)">
+  </app-paginacion>
+</div>

@@ -150,8 +150,10 @@
 
       <!-- SUBMENÚ NORMAL -->
       <div class="submenu" *ngIf="!colapsado && expedientesAbierto">
-        <a routerLink="/expedientes" routerLinkActive="activo-sub">Expedientes</a>
+        <a routerLink="/expediente-clinico" routerLinkActive="activo-sub">Expedientes</a>
         <a routerLink="/atenciones" routerLinkActive="activo-sub">Atenciones</a>
+        <a routerLink="/diagnosticos" routerLinkActive="activo-sub">Diagnosticos</a>
+        <a routerLink="/sintomas" routerLinkActive="activo-sub">Sintomas</a>
       </div>
 
       <!-- MENÚ FLOTANTE -->
@@ -162,13 +164,21 @@
         (pointerenter)="mantenerFlotante()"
         (pointerleave)="programarCierre()">
         <div class="menu-flotante-titulo">Expedientes Clínicos</div>
-        <a routerLink="/expedientes" routerLinkActive="activo-flotante" (click)="cerrarFlotante()">
+        <a routerLink="/expediente-clinico" routerLinkActive="activo-flotante" (click)="cerrarFlotante()">
           <i class="bi bi-folder2"></i>
           <span>Expedientes</span>
         </a>
         <a routerLink="/atenciones" routerLinkActive="activo-flotante" (click)="cerrarFlotante()">
           <i class="bi bi-clipboard2-pulse"></i>
           <span>Atenciones</span>
+        </a>
+        <a routerLink="/diagosticos" routerLinkActive="activo-flotante" (click)="cerrarFlotante()">
+          <i class="bi bi-clipboard2-pulse"></i>
+          <span>Diagnosticos</span>
+        </a>
+        <a routerLink="/sintomas" routerLinkActive="activo-flotante" (click)="cerrarFlotante()">
+          <i class="bi bi-clipboard2-pulse"></i>
+          <span>Sintomas</span>
         </a>
       </div>
     </div>

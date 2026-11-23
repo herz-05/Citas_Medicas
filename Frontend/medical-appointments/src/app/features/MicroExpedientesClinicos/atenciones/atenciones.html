@@ -1,1 +1,127 @@
-<p>atenciones works!</p>
+<!-- MODAL ATENCION -->
+<div class="overlay" *ngIf="mostrarFormulario">
+  <div class="modal-registro">
+
+    <!-- HEADER MODAL -->
+    <div class="modal-header">
+      <div class="modal-marca">
+        <span class="mini-logo"><i class="bi bi-clipboard2-heart"></i></span>
+        <strong>Atención</strong>
+      </div>
+      <button type="button" class="btn-cerrar" (click)="cerrarFormulario()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <!-- TÍTULOS Y SUBTÍTULOS -->
+    <h2 *ngIf="modoFormulario === 'nuevo'">Registrar nueva atención</h2>
+    <h2 *ngIf="modoFormulario === 'ver'">Información de la atención</h2>
+    <h2 *ngIf="modoFormulario === 'editar'">Editar atención</h2>
+
+    <p class="subtitulo" *ngIf="modoFormulario === 'nuevo'">Complete la información de la atención</p>
+    <p class="subtitulo" *ngIf="modoFormulario === 'ver'">Consulte la información registrada</p>
+    <p class="subtitulo" *ngIf="modoFormulario === 'editar'">Modifique la información necesaria</p>
+
+    <!-- FORMULARIO -->
+    <div class="form-grid">
+      <div class="campo">
+        <label>ID del expediente clínico</label>
+        <input type="number" placeholder="Ingrese el ID del expediente" [(ngModel)]="nuevoAtencion.idExpedienteClinico" [disabled]="modoFormulario === 'ver'">
+      </div>
+
+      <div class="campo">
+        <label>ID del médico</label>
+        <input type="number" placeholder="Ingrese el ID del médico" [(ngModel)]="nuevoAtencion.idMedico" [disabled]="modoFormulario === 'ver'">
+      </div>
+
+      <div class="campo campo-completo">
+        <label>Fecha de atención</label>
+        <input type="date" [(ngModel)]="nuevoAtencion.fechaAtencion" [disabled]="modoFormulario === 'ver'">
+      </div>
+
+      <div class="campo campo-completo">
+        <label>Motivo de consulta</label>
+        <input type="text" placeholder="Ingrese el motivo de consulta" [(ngModel)]="nuevoAtencion.motivoConsulta" [disabled]="modoFormulario === 'ver'">
+      </div>
+
+      <div class="campo campo-completo">
+        <label>Observaciones</label>
+        <textarea rows="3" placeholder="Ingrese las observaciones" [(ngModel)]="nuevoAtencion.observaciones" [disabled]="modoFormulario === 'ver'"></textarea>
+      </div>
+    </div>
+
+    <!-- ACCIONES MODAL -->
+    <div class="acciones">
+      <button *ngIf="modoFormulario === 'ver'" type="button" class="btn-cancelar" (click)="cerrarFormulario()">Cerrar</button>
+
+      <ng-container *ngIf="modoFormulario !== 'ver'">
+        <button type="button" class="btn-cancelar" (click)="cerrarFormulario()">Cancelar</button>
+        <button type="button" class="btn-guardar" (click)="guardarAtencion()">
+          <i class="bi bi-check-lg"></i>
+          {{ modoFormulario === 'nuevo' ? 'Guardar' : 'Guardar cambios' }}
+        </button>
+      </ng-container>
+    </div>
+
+  </div>
+</div>
+
+<!-- TABLA ATENCIONES -->
+<div class="tabla-contenedor">
+  <div class="tabla-header">
+    <div>
+      <h2>Atenciones</h2>
+      <p>{{ totalRegistros }} {{ totalRegistros === 1 ? 'atención registrada' : 'atenciones registradas' }}</p>
+    </div>
+    <button type="button" class="btn-nuevo" (click)="abrirNuevoAtencion()">
+      <i class="bi bi-plus-lg"></i> Nueva atención
+    </button>
+  </div>
+
+  <div class="tabla-responsive">
+    <table class="tabla-datos">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Expediente</th>
+          <th>Médico</th>
+          <th>Fecha</th>
+          <th>Motivo</th>
+          <th>Observaciones</th>
+          <th class="columna-acciones">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let atencion of atenciones()">
+          <td><span class="id-registro">{{ atencion.idAtencion }}</span></td>
+          <td><span class="nombre-registro">Expediente #{{ atencion.idExpedienteClinico }}</span></td>
+          <td>Médico #{{ atencion.idMedico }}</td>
+          <td>{{ atencion.fechaAtencion | date:'dd/MM/yyyy' }}</td>
+          <td><span class="etiqueta">{{ atencion.motivoConsulta }}</span></td>
+          <td>{{ atencion.observaciones }}</td>
+          <td class="columna-acciones">
+            <app-botones-acciones
+              (ver)="verAtencion(atencion)"
+              (editar)="editarAtencion(atencion)"
+              (eliminar)="eliminarAtencion(atencion)">
+            </app-botones-acciones>
+          </td>
+        </tr>
+
+        <tr *ngIf="atenciones().length === 0">
+          <td colspan="7" class="sin-datos">No hay atenciones registradas</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <app-paginacion
+    [paginaActual]="paginaActual"
+    [tamanoPagina]="tamanoPagina"
+    [totalRegistros]="totalRegistros"
+    [totalPaginas]="totalPaginas"
+    nombreRegistros="atenciones"
+    (paginaCambiada)="cambiarPagina($event)"
+    (tamanoPaginaCambiado)="cambiarTamanoPagina($event)">
+  </app-paginacion>
+</div>

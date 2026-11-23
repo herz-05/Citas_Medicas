@@ -1,5 +1,4 @@
-
-/* BOTON NUEVO */
+/* BOTONES Y ACCIONES */
 .btn-nuevo {
   display: inline-flex;
   align-items: center;
@@ -17,6 +16,10 @@
   transition: background 0.2s ease, transform 0.15s ease;
 }
 
+.btn-nuevo i {
+  font-size: 16px;
+}
+
 .btn-nuevo:hover {
   background: #5b4cc4;
 }
@@ -25,7 +28,6 @@
   transform: scale(0.98);
 }
 
-/* CERRAR MODAL */
 .btn-cerrar {
   width: 34px;
   height: 34px;
@@ -38,6 +40,7 @@
   color: #777;
   font-size: 17px;
   cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .btn-cerrar:hover {
@@ -45,7 +48,6 @@
   color: #333;
 }
 
-/* BOTONES ACCIONES */
 .btn-cancelar {
   background: white;
   color: #555;
@@ -54,6 +56,10 @@
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
+}
+
+.btn-cancelar:hover {
+  background: #f8f8f8;
 }
 
 .btn-guardar {
@@ -70,16 +76,11 @@
   font-size: 14px;
 }
 
-.btn-guardar:hover:not(:disabled) {
+.btn-guardar:hover {
   background: #5b4cc4;
 }
 
-.btn-guardar:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* MODAL */
+/* MODAL Y OVERLAY */
 .overlay {
   position: fixed;
   inset: 0;
@@ -90,7 +91,7 @@
   z-index: 2000;
 }
 
-.modal-expediente {
+.modal-registro {
   width: 580px;
   max-width: 90%;
   max-height: 90vh;
@@ -125,7 +126,11 @@
   border-radius: 7px;
 }
 
-.modal-expediente h2 {
+.mini-logo i {
+  font-size: 14px;
+}
+
+.modal-registro h2 {
   margin-top: 24px;
   margin-bottom: 5px;
   color: #222;
@@ -150,6 +155,10 @@
   flex-direction: column;
 }
 
+.campo-completo {
+  grid-column: 1 / -1;
+}
+
 .campo label {
   margin-bottom: 6px;
   color: #555;
@@ -158,7 +167,8 @@
 }
 
 .campo input,
-.campo select {
+.campo select,
+.campo textarea {
   width: 100%;
   padding: 11px 12px;
   border: 1px solid #d0d0d0;
@@ -169,16 +179,23 @@
   font-family: inherit;
   outline: none;
   box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.campo textarea {
+  resize: vertical;
 }
 
 .campo input:focus,
-.campo select:focus {
+.campo select:focus,
+.campo textarea:focus {
   border-color: #6c5ce7;
   box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.08);
 }
 
 .campo input:disabled,
-.campo select:disabled {
+.campo select:disabled,
+.campo textarea:disabled {
   background: #f8f9fa;
   border-color: #e5e7eb;
   color: #555;
@@ -233,17 +250,17 @@
   overflow-x: auto;
 }
 
-.tabla-expedientes {
+.tabla-datos {
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
 }
 
-.tabla-expedientes thead {
+.tabla-datos thead {
   background: #6c5ce7;
 }
 
-.tabla-expedientes th {
+.tabla-datos th {
   padding: 14px 16px;
   text-align: left;
   color: white;
@@ -254,47 +271,45 @@
   white-space: nowrap;
 }
 
-.tabla-expedientes td {
+.tabla-datos td {
   padding: 14px 16px;
   border-bottom: 1px solid #eeeeee;
   color: #555;
   vertical-align: middle;
 }
 
-.tabla-expedientes tbody tr:hover {
+.tabla-datos tbody tr {
+  transition: background 0.2s ease;
+}
+
+.tabla-datos tbody tr:hover {
   background: #f8f7fd;
 }
 
-.tabla-expedientes tbody tr:last-child td {
+.tabla-datos tbody tr:last-child td {
   border-bottom: none;
 }
 
-/* IDENTIFICADOR */
-.id-expediente {
+/* DATOS Y ESTADOS */
+.id-registro {
   color: #6c5ce7;
   font-weight: 600;
 }
 
-/* ESTADO */
-.estado-expediente {
-  display: inline-block;
-  padding: 5px 10px;
-  background: #dcfce7;
-  color: #15803d;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
+.nombre-registro {
+  color: #333;
+  font-weight: 600;
   white-space: nowrap;
 }
 
-.estado-expediente.cerrado {
-  background: #dbeafe;
-  color: #1d4ed8;
-}
-
-.estado-expediente.inactivo {
-  background: #fee2e2;
-  color: #b91c1c;
+.etiqueta {
+  display: inline-block;
+  padding: 5px 10px;
+  background: #ede9fe;
+  color: #5b4cc4;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .columna-acciones {
@@ -308,13 +323,17 @@
   color: #999 !important;
 }
 
-/* RESPONSIVE */
+/* MEDIA QUERIES */
 @media (max-width: 650px) {
   .form-grid {
     grid-template-columns: 1fr;
   }
 
-  .modal-expediente {
+  .campo-completo {
+    grid-column: auto;
+  }
+
+  .modal-registro {
     padding: 22px 20px;
   }
 }
@@ -330,8 +349,8 @@
   }
 }
 
-@media (max-width: 1100px) {
-  .tabla-expedientes {
-    min-width: 850px;
+@media (max-width: 900px) {
+  .tabla-datos {
+    min-width: 900px;
   }
 }

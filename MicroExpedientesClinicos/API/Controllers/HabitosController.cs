@@ -1,5 +1,4 @@
-using Core.feature.AntecedenteMedicos.Commands;
-using Core.feature.AntecedenteMedicos.Queries;
+
 using Core.feature.Habitoss.Commands;
 using Core.feature.Habitoss.Queries;
 using Domain.Models;

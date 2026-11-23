@@ -19,6 +19,11 @@ import { Recetas } from './features/MicroTratamiento-Lab/recetas/recetas';
 //import { OrdenesLaboratorio } from './features/MicroTratamiento-Lab/ordenes-laboratorio/ordenes-laboratorio';
 //import { Tratamientos } from './features/MicroTratamiento-Lab/tratamientos/tratamientos';
 
+import { ExpedientesClinicos } from './features/MicroExpedientesClinicos/expediente-clinico/expediente-clinico';
+import { Atenciones } from './features/MicroExpedientesClinicos/atenciones/atenciones';
+import { Diagnosticos } from './features/MicroExpedientesClinicos/diagnosticos/diagnosticos';
+import { Sintomas } from './features/MicroExpedientesClinicos/sintomas/sintomas';
+
 import { authGuard, authChildGuard } from './core/Auth/auth.guard';
 
 export const routes: Routes = [
@@ -48,6 +53,11 @@ export const routes: Routes = [
       { path: 'prescripciones', component: Recetas },
       //{ path: 'ordenes-laboratorio', component: OrdenesLaboratorio },
       //{ path: 'tratamientos', component: Tratamientos },
+
+      { path: 'expediente-clinico', component: ExpedientesClinicos },
+      { path: 'atenciones', component: Atenciones },
+      { path: 'diagnosticos', component: Diagnosticos },
+      { path: 'sintomas', component: Sintomas },
 
       { path: '', redirectTo: 'inicio', pathMatch: 'full' }
     ]

@@ -19,7 +19,7 @@ namespace Core.feature.AtencionDiagnosticos.Commands
         public string? Observacion { get; set; }
     }
 
-    public class UpdateAtnDiagnosticossCommandHandler
+    public class UpdateAtnDiagnosticosCommandHandler
        : IRequestHandler<UpdateAtnDiagnosticosCommand, bool>
     {
         private readonly IGenericRepository<AtencionDiagnostico> _repository;

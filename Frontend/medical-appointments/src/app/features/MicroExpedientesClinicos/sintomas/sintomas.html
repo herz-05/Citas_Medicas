@@ -1,1 +1,106 @@
-<p>sintomas works!</p>
+<!-- MODAL SINTOMA -->
+<div class="overlay" *ngIf="mostrarFormulario">
+  <div class="modal-registro">
+
+    <!-- HEADER MODAL -->
+    <div class="modal-header">
+      <div class="modal-marca">
+        <span class="mini-logo"><i class="bi bi-thermometer-half"></i></span>
+        <strong>Síntoma</strong>
+      </div>
+      <button type="button" class="btn-cerrar" (click)="cerrarFormulario()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <!-- TÍTULOS Y SUBTÍTULOS -->
+    <h2 *ngIf="modoFormulario === 'nuevo'">Registrar nuevo síntoma</h2>
+    <h2 *ngIf="modoFormulario === 'ver'">Información del síntoma</h2>
+    <h2 *ngIf="modoFormulario === 'editar'">Editar síntoma</h2>
+
+    <p class="subtitulo" *ngIf="modoFormulario === 'nuevo'">Complete la información del síntoma</p>
+    <p class="subtitulo" *ngIf="modoFormulario === 'ver'">Consulte la información registrada</p>
+    <p class="subtitulo" *ngIf="modoFormulario === 'editar'">Modifique la información necesaria</p>
+
+    <!-- FORMULARIO -->
+    <div class="form-grid">
+      <div class="campo campo-completo">
+        <label>Nombre</label>
+        <input type="text" placeholder="Ingrese el nombre" [(ngModel)]="nuevoSintoma.nombre" [disabled]="modoFormulario === 'ver'">
+      </div>
+
+      <div class="campo campo-completo">
+        <label>Descripción</label>
+        <textarea rows="3" placeholder="Ingrese la descripción" [(ngModel)]="nuevoSintoma.descripcion" [disabled]="modoFormulario === 'ver'"></textarea>
+      </div>
+    </div>
+
+    <!-- ACCIONES MODAL -->
+    <div class="acciones">
+      <button *ngIf="modoFormulario === 'ver'" type="button" class="btn-cancelar" (click)="cerrarFormulario()">Cerrar</button>
+
+      <ng-container *ngIf="modoFormulario !== 'ver'">
+        <button type="button" class="btn-cancelar" (click)="cerrarFormulario()">Cancelar</button>
+        <button type="button" class="btn-guardar" (click)="guardarSintoma()">
+          <i class="bi bi-check-lg"></i>
+          {{ modoFormulario === 'nuevo' ? 'Guardar' : 'Guardar cambios' }}
+        </button>
+      </ng-container>
+    </div>
+
+  </div>
+</div>
+
+<!-- TABLA SINTOMAS -->
+<div class="tabla-contenedor">
+  <div class="tabla-header">
+    <div>
+      <h2>Síntomas</h2>
+      <p>{{ totalRegistros }} {{ totalRegistros === 1 ? 'síntoma registrado' : 'síntomas registrados' }}</p>
+    </div>
+    <button type="button" class="btn-nuevo" (click)="abrirNuevoSintoma()">
+      <i class="bi bi-plus-lg"></i> Nuevo síntoma
+    </button>
+  </div>
+
+  <div class="tabla-responsive">
+    <table class="tabla-datos">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th class="columna-acciones">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let sintoma of sintomas()">
+          <td><span class="id-registro">{{ sintoma.idSintoma }}</span></td>
+          <td><span class="nombre-registro">{{ sintoma.nombre }}</span></td>
+          <td>{{ sintoma.descripcion }}</td>
+          <td class="columna-acciones">
+            <app-botones-acciones
+              (ver)="verSintoma(sintoma)"
+              (editar)="editarSintoma(sintoma)"
+              (eliminar)="eliminarSintoma(sintoma)">
+            </app-botones-acciones>
+          </td>
+        </tr>
+
+        <tr *ngIf="sintomas().length === 0">
+          <td colspan="4" class="sin-datos">No hay síntomas registrados</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <app-paginacion
+    [paginaActual]="paginaActual"
+    [tamanoPagina]="tamanoPagina"
+    [totalRegistros]="totalRegistros"
+    [totalPaginas]="totalPaginas"
+    nombreRegistros="síntomas"
+    (paginaCambiada)="cambiarPagina($event)"
+    (tamanoPaginaCambiado)="cambiarTamanoPagina($event)">
+  </app-paginacion>
+</div>
