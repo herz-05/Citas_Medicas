@@ -1,7 +1,13 @@
-﻿
-import { Component, OnInit, signal } from '@angular/core';
+﻿import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subject, of, timer } from 'rxjs';
+import {
+  switchMap,
+  catchError,
+  finalize,
+  distinctUntilChanged
+} from 'rxjs/operators';
 
 import {
   CitasService,
@@ -83,10 +89,21 @@ export class AgendaCitas implements OnInit {
   cargandoHorarios = false;
   errorHorarios = '';
 
+  horarioPrecargado = false;
+  diaSemanaPrecargado: string | null = null;
+
+  fechaMinima = this.obtenerFechaLocal();
+
   modoFormulario: 'nuevo' | 'ver' | 'editar' = 'nuevo';
 
   citaSeleccionada: Cita | null = null;
   nuevaCita: Cita = this.crearCitaVacia();
+
+  private solicitudesHorarios$ = new Subject<{
+    idMedico: number;
+    idEspecialidad: number;
+    fecha: string;
+  } | null>();
 
   constructor(
     private citasService: CitasService,
@@ -98,7 +115,9 @@ export class AgendaCitas implements OnInit {
     private medicoEspecialidadesService: MedicoEspecialidadesService,
     private horariosMedicosService: HorariosMedicosService,
     private busquedaService: BusquedaService
-  ) {}
+  ) {
+    this.configurarConsultaHorarios();
+  }
 
   ngOnInit(): void {
     this.busquedaService.configurar('Buscar citas...');
@@ -110,11 +129,98 @@ export class AgendaCitas implements OnInit {
     this.cargarEstadosCitas();
     this.cargarEspecialidades();
     this.cargarRelacionesMedicoEspecialidad();
+
+    this.recibirHorarioDesdeNavegacion();
   }
 
-  // =========================================
-  // CARGAR INFORMACIÓN
-  // =========================================
+  private recibirHorarioDesdeNavegacion(): void {
+    const estado = history.state;
+
+    if (!estado?.agendarCita || !estado?.horario) {
+      return;
+    }
+
+    const horario = estado.horario;
+
+    this.modoFormulario = 'nuevo';
+    this.citaSeleccionada = null;
+    this.nuevaCita = this.crearCitaVacia();
+
+    this.nuevaCita.idMedico = Number(horario.idMedico);
+    this.nuevaCita.idEspecialidad = Number(horario.idEspecialidad);
+    this.nuevaCita.idConsultorio = Number(horario.idConsultorio);
+
+    this.horarioPrecargado = true;
+    this.diaSemanaPrecargado = horario.diaSemana ?? null;
+
+    this.fechaMinima = this.obtenerFechaLocal();
+
+    this.actualizarEspecialidadesDisponibles();
+    this.asignarEstadoConfirmada();
+    this.limpiarHorarios();
+
+    this.mostrarFormulario = true;
+
+    history.replaceState(
+      { ...history.state, agendarCita: false },
+      ''
+    );
+  }
+
+  private normalizarDia(dia: string): string {
+    return dia
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim()
+      .toLowerCase();
+  }
+
+  private configurarConsultaHorarios(): void {
+    this.solicitudesHorarios$
+      .pipe(
+        distinctUntilChanged((a, b) =>
+          a === b || (
+            !!a && !!b &&
+            a.idMedico === b.idMedico &&
+            a.idEspecialidad === b.idEspecialidad &&
+            a.fecha === b.fecha
+          )
+        ),
+        switchMap(parametros => {
+          if (!parametros) {
+            this.cargandoHorarios = false;
+            return of([]);
+          }
+
+          this.cargandoHorarios = true;
+          this.errorHorarios = '';
+
+          return timer(180).pipe(
+            switchMap(() =>
+              this.horariosMedicosService.getHorariosDisponibles(
+                parametros.idMedico,
+                parametros.idEspecialidad,
+                parametros.fecha
+              )
+            ),
+            catchError(error => {
+              console.error('Error consultando horarios:', error);
+
+              this.errorHorarios =
+                'No fue posible consultar los horarios disponibles.';
+
+              return of([]);
+            }),
+            finalize(() => {
+              this.cargandoHorarios = false;
+            })
+          );
+        })
+      )
+      .subscribe(horarios => {
+        this.horariosDisponibles.set(horarios ?? []);
+      });
+  }
 
   cargarCitas(): void {
     this.citasService.getCitas(
@@ -161,7 +267,13 @@ export class AgendaCitas implements OnInit {
 
   cargarEstadosCitas(): void {
     this.estadoCitasService.getEstadosCitas(1, 1000).subscribe({
-      next: resultado => this.estadosCitas.set(resultado.data ?? []),
+      next: resultado => {
+        this.estadosCitas.set(resultado.data ?? []);
+
+        if (this.modoFormulario === 'nuevo') {
+          this.asignarEstadoConfirmada();
+        }
+      },
       error: error => console.error('Error cargando estados:', error)
     });
   }
@@ -193,10 +305,6 @@ export class AgendaCitas implements OnInit {
         }
       });
   }
-
-  // =========================================
-  // MÉDICO Y ESPECIALIDAD
-  // =========================================
 
   actualizarEspecialidadesDisponibles(): void {
     const idMedico = Number(this.nuevaCita.idMedico);
@@ -245,6 +353,37 @@ export class AgendaCitas implements OnInit {
     this.nuevaCita.horaFin = '';
 
     this.limpiarHorarios();
+
+    if (this.nuevaCita.fechaCita < this.obtenerFechaLocal()) {
+      this.errorHorarios = 'No puede seleccionar una fecha anterior a hoy.';
+      return;
+    }
+
+    if (this.diaSemanaPrecargado) {
+      const fecha = new Date(`${this.nuevaCita.fechaCita}T12:00:00`);
+
+      const dias = [
+        'domingo',
+        'lunes',
+        'martes',
+        'miercoles',
+        'jueves',
+        'viernes',
+        'sabado'
+      ];
+
+      const diaSeleccionado = dias[fecha.getDay()];
+
+      if (
+        this.normalizarDia(diaSeleccionado) !==
+        this.normalizarDia(this.diaSemanaPrecargado)
+      ) {
+        this.errorHorarios =
+          `Este horario solamente atiende los días ${this.diaSemanaPrecargado}.`;
+        return;
+      }
+    }
+
     this.consultarHorariosDisponibles();
   }
 
@@ -258,10 +397,6 @@ export class AgendaCitas implements OnInit {
       || `Especialidad #${id}`;
   }
 
-  // =========================================
-  // DISPONIBILIDAD DE HORARIOS
-  // =========================================
-
   consultarHorariosDisponibles(): void {
     const idMedico = Number(this.nuevaCita.idMedico);
     const idEspecialidad = Number(this.nuevaCita.idEspecialidad);
@@ -270,30 +405,19 @@ export class AgendaCitas implements OnInit {
     if (
       idMedico <= 0 ||
       idEspecialidad <= 0 ||
-      !fecha
+      !fecha ||
+      fecha < this.obtenerFechaLocal()
     ) {
+      this.limpiarHorarios();
       return;
     }
 
-    this.cargandoHorarios = true;
-    this.errorHorarios = '';
     this.horariosDisponibles.set([]);
 
-    this.horariosMedicosService.getHorariosDisponibles(
+    this.solicitudesHorarios$.next({
       idMedico,
       idEspecialidad,
       fecha
-    ).subscribe({
-      next: horarios => {
-        this.horariosDisponibles.set(horarios ?? []);
-        this.cargandoHorarios = false;
-      },
-      error: error => {
-        console.error('Error consultando horarios:', error);
-        this.errorHorarios =
-          'No fue posible consultar los horarios disponibles.';
-        this.cargandoHorarios = false;
-      }
     });
   }
 
@@ -323,14 +447,35 @@ export class AgendaCitas implements OnInit {
   }
 
   limpiarHorarios(): void {
+    this.solicitudesHorarios$.next(null);
+
     this.horariosDisponibles.set([]);
     this.cargandoHorarios = false;
     this.errorHorarios = '';
   }
 
-  // =========================================
-  // NOMBRES PARA LA TABLA
-  // =========================================
+  private obtenerFechaLocal(): string {
+    const fecha = new Date();
+
+    const anio = fecha.getFullYear();
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const dia = String(fecha.getDate()).padStart(2, '0');
+
+    return `${anio}-${mes}-${dia}`;
+  }
+
+  private asignarEstadoConfirmada(): boolean {
+    const estado = this.estadosCitas().find(
+      e => e.nombreEstado?.trim().toLowerCase() === 'confirmada'
+    );
+
+    if (!estado) {
+      return false;
+    }
+
+    this.nuevaCita.idEstadoCita = estado.idEstadoCita;
+    return true;
+  }
 
   obtenerNombrePaciente(id: number): string {
     const paciente = this.pacientes().find(
@@ -372,14 +517,17 @@ export class AgendaCitas implements OnInit {
       : `Estado #${id}`;
   }
 
-  // =========================================
-  // FORMULARIO
-  // =========================================
-
   abrirNuevaCita(): void {
     this.modoFormulario = 'nuevo';
     this.citaSeleccionada = null;
     this.nuevaCita = this.crearCitaVacia();
+
+    this.horarioPrecargado = false;
+    this.diaSemanaPrecargado = null;
+
+    this.fechaMinima = this.obtenerFechaLocal();
+
+    this.asignarEstadoConfirmada();
 
     this.especialidadesDisponibles.set([]);
     this.limpiarHorarios();
@@ -390,6 +538,8 @@ export class AgendaCitas implements OnInit {
   verCita(cita: Cita): void {
     this.citasService.getCitaById(cita.idCita).subscribe({
       next: resultado => {
+        this.limpiarHorarios();
+
         this.modoFormulario = 'ver';
         this.citaSeleccionada = resultado;
 
@@ -409,6 +559,8 @@ export class AgendaCitas implements OnInit {
   editarCita(cita: Cita): void {
     this.citasService.getCitaById(cita.idCita).subscribe({
       next: resultado => {
+        this.limpiarHorarios();
+
         this.modoFormulario = 'editar';
         this.citaSeleccionada = resultado;
 
@@ -435,13 +587,12 @@ export class AgendaCitas implements OnInit {
     this.citaSeleccionada = null;
     this.nuevaCita = this.crearCitaVacia();
 
+    this.horarioPrecargado = false;
+    this.diaSemanaPrecargado = null;
+
     this.especialidadesDisponibles.set([]);
     this.limpiarHorarios();
   }
-
-  // =========================================
-  // VALIDAR Y GUARDAR
-  // =========================================
 
   guardarCita(): void {
     if (this.guardando) return;
@@ -474,6 +625,13 @@ export class AgendaCitas implements OnInit {
       return;
     }
 
+    this.fechaMinima = this.obtenerFechaLocal();
+
+    if (this.nuevaCita.fechaCita < this.fechaMinima) {
+      alert('No puede programar citas en fechas anteriores a hoy.');
+      return;
+    }
+
     if (!this.nuevaCita.horaInicio || !this.nuevaCita.horaFin) {
       alert('Seleccione un horario disponible.');
       return;
@@ -490,6 +648,11 @@ export class AgendaCitas implements OnInit {
     }
 
     if (this.modoFormulario === 'nuevo') {
+      if (!this.asignarEstadoConfirmada()) {
+        alert('No se encontró el estado Confirmada en el catálogo.');
+        return;
+      }
+
       this.agregarCita();
     } else if (this.modoFormulario === 'editar') {
       this.actualizarCita();
@@ -554,10 +717,6 @@ export class AgendaCitas implements OnInit {
     };
   }
 
-  // =========================================
-  // ELIMINACIÓN ACTUAL
-  // =========================================
-
   eliminarCita(cita: Cita): void {
     const paciente = this.obtenerNombrePaciente(cita.idPaciente);
 
@@ -578,10 +737,6 @@ export class AgendaCitas implements OnInit {
       error: error => console.error('Error eliminando cita:', error)
     });
   }
-
-  // =========================================
-  // PAGINACIÓN Y UTILIDADES
-  // =========================================
 
   private convertirHoraParaApi(hora: string): string {
     if (!hora) return '';

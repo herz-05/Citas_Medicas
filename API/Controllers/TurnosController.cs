@@ -1,3 +1,4 @@
+
 using Core.feature.Turnos.Commands;
 using Core.feature.Turnos.Queries;
 using Domain.Models;
@@ -18,55 +19,80 @@ namespace API.Controllers
             _mediator = mediator;
         }
 
-
-        // =========================================
-        // GET - LISTAR TURNOS PAGINADOS
-        // =========================================
-
+        // GET - LISTAR TURNOS
         [HttpGet]
         public async Task<ActionResult<PagedResult<Turno>>> Get(
             [FromQuery] GetTurnosQuery query)
         {
-            var resultado = await _mediator.Send(query);
+            var resultado = await _mediator.Send(
+                query,
+                HttpContext.RequestAborted);
 
             return Ok(resultado);
         }
 
-        // =========================================
-        // GET - TURNO POR ID
-        // =========================================
+        // GET - CITAS PENDIENTES DE LLEGADA
+        [HttpGet("citas-pendientes")]
+        public async Task<IActionResult> GetCitasPendientes()
+        {
+            var resultado = await _mediator.Send(
+                new GetCitasPendientesTurnoQuery(),
+                HttpContext.RequestAborted);
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Turno>> GetById(
-            int id)
+            return Ok(resultado);
+        }
+
+        // GET - TURNO POR ID
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Turno>> GetById(int id)
         {
             var turno = await _mediator.Send(
                 new GetTurnosByIdQuery
                 {
                     IdTurno = id
-                }
-            );
+                },
+                HttpContext.RequestAborted);
 
             if (turno == null)
-            {
                 return NotFound();
-            }
 
             return Ok(turno);
         }
 
-
-        // =========================================
-        // POST - CREAR TURNO
-        // =========================================
-
-        [HttpPost]
-        public async Task<ActionResult<bool>> Post(
-            [FromBody] AddTurnosCommand command)
+        // POST - REGISTRAR LLEGADA
+        [HttpPost("registrar-llegada/{idCita:int}")]
+        public async Task<IActionResult> RegistrarLlegada(int idCita)
         {
-            var resultado = await _mediator.Send(command);
+            var numeroTurno = await _mediator.Send(
+                new RegistrarLlegadaTurnoCommand
+                {
+                    IdCita = idCita
+                },
+                HttpContext.RequestAborted);
 
-            return Ok(resultado);
+            return Ok(new
+            {
+                mensaje = "Llegada registrada correctamente.",
+                numeroTurno
+            });
+        }
+
+        // PATCH - CAMBIAR ESTADO
+        [HttpPatch("{id:int}/estado")]
+        public async Task<IActionResult> CambiarEstado(
+            int id,
+            [FromBody] UpdateEstadoTurnoCommand command)
+        {
+            command.IdTurno = id;
+
+            var resultado = await _mediator.Send(
+                command,
+                HttpContext.RequestAborted);
+
+            if (!resultado)
+                return NotFound();
+
+            return Ok(true);
         }
     }
 }

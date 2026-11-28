@@ -1,5 +1,5 @@
 
-<!-- Modal de horarios médicos -->
+<!-- MODAL DE HORARIOS MÉDICOS -->
 <div class="overlay" *ngIf="mostrarFormulario">
   <div class="modal-horario">
 
@@ -46,7 +46,7 @@
 
     <div class="form-grid">
 
-      <!-- Médico -->
+      <!-- MÉDICO -->
       <div class="campo">
         <label>Médico</label>
 
@@ -74,7 +74,7 @@
         </select>
       </div>
 
-      <!-- Especialidad -->
+      <!-- ESPECIALIDAD -->
       <div class="campo">
         <label>Especialidad</label>
 
@@ -111,7 +111,7 @@
         </select>
       </div>
 
-      <!-- Consultorio -->
+      <!-- CONSULTORIO -->
       <div class="campo">
         <label>Consultorio</label>
 
@@ -129,16 +129,12 @@
 
             {{ consultorio.nombre }}
 
-            <ng-container *ngIf="consultorio.numeroConsultorio">
-              - {{ consultorio.numeroConsultorio }}
-            </ng-container>
-
           </option>
 
         </select>
       </div>
 
-      <!-- Día -->
+      <!-- DÍA -->
       <div class="campo">
         <label>Día de la semana</label>
 
@@ -159,7 +155,7 @@
         </select>
       </div>
 
-      <!-- Estado -->
+      <!-- ESTADO -->
       <div class="campo">
         <label>Estado</label>
 
@@ -173,7 +169,7 @@
         </select>
       </div>
 
-      <!-- Hora de inicio -->
+      <!-- HORA INICIO -->
       <div class="campo">
         <label>Hora de inicio</label>
 
@@ -183,7 +179,7 @@
           [disabled]="modoFormulario === 'ver' || guardando">
       </div>
 
-      <!-- Hora de fin -->
+      <!-- HORA FIN -->
       <div class="campo">
         <label>Hora de fin</label>
 
@@ -195,7 +191,7 @@
 
     </div>
 
-    <!-- Acciones -->
+    <!-- ACCIONES -->
     <div class="acciones">
 
       <button
@@ -206,6 +202,18 @@
         (click)="cerrarFormulario()">
 
         Cerrar
+
+      </button>
+
+      <!-- NUEVO BOTÓN AGENDAR CITA -->
+      <button
+        *ngIf="modoFormulario === 'ver' && nuevoHorario.estado"
+        type="button"
+        class="btn-agendar"
+        (click)="agendarCita(nuevoHorario)">
+
+        <i class="bi bi-calendar-plus"></i>
+        Agendar cita
 
       </button>
 
@@ -247,18 +255,20 @@
 </div>
 
 
-<!-- Tabla de horarios médicos -->
+<!-- TABLA DE HORARIOS MÉDICOS -->
 <div class="tabla-contenedor">
 
   <div class="tabla-header">
+
     <div>
       <h2>Horarios Médicos</h2>
 
       <p>
         {{ totalRegistros }}
-        {{ totalRegistros === 1
-          ? 'horario registrado'
-          : 'horarios registrados'
+        {{
+          totalRegistros === 1
+            ? 'horario registrado'
+            : 'horarios registrados'
         }}
       </p>
     </div>
@@ -273,6 +283,7 @@
       Nuevo horario
 
     </button>
+
   </div>
 
   <div class="tabla-responsive">
@@ -370,7 +381,7 @@
 
   </div>
 
-  <!-- Paginación -->
+  <!-- PAGINACIÓN -->
   <app-paginacion
     [paginaActual]="paginaActual"
     [tamanoPagina]="tamanoPagina"

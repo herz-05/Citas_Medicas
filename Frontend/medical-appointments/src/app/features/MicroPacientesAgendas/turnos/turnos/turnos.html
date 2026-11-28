@@ -1,0 +1,278 @@
+
+<!-- RECEPCIÓN DE PACIENTES -->
+
+<div class="tabla-contenedor">
+
+<div class="tabla-header">
+
+  <div>
+    <h2>Recepción de pacientes</h2>
+    <p>Citas confirmadas pendientes de llegada</p>
+  </div>
+
+  <span class="contador-citas">
+    <i class="bi bi-calendar-check"></i>
+    {{ citasPendientes.length }}
+    {{ citasPendientes.length === 1 ? 'cita pendiente' : 'citas pendientes' }}
+  </span>
+
+</div>
+
+  <div class="tabla-responsive">
+
+    <table class="tabla-turnos">
+
+      <thead>
+        <tr>
+          <th>Cita</th>
+          <th>Paciente</th>
+          <th>Médico</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Motivo</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let cita of citasPendientes">
+
+          <td>
+            <span class="id-turno">
+              #{{ cita.idCita }}
+            </span>
+          </td>
+
+          <td>
+            <strong class="paciente-nombre">
+              {{ obtenerNombrePaciente(cita.idPaciente) }}
+            </strong>
+          </td>
+
+          <td>
+            <strong class="medico-nombre">
+              {{ obtenerNombreMedico(cita.idMedico) }}
+            </strong>
+          </td>
+
+          <td>
+            {{ cita.fechaCita | date:'dd/MM/yyyy' }}
+          </td>
+
+          <td>
+            {{ formatearHora(cita.horaInicio) }}
+          </td>
+
+          <td>
+            {{ cita.motivoConsulta || 'Consulta general' }}
+          </td>
+
+          <td>
+
+            <button
+              type="button"
+              class="btn-guardar"
+              [disabled]="registrandoLlegada"
+              (click)="registrarLlegada(cita)">
+
+              <i class="bi bi-ticket-perforated"></i>
+
+              {{ registrandoLlegada ? 'Registrando...' : 'Registrar llegada' }}
+
+            </button>
+
+          </td>
+
+        </tr>
+
+        <tr *ngIf="cargandoPendientes && citasPendientes.length === 0">
+
+          <td colspan="7" class="sin-datos">
+            <i class="bi bi-arrow-repeat"></i>
+            Cargando citas pendientes...
+          </td>
+
+        </tr>
+
+        <tr *ngIf="!cargandoPendientes && citasPendientes.length === 0">
+
+          <td colspan="7" class="sin-datos">
+            <i class="bi bi-check-circle"></i>
+            No hay citas pendientes de llegada para hoy.
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+
+<!-- TURNOS REGISTRADOS -->
+
+<div class="tabla-contenedor">
+
+  <div class="tabla-header">
+
+    <div>
+      <h2>Turnos registrados</h2>
+
+      <p>
+        {{ totalRegistros }}
+        {{ totalRegistros === 1 ? 'turno registrado' : 'turnos registrados' }}
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="btn-nuevo"
+      [disabled]="cargandoDatos"
+      (click)="cargarTurnos()">
+
+      <i class="bi bi-arrow-clockwise"></i>
+
+      {{ cargandoDatos ? 'Actualizando...' : 'Actualizar turnos' }}
+
+    </button>
+
+  </div>
+
+  <div class="tabla-responsive">
+
+    <table class="tabla-turnos">
+
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Número de turno</th>
+          <th>Paciente</th>
+          <th>Horario médico</th>
+          <th>Fecha</th>
+          <th>Estado</th>
+          <th class="columna-acciones">Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let turno of turnos()">
+
+          <td>
+            <span class="id-turno">
+              {{ turno.idTurno }}
+            </span>
+          </td>
+
+          <td>
+            <span class="numero-turno">
+              #{{ formatearNumeroTurno(turno.numeroTurno) }}
+            </span>
+          </td>
+
+          <td>
+            <strong class="paciente-nombre">
+              {{ obtenerNombrePaciente(turno.idPaciente) }}
+            </strong>
+          </td>
+
+          <td>
+            {{ obtenerNombreMedico(
+              horarios().find(h => h.idHorario === turno.idHorario)?.idMedico ?? 0
+            ) }}
+            <br>
+            <small>
+              {{ obtenerDescripcionHorario(turno.idHorario) }}
+            </small>
+          </td>
+
+          <td>
+            {{ turno.fechaTurno | date:'dd/MM/yyyy' }}
+          </td>
+
+          <td>
+
+            <span
+              class="estado"
+              [class.estado-espera]="turno.estado === 'En espera'"
+              [class.estado-llamado]="turno.estado === 'Llamado'"
+              [class.estado-atendiendo]="turno.estado === 'Atendiendo'"
+              [class.estado-atendido]="turno.estado === 'Atendido'"
+              [class.estado-ausente]="turno.estado === 'Ausente'"
+              [class.estado-cancelado]="turno.estado === 'Cancelado'">
+
+              {{ turno.estado }}
+
+            </span>
+
+          </td>
+
+          <td class="columna-acciones">
+
+            <select
+              class="selector-estado"
+              [ngModel]="turno.estado"
+              (ngModelChange)="cambiarEstadoTurno(turno, $event)">
+
+              <option value="En espera">En espera</option>
+              <option value="Llamado">Llamado</option>
+              <option value="Atendiendo">Atendiendo</option>
+              <option value="Atendido">Atendido</option>
+              <option value="Ausente">Ausente</option>
+              <option value="Cancelado">Cancelado</option>
+
+            </select>
+
+            <button
+              type="button"
+              class="btn-eliminar"
+              title="Eliminar turno"
+              (click)="eliminarTurno(turno)">
+
+              <i class="bi bi-trash"></i>
+
+            </button>
+
+          </td>
+
+        </tr>
+
+        <tr *ngIf="cargandoDatos && turnos().length === 0">
+
+          <td colspan="7" class="sin-datos">
+            Cargando turnos...
+          </td>
+
+        </tr>
+
+        <tr *ngIf="!cargandoDatos && turnos().length === 0">
+
+          <td colspan="7" class="sin-datos">
+            No hay turnos registrados.
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  <!-- PAGINACIÓN -->
+
+  <app-paginacion
+    [paginaActual]="paginaActual"
+    [tamanoPagina]="tamanoPagina"
+    [totalRegistros]="totalRegistros"
+    [totalPaginas]="totalPaginas"
+    nombreRegistros="turnos"
+    (paginaCambiada)="cambiarPagina($event)"
+    (tamanoPaginaCambiado)="cambiarTamanoPagina($event)">
+  </app-paginacion>
+
+</div>

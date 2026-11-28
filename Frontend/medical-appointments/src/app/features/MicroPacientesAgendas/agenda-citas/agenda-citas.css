@@ -461,3 +461,54 @@
     font-size: 12px;
   }
 }
+
+/* AVISO DE HORARIO PRECARGADO */
+.aviso-horario {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  color: #1e40af;
+  grid-column: 1 / -1;
+}
+
+.aviso-horario > i {
+  font-size: 20px;
+  margin-top: 2px;
+}
+
+.aviso-horario p {
+  margin: 5px 0;
+  font-size: 13px;
+}
+
+.aviso-horario small {
+  font-size: 12px;
+}
+
+.mensaje-horario {
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 7px;
+  color: #777;
+  font-size: 13px;
+}
+
+.cargando-horarios {
+  padding: 14px;
+  color: #6c5ce7;
+  font-size: 13px;
+}
+
+.cargando-horarios i {
+  margin-right: 7px;
+}
+
+@media (max-width: 650px) {
+  .aviso-horario {
+    grid-column: auto;
+  }
+}

@@ -65,6 +65,12 @@ namespace Persistence.Migrations
 
                     b.HasKey("IdCita");
 
+                    b.HasIndex("FechaCita", "IdConsultorio")
+                        .HasDatabaseName("IX_Citas_Fecha_Consultorio");
+
+                    b.HasIndex("FechaCita", "IdMedico")
+                        .HasDatabaseName("IX_Citas_Fecha_Medico");
+
                     b.ToTable("Citas");
                 });
 
@@ -166,7 +172,7 @@ namespace Persistence.Migrations
 
                     b.Property<string>("DiaSemana")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("Estado")
                         .HasColumnType("bit");
@@ -187,6 +193,9 @@ namespace Persistence.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("IdHorario");
+
+                    b.HasIndex("IdMedico", "DiaSemana", "Estado")
+                        .HasDatabaseName("IX_HorariosMedicos_Medico_Dia_Estado");
 
                     b.ToTable("HorariosMedicos");
                 });

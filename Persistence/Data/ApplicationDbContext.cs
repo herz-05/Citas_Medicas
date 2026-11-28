@@ -1,11 +1,7 @@
-﻿using Domain.Models;
+﻿
+using Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Persistence.Data
 {
@@ -19,15 +15,46 @@ namespace Persistence.Data
         public DbSet<EstadoCitas> EstadosCitas { get; set; }
         public DbSet<Turno> Turnos { get; set; }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        public ApplicationDbContext(
+            DbContextOptions<ApplicationDbContext> options)
+            : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            modelBuilder.ApplyConfigurationsFromAssembly(
+                Assembly.GetExecutingAssembly());
+
+            // Índice para búsquedas de citas por fecha y médico.
+            modelBuilder.Entity<Cita>()
+                .HasIndex(c => new
+                {
+                    c.FechaCita,
+                    c.IdMedico
+                })
+                .HasDatabaseName("IX_Citas_Fecha_Medico");
+
+            // Índice para búsquedas de citas por fecha y consultorio.
+            modelBuilder.Entity<Cita>()
+                .HasIndex(c => new
+                {
+                    c.FechaCita,
+                    c.IdConsultorio
+                })
+                .HasDatabaseName("IX_Citas_Fecha_Consultorio");
+
+            // Índice para búsquedas de horarios por médico y día.
+            modelBuilder.Entity<HorariosMedico>()
+                .HasIndex(h => new
+                {
+                    h.IdMedico,
+                    h.DiaSemana,
+                    h.Estado
+                })
+                .HasDatabaseName("IX_HorariosMedicos_Medico_Dia_Estado");
         }
     }
 }

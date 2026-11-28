@@ -2,6 +2,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import {
   HorarioMedicoService,
@@ -86,7 +87,8 @@ export class HorarioMedico implements OnInit {
     private medicosService: MedicosService,
     private especialidadesService: EspecialidadesService,
     private medicoEspecialidadesService: MedicoEspecialidadesService,
-    private busquedaService: BusquedaService
+    private busquedaService: BusquedaService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -124,6 +126,7 @@ export class HorarioMedico implements OnInit {
           resultado.filter(medico => medico.estado)
         );
         this.cargandoMedicos = false;
+        this.actualizarEspecialidadesDisponibles();
       },
       error: error => {
         console.error('Error cargando médicos:', error);
@@ -172,7 +175,7 @@ export class HorarioMedico implements OnInit {
           this.actualizarEspecialidadesDisponibles();
         },
         error: error => {
-          console.error('Error cargando relaciones médico-especialidad:', error);
+          console.error('Error cargando relaciones:', error);
           this.cargandoRelaciones = false;
         }
       });
@@ -193,18 +196,24 @@ export class HorarioMedico implements OnInit {
     }
 
     const idsEspecialidades = this.relacionesMedicoEspecialidad()
-      .filter(relacion => Number(relacion.idMedico) === idMedico)
+      .filter(relacion =>
+        Number(relacion.idMedico) === idMedico
+      )
       .map(relacion => Number(relacion.idEspecialidad));
 
     this.especialidadesDisponibles.set(
       this.especialidades().filter(especialidad =>
-        idsEspecialidades.includes(Number(especialidad.idEspecialidad))
+        idsEspecialidades.includes(
+          Number(especialidad.idEspecialidad)
+        )
       )
     );
 
     if (
       this.nuevoHorario.idEspecialidad &&
-      !idsEspecialidades.includes(Number(this.nuevoHorario.idEspecialidad))
+      !idsEspecialidades.includes(
+        Number(this.nuevoHorario.idEspecialidad)
+      )
     ) {
       this.nuevoHorario.idEspecialidad = 0;
     }
@@ -226,13 +235,15 @@ export class HorarioMedico implements OnInit {
     );
 
     return especialidad
-      ? especialidad.nombreEspecialidad || especialidad.nombre || `Especialidad #${idEspecialidad}`
+      ? especialidad.nombreEspecialidad ||
+        especialidad.nombre ||
+        `Especialidad #${idEspecialidad}`
       : `Especialidad #${idEspecialidad}`;
   }
 
   obtenerNombreConsultorio(idConsultorio: number): string {
     const consultorio = this.consultorios().find(
-      c => c.idConsultorio === idConsultorio
+      c => Number(c.idConsultorio) === Number(idConsultorio)
     );
 
     return consultorio
@@ -419,6 +430,38 @@ export class HorarioMedico implements OnInit {
   limpiarFormulario(): void {
     this.nuevoHorario = this.crearHorarioVacio();
     this.especialidadesDisponibles.set([]);
+  }
+
+  // NUEVO: ENVIAR HORARIO A AGENDA DE CITAS
+  agendarCita(horario: HorarioMedicoModel): void {
+    if (!horario.estado) {
+      alert('No se pueden agendar citas en un horario inactivo.');
+      return;
+    }
+
+    if (
+      !horario.idMedico ||
+      !horario.idEspecialidad ||
+      !horario.idConsultorio
+    ) {
+      alert('El horario no tiene todos los datos necesarios.');
+      return;
+    }
+
+    this.router.navigate(['/agenda-citas'], {
+      state: {
+        agendarCita: true,
+        horario: {
+          idHorario: horario.idHorario,
+          idMedico: horario.idMedico,
+          idEspecialidad: horario.idEspecialidad,
+          idConsultorio: horario.idConsultorio,
+          diaSemana: horario.diaSemana,
+          horaInicio: this.formatearHora(horario.horaInicio),
+          horaFin: this.formatearHora(horario.horaFin)
+        }
+      }
+    });
   }
 
   private prepararHorarioParaApi(

@@ -23,6 +23,15 @@ namespace Core.feature.HorarioMedico.Queries
         public TimeOnly HoraFin { get; set; }
     }
 
+    public class CitaOcupacionDto
+    {
+        public int IdMedico { get; set; }
+        public int IdConsultorio { get; set; }
+        public int IdEstadoCita { get; set; }
+        public TimeOnly HoraInicio { get; set; }
+        public TimeOnly HoraFin { get; set; }
+    }
+
     public class GetHorariosDisponiblesQueryHandler
         : IRequestHandler<
             GetHorariosDisponiblesQuery,
@@ -53,113 +62,124 @@ namespace Core.feature.HorarioMedico.Queries
             GetHorariosDisponiblesQuery request,
             CancellationToken cancellationToken)
         {
-            // 1. Validar médico y especialidad.
             if (request.IdMedico <= 0)
-            {
                 throw new ArgumentException(
                     "Debe seleccionar un médico.");
-            }
 
             if (request.IdEspecialidad <= 0)
-            {
                 throw new ArgumentException(
                     "Debe seleccionar una especialidad.");
-            }
 
-            // 2. Obtener el día de la semana.
+            var hoy = DateOnly.FromDateTime(DateTime.Today);
+
+            if (request.Fecha < hoy)
+                throw new ArgumentException(
+                    "No se permiten consultar fechas anteriores a hoy.");
+
             var diaSemana = ObtenerDiaSemana(request.Fecha);
 
-            // 3. Consultar horarios.
-            var horarios = await _horarioRepository.GetAllAsync(
-                cancellationToken);
+            // Consultar horarios del médico y especialidad.
+            var horariosResultado =
+                await _horarioRepository.GetPagedAsync(
+                    pageNumber: 1,
+                    pageSize: 1000,
+                    filter: h =>
+                        h.IdMedico == request.IdMedico &&
+                        h.IdEspecialidad == request.IdEspecialidad &&
+                        h.Estado &&
+                        h.DiaSemana == diaSemana,
+                    cancellationToken: cancellationToken
+                );
 
-            var horariosDelMedico = horarios
-                .Where(h =>
-                    h.IdMedico == request.IdMedico &&
-                    h.IdEspecialidad == request.IdEspecialidad &&
-                    h.Estado &&
-                    string.Equals(
-                        h.DiaSemana.Trim(),
-                        diaSemana,
-                        StringComparison.OrdinalIgnoreCase))
-                .ToList();
+            var horarios = horariosResultado.Data.ToList();
 
-            // Si no existen horarios, no hay disponibilidad.
-            if (!horariosDelMedico.Any())
+            if (horarios.Count == 0)
                 return new List<HorarioDisponibleDto>();
 
-            // 4. Consultar estados de citas.
+            // Obtener estados que liberan horarios.
             var estados = await _estadoRepository.GetAllAsync(
                 cancellationToken);
 
-            // Identificar estados que liberan el horario.
             var estadosCancelados = estados
                 .Where(e =>
                     !string.IsNullOrWhiteSpace(e.NombreEstado) &&
                     (
-                        e.NombreEstado.Equals(
+                        e.NombreEstado.Trim().Equals(
                             "Cancelada",
-                            StringComparison.OrdinalIgnoreCase)
-                        ||
-                        e.NombreEstado.Equals(
+                            StringComparison.OrdinalIgnoreCase) ||
+                        e.NombreEstado.Trim().Equals(
                             "Cancelado",
-                            StringComparison.OrdinalIgnoreCase)
-                        ||
-                        e.NombreEstado.Equals(
+                            StringComparison.OrdinalIgnoreCase) ||
+                        e.NombreEstado.Trim().Equals(
                             "Anulada",
-                            StringComparison.OrdinalIgnoreCase)
-                        ||
-                        e.NombreEstado.Equals(
+                            StringComparison.OrdinalIgnoreCase) ||
+                        e.NombreEstado.Trim().Equals(
                             "Anulado",
                             StringComparison.OrdinalIgnoreCase)
                     ))
                 .Select(e => e.IdEstadoCita)
                 .ToHashSet();
 
-            // 5. Consultar citas existentes.
-            var citas = await _citaRepository.GetAllAsync(
-                cancellationToken);
+            // Recuperar únicamente las columnas necesarias.
+            var citasDelDia = await _citaRepository.GetProjectedAsync(
+                c => c.FechaCita == request.Fecha,
 
-            // Excluir las citas canceladas.
-            var citasDelDia = citas
+                c => new CitaOcupacionDto
+                {
+                    IdMedico = c.IdMedico,
+                    IdConsultorio = c.IdConsultorio,
+                    IdEstadoCita = c.IdEstadoCita,
+                    HoraInicio = c.HoraInicio,
+                    HoraFin = c.HoraFin
+                },
+
+                cancellationToken
+            );
+
+            // Excluir citas canceladas y anuladas.
+            citasDelDia = citasDelDia
                 .Where(c =>
-                    c.FechaCita == request.Fecha &&
                     !estadosCancelados.Contains(c.IdEstadoCita))
                 .ToList();
 
-            // 6. Generar espacios disponibles.
             var disponibles = new List<HorarioDisponibleDto>();
 
-            foreach (var horario in horariosDelMedico)
+            var horaActual = TimeOnly.FromDateTime(DateTime.Now);
+
+            foreach (var horario in horarios)
             {
-                var inicioJornada = TimeOnly.FromTimeSpan(
-                    horario.HoraInicio);
+                var inicioJornada =
+                    TimeOnly.FromTimeSpan(horario.HoraInicio);
 
-                var finJornada = TimeOnly.FromTimeSpan(
-                    horario.HoraFin);
+                var finJornada =
+                    TimeOnly.FromTimeSpan(horario.HoraFin);
 
-                var horaActual = inicioJornada;
+                var horaInicio = inicioJornada;
 
-                // Generar espacios de 30 minutos.
-                while (horaActual.AddMinutes(DuracionCitaMinutos)
+                while (horaInicio.AddMinutes(DuracionCitaMinutos)
                        <= finJornada)
                 {
-                    var horaFin = horaActual.AddMinutes(
+                    var horaFin = horaInicio.AddMinutes(
                         DuracionCitaMinutos);
 
-                    // Verificar si el médico o consultorio
-                    // tienen otra cita en ese intervalo.
+                    // Excluir horarios que ya pasaron.
+                    if (request.Fecha == hoy &&
+                        horaInicio <= horaActual)
+                    {
+                        horaInicio = horaFin;
+                        continue;
+                    }
+
+                    // Verificar ocupación del médico o consultorio.
                     var ocupado = citasDelDia.Any(c =>
                         (
-                            c.IdMedico == horario.IdMedico ||
+                            c.IdMedico == request.IdMedico ||
                             c.IdConsultorio == horario.IdConsultorio
-                        )
-                        &&
-                        horaActual < c.HoraFin
-                        &&
-                        horaFin > c.HoraInicio);
+                        ) &&
+                        horaInicio < c.HoraFin &&
+                        horaFin > c.HoraInicio
+                    );
 
-                    // Si no está ocupado, agregar disponibilidad.
                     if (!ocupado)
                     {
                         disponibles.Add(
@@ -169,22 +189,20 @@ namespace Core.feature.HorarioMedico.Queries
                                 IdEspecialidad = horario.IdEspecialidad,
                                 IdConsultorio = horario.IdConsultorio,
                                 Fecha = request.Fecha,
-                                HoraInicio = horaActual,
+                                HoraInicio = horaInicio,
                                 HoraFin = horaFin
                             });
                     }
 
-                    horaActual = horaFin;
+                    horaInicio = horaFin;
                 }
             }
 
-            // 7. Devolver horarios ordenados.
             return disponibles
-                .OrderBy(x => x.HoraInicio)
+                .OrderBy(h => h.HoraInicio)
                 .ToList();
         }
 
-        // Convertir fecha a día de la semana en español.
         private static string ObtenerDiaSemana(DateOnly fecha)
         {
             return fecha.DayOfWeek switch

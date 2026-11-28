@@ -1,9 +1,11 @@
 
-<!-- MODAL DE CITAS -->
+<!-- ========================================= -->
+<!-- MODAL DE REGISTRO Y EDICIÓN DE CITAS -->
+<!-- ========================================= -->
+
 <div class="overlay" *ngIf="mostrarFormulario">
   <div class="modal-cita">
 
-    <!-- Encabezado -->
     <div class="modal-header">
       <div class="modal-marca">
         <span class="mini-logo">
@@ -21,9 +23,17 @@
       </button>
     </div>
 
-    <h2 *ngIf="modoFormulario === 'nuevo'">Registrar nueva cita</h2>
-    <h2 *ngIf="modoFormulario === 'ver'">Información de la cita</h2>
-    <h2 *ngIf="modoFormulario === 'editar'">Editar cita</h2>
+    <h2 *ngIf="modoFormulario === 'nuevo'">
+      Registrar nueva cita
+    </h2>
+
+    <h2 *ngIf="modoFormulario === 'ver'">
+      Información de la cita
+    </h2>
+
+    <h2 *ngIf="modoFormulario === 'editar'">
+      Editar cita
+    </h2>
 
     <p class="subtitulo" *ngIf="modoFormulario === 'nuevo'">
       Complete la información para programar la cita.
@@ -37,10 +47,31 @@
       Modifique la información necesaria.
     </p>
 
-    <!-- FORMULARIO -->
     <div class="form-grid">
 
-      <!-- Paciente -->
+      <!-- AVISO DE HORARIO PRECARGADO -->
+      <div
+        class="aviso-horario campo-completo"
+        *ngIf="horarioPrecargado">
+
+        <i class="bi bi-info-circle-fill"></i>
+
+        <div>
+          <strong>Agendamiento desde horario médico</strong>
+
+          <p>
+            El médico, especialidad y consultorio ya fueron asignados.
+          </p>
+
+          <small>
+            Día de atención:
+            <strong>{{ diaSemanaPrecargado }}</strong>
+          </small>
+        </div>
+
+      </div>
+
+      <!-- PACIENTE -->
       <div class="campo">
         <label>Paciente</label>
 
@@ -48,7 +79,9 @@
           [(ngModel)]="nuevaCita.idPaciente"
           [disabled]="modoFormulario === 'ver' || guardando">
 
-          <option [ngValue]="0">Seleccione un paciente</option>
+          <option [ngValue]="0">
+            Seleccione un paciente
+          </option>
 
           <option
             *ngFor="let paciente of pacientes()"
@@ -57,19 +90,26 @@
             {{ paciente.nombres }} {{ paciente.apellidos }}
 
           </option>
+
         </select>
       </div>
 
-      <!-- Médico -->
+      <!-- MÉDICO -->
       <div class="campo">
         <label>Médico</label>
 
         <select
           [(ngModel)]="nuevaCita.idMedico"
           (ngModelChange)="cambiarMedico($event)"
-          [disabled]="modoFormulario === 'ver' || guardando">
+          [disabled]="
+            modoFormulario === 'ver' ||
+            guardando ||
+            horarioPrecargado
+          ">
 
-          <option [ngValue]="0">Seleccione un médico</option>
+          <option [ngValue]="0">
+            Seleccione un médico
+          </option>
 
           <option
             *ngFor="let medico of medicos()"
@@ -78,10 +118,11 @@
             {{ medico.nombres }} {{ medico.apellidos }}
 
           </option>
+
         </select>
       </div>
 
-      <!-- Especialidad -->
+      <!-- ESPECIALIDAD -->
       <div class="campo">
         <label>Especialidad</label>
 
@@ -91,6 +132,7 @@
           [disabled]="
             modoFormulario === 'ver' ||
             guardando ||
+            horarioPrecargado ||
             !nuevaCita.idMedico
           ">
 
@@ -109,6 +151,7 @@
             {{ obtenerNombreEspecialidad(especialidad.idEspecialidad) }}
 
           </option>
+
         </select>
 
         <small
@@ -116,42 +159,39 @@
             nuevaCita.idMedico &&
             especialidadesDisponibles().length === 0
           ">
+
           Este médico no tiene especialidades asignadas.
+
         </small>
       </div>
 
-      <!-- Estado -->
+      <!-- ESTADO -->
       <div class="campo">
         <label>Estado de la cita</label>
 
-        <select
-          [(ngModel)]="nuevaCita.idEstadoCita"
-          [disabled]="modoFormulario === 'ver' || guardando">
-
-          <option [ngValue]="0">Seleccione un estado</option>
-
-          <option
-            *ngFor="let estado of estadosCitas()"
-            [ngValue]="estado.idEstadoCita">
-
-            {{ estado.nombreEstado }}
-
-          </option>
-        </select>
+        <input
+          type="text"
+          [value]="obtenerNombreEstado(nuevaCita.idEstadoCita)"
+          disabled>
       </div>
 
-      <!-- Fecha -->
+      <!-- FECHA -->
       <div class="campo">
         <label>Fecha de la cita</label>
 
         <input
           type="date"
           [(ngModel)]="nuevaCita.fechaCita"
+          [min]="fechaMinima"
           (ngModelChange)="cambiarFecha()"
           [disabled]="modoFormulario === 'ver' || guardando">
+
+        <small>
+          No se permiten fechas anteriores a hoy.
+        </small>
       </div>
 
-      <!-- Consultorio automático -->
+      <!-- CONSULTORIO -->
       <div class="campo">
         <label>Consultorio asignado</label>
 
@@ -174,31 +214,48 @@
           Cada cita tiene una duración de 30 minutos.
         </p>
 
-        <div *ngIf="!nuevaCita.idMedico">
+        <div
+          class="mensaje-horario"
+          *ngIf="!nuevaCita.idMedico">
+
           Seleccione un médico para continuar.
+
         </div>
 
         <div
+          class="mensaje-horario"
           *ngIf="
             nuevaCita.idMedico &&
             !nuevaCita.idEspecialidad
           ">
+
           Seleccione una especialidad.
+
         </div>
 
         <div
+          class="mensaje-horario"
           *ngIf="
             nuevaCita.idEspecialidad &&
             !nuevaCita.fechaCita
           ">
+
           Seleccione una fecha para consultar los horarios.
+
         </div>
 
-        <div *ngIf="cargandoHorarios" class="subtitulo">
+        <!-- CARGANDO -->
+        <div
+          *ngIf="cargandoHorarios"
+          class="cargando-horarios">
+
           <i class="bi bi-arrow-repeat"></i>
+
           Consultando horarios disponibles...
+
         </div>
 
+        <!-- ERROR -->
         <div
           *ngIf="errorHorarios"
           class="alert alert-danger">
@@ -207,7 +264,7 @@
 
         </div>
 
-        <!-- Botones de horarios -->
+        <!-- LISTADO -->
         <div
           class="horarios-disponibles"
           *ngIf="
@@ -233,7 +290,7 @@
 
         </div>
 
-        <!-- Sin disponibilidad -->
+        <!-- SIN HORARIOS -->
         <div
           *ngIf="
             !cargandoHorarios &&
@@ -241,16 +298,18 @@
             nuevaCita.idEspecialidad &&
             nuevaCita.fechaCita &&
             horariosDisponibles().length === 0 &&
-            !errorHorarios
+            !errorHorarios &&
+            nuevaCita.fechaCita >= fechaMinima
           "
           class="sin-horarios">
 
           <i class="bi bi-calendar-x"></i>
+
           No hay horarios disponibles para esta fecha.
 
         </div>
 
-        <!-- Horario seleccionado -->
+        <!-- HORARIO SELECCIONADO -->
         <div
           *ngIf="nuevaCita.horaInicio"
           class="horario-seleccionado">
@@ -269,7 +328,7 @@
 
       </div>
 
-      <!-- Motivo -->
+      <!-- MOTIVO -->
       <div class="campo campo-completo">
         <label>Motivo de consulta</label>
 
@@ -281,7 +340,7 @@
         </textarea>
       </div>
 
-      <!-- Observaciones -->
+      <!-- OBSERVACIONES -->
       <div class="campo campo-completo">
         <label>Observaciones</label>
 
@@ -322,7 +381,7 @@
             guardando
               ? 'Guardando...'
               : modoFormulario === 'nuevo'
-                ? 'Guardar'
+                ? 'Registrar cita'
                 : 'Guardar cambios'
           }}
 
@@ -336,11 +395,14 @@
 </div>
 
 
-<!-- TABLA DE AGENDA -->
+<!-- ========================================= -->
+<!-- TABLA DE CITAS -->
+<!-- ========================================= -->
+
 <div class="tabla-contenedor">
 
-  <!-- Encabezado -->
   <div class="tabla-header">
+
     <div>
       <h2>Agenda y Citas</h2>
 
@@ -357,12 +419,13 @@
       (click)="abrirNuevaCita()">
 
       <i class="bi bi-plus-lg"></i>
+
       Nueva cita
 
     </button>
+
   </div>
 
-  <!-- Tabla -->
   <div class="tabla-responsive">
 
     <table class="tabla-citas">
@@ -388,7 +451,9 @@
         <tr *ngFor="let cita of citas()">
 
           <td>
-            <span class="id-cita">{{ cita.idCita }}</span>
+            <span class="id-cita">
+              {{ cita.idCita }}
+            </span>
           </td>
 
           <td>
@@ -452,9 +517,11 @@
         </tr>
 
         <tr *ngIf="citas().length === 0">
+
           <td colspan="11" class="sin-datos">
             No hay citas registradas.
           </td>
+
         </tr>
 
       </tbody>
@@ -463,7 +530,7 @@
 
   </div>
 
-  <!-- Paginación -->
+  <!-- PAGINACIÓN -->
   <app-paginacion
     [paginaActual]="paginaActual"
     [tamanoPagina]="tamanoPagina"

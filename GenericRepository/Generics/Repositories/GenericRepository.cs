@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -27,9 +28,7 @@ public class GenericRepository<T> : IGenericRepository<T>
         IQueryable<T> query = _dbSet;
 
         if (asNoTracking)
-        {
             query = query.AsNoTracking();
-        }
 
         return query;
     }
@@ -37,7 +36,8 @@ public class GenericRepository<T> : IGenericRepository<T>
     public async Task<IEnumerable<T>> GetAllAsync(
         CancellationToken cancellationToken = default)
     {
-        return await _dbSet.ToListAsync(cancellationToken);
+        return await Query()
+            .ToListAsync(cancellationToken);
     }
 
     public Task<T?> GetByIdAsync(
@@ -57,8 +57,7 @@ public class GenericRepository<T> : IGenericRepository<T>
 
         var primaryKey = _dbSet.EntityType.FindPrimaryKey()
             ?? throw new InvalidOperationException(
-                $"La entidad {typeof(T).Name} no tiene " +
-                "clave primaria configurada.");
+                $"La entidad {typeof(T).Name} no tiene clave primaria configurada.");
 
         if (keyValues.Length != primaryKey.Properties.Count)
         {
@@ -77,8 +76,7 @@ public class GenericRepository<T> : IGenericRepository<T>
                 !expectedType.IsInstanceOfType(keyValues[i]))
             {
                 throw new ArgumentException(
-                    $"La clave {property.Name} debe ser " +
-                    $"de tipo {expectedType.Name}.",
+                    $"La clave {property.Name} debe ser de tipo {expectedType.Name}.",
                     nameof(keyValues));
             }
         }
@@ -120,9 +118,7 @@ public class GenericRepository<T> : IGenericRepository<T>
         var lista = entities.ToList();
 
         if (lista.Count == 0)
-        {
             return lista;
-        }
 
         await _dbSet.AddRangeAsync(lista, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
@@ -148,6 +144,22 @@ public class GenericRepository<T> : IGenericRepository<T>
 
         _dbSet.Remove(entity);
         await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    // NUEVO: consulta únicamente las columnas seleccionadas.
+    public async Task<List<TResult>> GetProjectedAsync<TResult>(
+        Expression<Func<T, bool>> filter,
+        Expression<Func<T, TResult>> selector,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(filter);
+        ArgumentNullException.ThrowIfNull(selector);
+
+        return await _dbSet
+            .AsNoTracking()
+            .Where(filter)
+            .Select(selector)
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<PagedResult<T>> GetPagedAsync(
@@ -179,22 +191,16 @@ public class GenericRepository<T> : IGenericRepository<T>
             includes);
 
         if (filter is not null)
-        {
             query = query.Where(filter);
-        }
 
         if (splitQuery)
-        {
             query = query.AsSplitQuery();
-        }
 
         int totalRecords = await query.CountAsync(
             cancellationToken);
 
         if (orderBy is not null)
-        {
             query = orderBy(query);
-        }
 
         int skip = checked((pageNumber - 1) * pageSize);
 
@@ -219,9 +225,7 @@ public class GenericRepository<T> : IGenericRepository<T>
         Expression<Func<T, object>>[] includes)
     {
         foreach (var include in includes)
-        {
             query = query.Include(include);
-        }
 
         return query;
     }

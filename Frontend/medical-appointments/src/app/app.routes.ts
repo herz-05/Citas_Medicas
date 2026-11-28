@@ -8,6 +8,7 @@ import { Pacientes } from './features/MicroPacientesAgendas/pacientes/pacientes'
 import { Consultorios } from './features/MicroPacientesAgendas/consultorios/consultorios';
 import { HorarioMedico } from './features/MicroPacientesAgendas/horario-medico/horario-medico';
 import { AgendaCitas } from './features/MicroPacientesAgendas/agenda-citas/agenda-citas';
+import { TurnosComponent } from './features/MicroPacientesAgendas/turnos/turnos/turnos';
 
 import { Servicios } from './features/MicroFacturacion/servicios/servicios';
 import { Facturas } from './features/MicroFacturacion/facturas/facturas';
@@ -43,6 +44,7 @@ export const routes: Routes = [
       { path: 'consultorios', component: Consultorios },
       { path: 'horarios-medicos', component: HorarioMedico },
       { path: 'agenda-citas', component: AgendaCitas },
+      { path: 'turnos', component: TurnosComponent },
 
       { path: 'servicios', component: Servicios },
       { path: 'facturas', component: Facturas },
